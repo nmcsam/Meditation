@@ -10,6 +10,8 @@
 <link rel="manifest" href="manifest.json">
 <title>Nguyễn Hồng Sâm</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" onload="if(typeof renderCharts==='function')try{renderCharts();}catch(e){}if(typeof renderPieChart==='function')try{renderPieChart();}catch(e){}"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <style>
 :root{
   --ink:#1A0E00;--ink2:#3A2000;
@@ -29,6 +31,10 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .app-name{font-size:16px;font-weight:700;color:#ffffff;}
 .app-date{font-size:11px;color:rgba(255,255,255,.8);margin-top:1px}
 .streak{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.2);color:#ffffff;border:1px solid rgba(255,255,255,.4)}
+.sync-btn{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.sync-btn.connected{background:rgba(255,255,255,.4);border-color:rgba(255,255,255,.6)}
+.sync-row{display:flex;align-items:center;gap:8px}
+.sync-code-input{width:100%;padding:10px;font-size:16px;letter-spacing:2px;text-align:center;font-weight:700;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);text-transform:uppercase}
 .nav{display:flex;background:#ffffff;border-bottom:1px solid #e0e0e0}
 .nav-btn{flex:1;border:none;background:transparent;padding:9px 2px 7px;font-size:10px;font-weight:500;color:#999999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-bottom:2px solid transparent}
 .nav-btn svg{width:17px;height:17px;stroke-width:1.7}
@@ -102,7 +108,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 <body>
 <div class="hdr">
   <div><div class="app-name">🧘 Nguyễn Hồng Sâm</div><div class="app-date" id="hdr-date"></div></div>
-  <span class="streak" id="streak-el">0 ngày 🔥</span>
+  <div class="sync-row">
+    <button class="sync-btn" id="sync-btn" onclick="openSyncModal()" title="Đồng bộ nhiều thiết bị">☁️</button>
+    <span class="streak" id="streak-el">0 ngày 🔥</span>
+  </div>
 </div>
 <div class="nav">
   <button class="nav-btn on" onclick="nav('today')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Hôm nay</button>
@@ -572,6 +581,23 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   </div>
 </div>
 
+<div class="detail-overlay" id="sync-modal">
+  <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto">
+    <h3 style="margin-bottom:6px">☁️ Đồng bộ nhiều thiết bị</h3>
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.5">Nhập <strong>cùng một mã</strong> trên điện thoại và máy tính để dữ liệu tự động đồng bộ hai chiều.</div>
+    <input type="text" id="sync-code-input" class="sync-code-input" placeholder="VD: A1B2C3D4E5" maxlength="12">
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn" style="flex:1" onclick="genSyncCode()">🎲 Tạo mã mới</button>
+      <button class="btn btn-p" style="flex:1" onclick="connectSync(document.getElementById('sync-code-input').value,false)">✓ Kết nối</button>
+    </div>
+    <div id="sync-status" style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center">Chưa kết nối</div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn" style="flex:1" onclick="disconnectSync()">Ngắt kết nối</button>
+      <button class="btn" style="flex:1" onclick="closeSyncModal()">Đóng</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast-el"></div>
 
 <script>
@@ -584,8 +610,84 @@ let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
 let charts={},audioCtx=null,bellType='bowl';
 let wakeLock=null,swReg=null;
 
-function save(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}queueCloudSave();}
 function load(){try{const s=localStorage.getItem(KEY);if(s)ST=Object.assign(ST,JSON.parse(s));}catch(e){}}
+
+// ==== CLOUD SYNC (Firebase Firestore) ====
+// Dán config lấy từ Firebase Console (Project settings > General > SDK setup) vào đây:
+const firebaseConfig = {
+  apiKey: "AIzaSyBDvIFgBq0PmZ4fjWu0RUSZAgh_V5N58G0",
+  authDomain: "daily-meditation-d6bdf.firebaseapp.com",
+  projectId: "daily-meditation-d6bdf",
+  storageBucket: "daily-meditation-d6bdf.firebasestorage.app",
+  messagingSenderId: "619038884675",
+  appId: "1:619038884675:web:4db3c469bb5f70c899a5f6"
+};
+let fbDb=null,syncUnsub=null,syncCode=localStorage.getItem('thien_sync_code')||'',syncEcho=false,syncTimer=null;
+
+function fbConfigured(){return firebaseConfig.apiKey && firebaseConfig.apiKey!=='YOUR_API_KEY';}
+function initFirebase(){
+  if(!fbConfigured())return false;
+  try{ if(!fbDb){ if(!firebase.apps.length)firebase.initializeApp(firebaseConfig); fbDb=firebase.firestore(); } return true; }
+  catch(e){ console.error(e); return false; }
+}
+function initSync(){ updateSyncBtn(); if(syncCode) connectSync(syncCode,true); }
+function updateSyncBtn(){ const b=document.getElementById('sync-btn'); if(b) b.classList.toggle('connected', !!syncCode && !!fbDb); }
+function openSyncModal(){
+  document.getElementById('sync-code-input').value=syncCode;
+  document.getElementById('sync-status').textContent = !fbConfigured() ? '⚠️ Chưa cấu hình Firebase trong file index.html' : (syncCode ? ('Đang đồng bộ — mã: '+syncCode) : 'Chưa kết nối');
+  document.getElementById('sync-modal').classList.add('on');
+}
+function closeSyncModal(){ document.getElementById('sync-modal').classList.remove('on'); }
+function genSyncCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s='';
+  for(let i=0;i<10;i++) s+=chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('sync-code-input').value=s;
+}
+function connectSync(code,silent){
+  code=(code||'').trim().toUpperCase();
+  if(!code){ if(!silent)toast('Nhập hoặc tạo mã trước'); return; }
+  if(!initFirebase()){ if(!silent)toast('⚠️ Chưa cấu hình Firebase trong file'); return; }
+  syncCode=code; localStorage.setItem('thien_sync_code',syncCode);
+  if(syncUnsub){ syncUnsub(); syncUnsub=null; }
+  const ref=fbDb.collection('syncs').doc(syncCode);
+  syncUnsub=ref.onSnapshot(function(doc){
+    if(!doc.exists){ pushToCloud(); return; }
+    if(syncEcho){ syncEcho=false; return; }
+    const remote=doc.data();
+    if(!remote||!remote.updatedAt)return;
+    if(remote.updatedAt > (ST.updatedAt||0)){
+      try{
+        const parsed=JSON.parse(remote.payload);
+        ST=Object.assign(ST,parsed); ST.updatedAt=remote.updatedAt;
+        localStorage.setItem(KEY,JSON.stringify(ST));
+        renderAll();
+        document.getElementById('goal1-input').value=ST.goal1;
+        document.getElementById('goal2-input').value=ST.goal2;
+        toast('☁️ Đã nhận dữ liệu mới');
+      }catch(e){console.error(e);}
+    }
+  },function(err){ console.error(err); toast('Lỗi đồng bộ: '+err.message); });
+  updateSyncBtn();
+  document.getElementById('sync-status').textContent='Đang đồng bộ — mã: '+syncCode;
+  if(!silent){ toast('✓ Đã kết nối đồng bộ'); closeSyncModal(); }
+}
+function disconnectSync(){
+  if(syncUnsub){ syncUnsub(); syncUnsub=null; }
+  syncCode=''; localStorage.removeItem('thien_sync_code');
+  updateSyncBtn(); toast('Đã ngắt đồng bộ'); closeSyncModal();
+}
+function pushToCloud(){
+  if(!syncCode||!fbDb)return;
+  ST.updatedAt=Date.now();
+  syncEcho=true;
+  fbDb.collection('syncs').doc(syncCode).set({payload:JSON.stringify(ST),updatedAt:ST.updatedAt},{merge:true}).catch(function(e){console.error(e);});
+}
+function queueCloudSave(){
+  if(!syncCode)return;
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(pushToCloud,800);
+}
 function getDK(off=0){
   const d=new Date();
   d.setDate(d.getDate()-off);
@@ -1536,6 +1638,7 @@ timerReset();
 renderAll();
 updateNotifBtn();
 registerSW();
+initSync();
 </script>
 </body>
 </html>
