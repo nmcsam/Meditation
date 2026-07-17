@@ -31,7 +31,7 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .app-name{font-size:16px;font-weight:700;color:#ffffff;}
 .app-date{font-size:11px;color:rgba(255,255,255,.8);margin-top:1px}
 .streak{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.2);color:#ffffff;border:1px solid rgba(255,255,255,.4)}
-.sync-btn{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.sync-btn{height:30px;padding:0 12px;border-radius:20px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;font-weight:700;white-space:nowrap;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;font-family:inherit}
 .sync-btn.connected{background:rgba(255,255,255,.4);border-color:rgba(255,255,255,.6)}
 .sync-row{display:flex;align-items:center;gap:8px}
 .sync-code-input{width:100%;padding:10px;font-size:16px;letter-spacing:2px;text-align:center;font-weight:700;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);text-transform:uppercase}
@@ -109,8 +109,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 <div class="hdr">
   <div><div class="app-name">🧘 Nguyễn Hồng Sâm</div><div class="app-date" id="hdr-date"></div></div>
   <div class="sync-row">
-    <button class="sync-btn" id="sync-btn" onclick="openSyncModal()" title="Đồng bộ nhiều thiết bị">☁️</button>
-    <button class="sync-btn" id="settings-btn" onclick="openSettingsModal()" title="Cài đặt">⚙</button>
+    <button class="sync-btn" id="sync-btn" onclick="openSyncModal()" title="Đồng bộ nhiều thiết bị">☁️ Đám mây</button>
+    <button class="sync-btn" id="settings-btn" onclick="openSettingsModal()" title="Cài đặt">⚙ Cài đặt</button>
     <span class="streak" id="streak-el">0 ngày 🔥</span>
   </div>
 </div>
@@ -597,9 +597,9 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Tự động lưu một bản chụp dữ liệu lên đám mây theo chu kỳ (giữ 4 bản gần nhất). Cần đang bật Đồng bộ.</p>
       <div style="display:flex;gap:6px;margin-bottom:10px">
         <button class="btn bk-freq" data-f="off" style="flex:1" onclick="bkSetFreq('off')">Tắt</button>
-        <button class="btn bk-freq" data-f="d" style="flex:1" onclick="bkSetFreq('d')">Hàng ngày</button>
-        <button class="btn bk-freq" data-f="w" style="flex:1" onclick="bkSetFreq('w')">Hàng tuần</button>
-        <button class="btn bk-freq" data-f="m" style="flex:1" onclick="bkSetFreq('m')">Hàng tháng</button>
+        <button class="btn bk-freq" data-f="d" style="flex:1" onclick="bkSetFreq('d')">Ngày</button>
+        <button class="btn bk-freq" data-f="w" style="flex:1" onclick="bkSetFreq('w')">Tuần</button>
+        <button class="btn bk-freq" data-f="m" style="flex:1" onclick="bkSetFreq('m')">Tháng</button>
       </div>
       <div id="bk-status" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
       <div style="display:flex;gap:8px">
@@ -678,7 +678,9 @@ function updateSyncBtn(){
   const b=document.getElementById('sync-btn'); if(!b)return;
   const on=!!syncCode && !!fbDb && !pendingConflict;
   b.classList.toggle('connected', on);
-  b.style.background = pendingConflict ? '#c0503e' : (on ? '#2e7d5b' : '');
+  if(pendingConflict){ b.textContent='⚠️ Đám mây'; b.style.background='#c0503e'; b.style.borderColor='#c0503e'; }
+  else if(on){ b.textContent='☁️ Đang bật'; b.style.background='#4c7a3a'; b.style.borderColor='#4c7a3a'; }
+  else { b.textContent='☁️ Đám mây'; b.style.background=''; b.style.borderColor=''; }
   b.title = pendingConflict ? 'Có khác biệt dữ liệu — chạm để xử lý' : (on ? ('Đang đồng bộ — mã: '+syncCode) : 'Đồng bộ đám mây (chưa bật)');
 }
 function dataSummary(st){
