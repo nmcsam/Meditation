@@ -107,6 +107,13 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 </style>
 </head>
 <body>
+<div id="lock-screen" style="display:none;position:fixed;inset:0;z-index:700;background:linear-gradient(170deg,#0b3d35,#076d5e 55%,#0a4a40);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px">
+  <div style="font-size:44px">🔒</div>
+  <div style="font-size:17px;font-weight:700;color:#fff8ec">Nhập mật khẩu để mở app</div>
+  <input type="password" id="lock-input" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')tryUnlock()" style="width:min(240px,80vw);padding:12px 14px;font-size:18px;text-align:center;border:none;border-radius:12px;background:#fff;color:#111;letter-spacing:4px">
+  <button onclick="tryUnlock()" style="width:min(240px,80vw);padding:12px;border:none;border-radius:12px;background:#c9a54a;color:#2c1f00;font-size:15px;font-weight:800;cursor:pointer">Mở khóa</button>
+  <div id="lock-err" style="font-size:12px;color:#ffd1c8;min-height:16px"></div>
+</div>
 <div id="home-screen" onclick="enterApp()" style="position:fixed;inset:0;z-index:500;background:linear-gradient(170deg,#0b3d35,#076d5e 55%,#0a4a40);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;cursor:pointer;text-align:center;padding:24px">
   <svg viewBox="0 0 200 200" style="width:170px;height:170px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))" aria-label="Tu sĩ ngồi thiền">
     <circle cx="100" cy="100" r="96" fill="#f6efe2"/>
@@ -562,7 +569,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v13</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v14</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -592,6 +599,15 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <button class="btn" style="flex:1" onclick="bkShowList()">🕘 Bản sao lưu</button>
       </div>
       <div id="bk-list" style="margin-top:10px"></div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-hd">🔒 Mật khẩu mở app</div>
+      <p id="pass-status" style="font-size:12px;color:var(--muted);margin-bottom:10px"></p>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-p" style="flex:1" onclick="setPassFlow()" id="pass-set-btn">Đặt mật khẩu</button>
+        <button class="btn" style="flex:1;display:none" onclick="clearPassFlow()" id="pass-off-btn">Tắt mật khẩu</button>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Mật khẩu chỉ lưu trên máy này (không đồng bộ). Nếu quên, xóa dữ liệu trang web của app sẽ gỡ khóa (dữ liệu thiền vẫn còn nếu đang bật đồng bộ/sao lưu).</p>
     </div>
     <div class="card" style="margin-bottom:10px;border-color:var(--rose)">
       <div class="card-hd" style="color:var(--rose)">Vùng nguy hiểm</div>
@@ -650,6 +666,41 @@ function editUserName(){
   if(n && n.trim()){ ST.userName=n.trim(); save(); applyUserName(); toast('✓ Đã đổi tên'); }
 }
 function enterApp(){ const h=document.getElementById('home-screen'); if(h) h.style.display='none'; }
+// ===== Mật khẩu mở app (lưu cục bộ trên máy) =====
+function hashPass(p){let h=5381;for(let i=0;i<p.length;i++){h=((h<<5)+h+p.charCodeAt(i))|0;}return 'h'+h;}
+function getPass(){try{return localStorage.getItem('thien_pass')||'';}catch(e){return'';}}
+function setPassFlow(){
+  const cur=getPass();
+  if(cur){ const old=prompt('Nhập mật khẩu hiện tại:'); if(old===null)return; if(hashPass(old)!==cur){toast('✗ Sai mật khẩu');return;} }
+  const p1=prompt(cur?'Mật khẩu mới (ít nhất 4 ký tự):':'Đặt mật khẩu (ít nhất 4 ký tự):'); if(p1===null)return;
+  if(!p1||p1.length<4){toast('Mật khẩu cần ít nhất 4 ký tự');return;}
+  const p2=prompt('Nhập lại mật khẩu:'); if(p2===null)return;
+  if(p2!==p1){toast('✗ Hai lần nhập không khớp');return;}
+  try{localStorage.setItem('thien_pass',hashPass(p1));}catch(e){}
+  toast('✓ Đã đặt mật khẩu — sẽ hỏi khi mở app'); updatePassUI();
+}
+function clearPassFlow(){
+  const cur=getPass(); if(!cur){toast('Chưa đặt mật khẩu');return;}
+  const old=prompt('Nhập mật khẩu hiện tại để tắt:'); if(old===null)return;
+  if(hashPass(old)!==cur){toast('✗ Sai mật khẩu');return;}
+  try{localStorage.removeItem('thien_pass');}catch(e){}
+  toast('✓ Đã tắt mật khẩu'); updatePassUI();
+}
+function updatePassUI(){
+  const t=document.getElementById('pass-status'); if(t) t.textContent=getPass()?'Đang BẬT — app sẽ hỏi mật khẩu mỗi khi mở.':'Đang tắt — ai cũng mở được app.';
+  const sb=document.getElementById('pass-set-btn'); if(sb) sb.textContent=getPass()?'Đổi mật khẩu':'Đặt mật khẩu';
+  const ob=document.getElementById('pass-off-btn'); if(ob) ob.style.display=getPass()?'':'none';
+}
+function tryUnlock(){
+  const inp=document.getElementById('lock-input');
+  if(hashPass((inp&&inp.value)||'')===getPass()){
+    const l=document.getElementById('lock-screen'); if(l) l.style.display='none';
+  }else{
+    const er=document.getElementById('lock-err'); if(er) er.textContent='✗ Sai mật khẩu, thử lại';
+    if(inp){inp.value='';inp.focus();}
+  }
+}
+function initLock(){ if(getPass()){ const l=document.getElementById('lock-screen'); if(l){ l.style.display='flex'; setTimeout(function(){const i=document.getElementById('lock-input');if(i)i.focus();},200); } } updatePassUI(); }
 function load(){try{const s=localStorage.getItem(KEY);if(s)ST=Object.assign(ST,JSON.parse(s));}catch(e){}}
 
 // ==== CLOUD SYNC (Firebase Firestore) ====
@@ -1926,6 +1977,7 @@ document.getElementById('goal2-input').value=ST.goal2;
 timerReset();
 renderAll();
 applyUserName();
+initLock();
 try{
   const lt=localStorage.getItem('thien_last_tab');
   if(lt && lt!=='today' && ['month','year','chart','rec'].includes(lt)) nav(lt);
