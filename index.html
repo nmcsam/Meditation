@@ -46,7 +46,7 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .sess-block{border:1px solid var(--border2);border-radius:var(--r);padding:8px 10px;cursor:pointer;transition:all .15s}
 .sess-block.done{background:#e0f4f0;border-color:#076d5e}
 .sess-lbl{font-size:10px;color:var(--muted);margin-bottom:3px}
-.sess-mins{font-size:16px;font-weight:700;color:var(--ink);line-height:1.2}
+.sess-mins{font-size:20px;font-weight:800;color:var(--ink);line-height:1.2}
 .mrow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
 .mcell{background:#f5f5f5;border-radius:var(--r);padding:10px 12px;border:1px solid rgba(28,16,8,.08)}
 .mcell-label{font-size:11px;color:var(--muted);margin-bottom:4px}
@@ -124,7 +124,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <ellipse cx="100" cy="156" rx="52" ry="8" fill="#0a4a40" opacity=".25"/>
   </svg>
   <div>
-    <div id="home-name" style="font-size:30px;font-weight:800;color:#fff8ec;letter-spacing:.5px">Nguyễn Hồng Sâm</div>
+    <div onclick="event.stopPropagation();editUserName()" style="cursor:pointer" title="Chạm để đổi tên">
+      <span id="home-name" style="font-size:30px;font-weight:800;color:#fff8ec;letter-spacing:.5px">Nguyễn Hồng Sâm</span>
+      <span style="font-size:15px;color:#bfe3da;opacity:.85;vertical-align:super">✎</span>
+    </div>
     <div style="font-size:14px;color:#bfe3da;margin-top:6px">Nhật ký hành thiền · Ānāpānasati</div>
   </div>
   <div style="font-size:12px;color:#9fd0c4;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:8px 18px">Chạm để vào</div>
@@ -152,7 +155,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <!-- CARD A: KẾ HOẠCH (đặt trong tab Tháng) -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">🎯 KẾ HOẠCH HÔM NAY <span style="font-weight:500;text-transform:none">(chỉnh trong tab Tháng)</span></div>
+    <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">🎯 KẾ HOẠCH HÔM NAY</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
       <div style="background:#f5f5f5;border-radius:10px;padding:10px 12px;text-align:center">
         <div style="font-size:11px;color:var(--muted)">🌅 Sáng</div>
@@ -256,8 +259,9 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:20px;font-weight:700;color:var(--teal)" id="streak-today-val">0 ngày</div>
       </div>
       <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid var(--gold)">
-        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🏆 CHUỖI DÀI NHẤT</div>
-        <div style="font-size:20px;font-weight:700;color:var(--gold)" id="alltime-streak-today">—</div>
+        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI ĐỦ 2 THỜI DÀI NHẤT</div>
+        <div style="font-size:20px;font-weight:700;color:var(--gold)" id="alltime-streak">—</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">ngày liên tiếp đủ 2 thời</div>
       </div>
       <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal)">
         <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">⏱ PHIÊN DÀI NHẤT</div>
@@ -269,11 +273,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:20px;font-weight:700;color:#8e44ad" id="alltime-max-day">—</div>
         <div style="font-size:10px;color:var(--muted);margin-top:2px" id="alltime-max-day-date"></div>
       </div>
-      <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid var(--gold);grid-column:1/-1">
-        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI ĐỦ 2 THỜI DÀI NHẤT</div>
-        <div style="font-size:20px;font-weight:700;color:var(--gold)" id="alltime-streak">—</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">ngày liên tiếp đủ 2 thời</div>
-      </div>
+
     </div>
   </div>
 
