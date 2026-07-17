@@ -44,9 +44,9 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .page{display:none}.page.on{display:block}
 .card{background:#ffffff;border:1px solid #e8e8e8;border-radius:var(--rl);padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .card-hd{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
-.sess-block{border:1px solid var(--border2);border-radius:var(--r);padding:8px 10px;cursor:pointer;transition:all .15s}
+.sess-block{border:1px solid var(--border2);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .15s;text-align:center}
 .sess-block.done{background:#e0f4f0;border-color:#076d5e}
-.sess-lbl{font-size:10px;color:var(--muted);margin-bottom:3px}
+.sess-lbl{font-size:11px;color:var(--muted);margin-bottom:2px}
 .sess-mins{font-size:20px;font-weight:800;color:var(--ink);line-height:1.2}
 .mrow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
 .mcell{background:#f5f5f5;border-radius:var(--r);padding:10px 12px;border:1px solid rgba(28,16,8,.08)}
@@ -171,7 +171,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <!-- CARD B: THỰC TẾ (cùng dữ liệu với tab Tháng) -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div style="font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.5px;margin-bottom:6px">✅ THỰC TẾ <span style="font-weight:500;color:var(--muted);text-transform:none">(chạm để ghi · cùng dữ liệu với tab Tháng)</span></div>
+    <div style="font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.5px;margin-bottom:6px">✅ THỰC TẾ HÔM NAY</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
       <div class="sess-block" id="sess1-card" onclick="openLogModal(1)">
         <div class="sess-lbl">🌅 Sáng</div>
@@ -562,7 +562,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v11</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v12</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1174,8 +1174,13 @@ function renderToday(){
     const types=(e&&n==='1'?e.types1:e?e.types2:[])|| [];
     document.getElementById('sess'+n+'-mins').textContent=m>0?m+' ph':'— ph';
     document.getElementById('sess'+n+'-type').textContent=types.length?types.slice(0,2).join(', '):'Chưa ghi';
-    document.getElementById('sess'+n+'-status').textContent=m>0?'✓ Đã xong':'';
+    const plan=n==='1'?getTodayPlan().p1:getTodayPlan().p2;
+    const dat=plan>0 && m>=plan;
+    document.getElementById('sess'+n+'-status').textContent=m>0?(dat?'✓ Đạt kế hoạch':'△ Chưa đủ '+plan+' ph'):'';
+    document.getElementById('sess'+n+'-status').style.color=dat?'var(--teal)':'#a07800';
     card.className='sess-block'+(m>0?' done':'');
+    card.style.background=dat?'#dff3e7':'#fdf1cf';
+    card.style.borderColor=dat?'#2e7d5b':'#d9b23a';
   });
   const color=pct>=100?'#076d5e':pct>=70?'#f0b429':'#c0392b';
   const pctEl=document.getElementById('today-pct');
