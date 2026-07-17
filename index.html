@@ -820,6 +820,7 @@ function toast(msg){const t=document.getElementById('toast-el');t.textContent=ms
 function syncErr(msg){const st=document.getElementById('sync-status');if(st){st.textContent=msg;st.style.color='#b3261e';}toast(msg);}
 
 function nav(id){
+  try{ localStorage.setItem('thien_last_tab', id); }catch(e){}
   const ids=['today','plan','month','year','chart','rec'];
   document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('on',ids[i]===id));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
@@ -1842,6 +1843,10 @@ document.getElementById('goal1-input').value=ST.goal1;
 document.getElementById('goal2-input').value=ST.goal2;
 timerReset();
 renderAll();
+try{
+  const lt=localStorage.getItem('thien_last_tab');
+  if(lt && lt!=='today' && ['plan','month','year','chart','rec'].includes(lt)) nav(lt);
+}catch(e){}
 updateNotifBtn();
 registerSW();
 requestPersist();
