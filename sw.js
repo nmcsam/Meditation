@@ -6,7 +6,9 @@ self.addEventListener('activate', e => {
   );
   self.clients.claim();
 });
-// Khong cache - luon lay tu mang
+// KHONG cache: ep lay ban moi nhat tu mang, bo qua cache HTTP cua trinh duyet
 self.addEventListener('fetch', e => {
-  e.respondWith(fetch(e.request));
+  e.respondWith(
+    fetch(e.request, {cache: 'no-store'}).catch(() => fetch(e.request))
+  );
 });
