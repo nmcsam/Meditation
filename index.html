@@ -451,15 +451,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div class="card" style="background:var(--teal-light);border-color:rgba(7,109,94,.3)">
     <div style="font-size:13px;color:var(--teal);line-height:1.8"><strong>Gợi ý Pa-Auk:</strong> Ānāpānasati buổi sáng + Mettā buổi tối tạo nền tảng vững cho tuệ quán.</div>
   </div>
-  <button class="btn btn-d" onclick="resetAllData()">&#128465; Xóa toàn bộ dữ liệu</button>
-  <div class="card" style="margin-top:0">
-    <div class="card-hd">Xuất / Nhập dữ liệu</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Dùng để sao lưu hoặc chuyển dữ liệu sang điện thoại mới.</p>
-    <button class="btn btn-p" onclick="exportData()" style="margin-bottom:8px">&#8595; Xuất dữ liệu (JSON)</button>
-    <label style="display:block;width:100%">
-      <div class="btn" style="text-align:center;cursor:pointer;margin-top:0">&#8593; Nhập dữ liệu (JSON)</div>
-      <input type="file" accept=".json" style="display:none" onchange="importData(this)">
-    </label>
+  <div class="card" style="background:var(--surface2)">
+    <div style="font-size:12px;color:var(--muted)">Xuất / Nhập dữ liệu, sao lưu định kỳ và xóa dữ liệu nằm trong <b>⚙ Cài đặt</b> (góc trên bên phải).</div>
   </div>
 </div>
 
@@ -615,6 +608,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       </div>
       <div id="bk-list" style="margin-top:10px"></div>
     </div>
+    <div class="card" style="margin-bottom:10px;border-color:var(--rose)">
+      <div class="card-hd" style="color:var(--rose)">Vùng nguy hiểm</div>
+      <button class="btn btn-d" style="width:100%;margin:0" onclick="resetAllData()">&#128465; Xóa toàn bộ dữ liệu</button>
+    </div>
     <button class="btn" style="width:100%" onclick="closeSettingsModal()">Đóng</button>
   </div>
 </div>
@@ -677,7 +674,13 @@ function initFirebase(){
   catch(e){ console.error(e); return false; }
 }
 function initSync(){ updateSyncBtn(); if(syncCode) connectSync(syncCode,true); }
-function updateSyncBtn(){ const b=document.getElementById('sync-btn'); if(b) b.classList.toggle('connected', !!syncCode && !!fbDb && !pendingConflict); }
+function updateSyncBtn(){
+  const b=document.getElementById('sync-btn'); if(!b)return;
+  const on=!!syncCode && !!fbDb && !pendingConflict;
+  b.classList.toggle('connected', on);
+  b.style.background = pendingConflict ? '#c0503e' : (on ? '#2e7d5b' : '');
+  b.title = pendingConflict ? 'Có khác biệt dữ liệu — chạm để xử lý' : (on ? ('Đang đồng bộ — mã: '+syncCode) : 'Đồng bộ đám mây (chưa bật)');
+}
 function dataSummary(st){
   const arr=(st&&st.data)||[];
   const mins=arr.reduce(function(a,e){return a+(e.mins1||0)+(e.mins2||0);},0);
