@@ -1716,16 +1716,34 @@ function renderRec(){
   document.getElementById('achievements').innerHTML=ach.length?ach.map(function(a){return '<div style="padding:7px 0;border-bottom:.5px solid var(--border);font-size:13px">'+a+'</div>';}).join(''):'<div style="color:var(--muted);font-size:13px;padding:8px 0">Tiếp tục thiền để mở thành tích.</div>';
 }
 
+async function saveFileAs(fname, blob){
+  if(window.showSaveFilePicker){
+    try{
+      const ext='.'+fname.split('.').pop();
+      const mimes={'.json':'application/json','.csv':'text/csv'};
+      const h=await window.showSaveFilePicker({suggestedName:fname, types:[{description:'Tệp '+ext.slice(1).toUpperCase(), accept:{[mimes[ext]||'application/octet-stream']:[ext]}}]});
+      const w=await h.createWritable(); await w.write(blob); await w.close();
+      toast('✓ Đã lưu vào vị trí bạn chọn'); return;
+    }catch(e){ if(e&&e.name==='AbortError'){ toast('Đã hủy'); return; } console.error(e); }
+  }
+  try{
+    const file=new File([blob], fname, {type:blob.type||'application/octet-stream'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:fname});
+      toast('✓ Đã chuyển tới nơi bạn chọn'); return;
+    }
+  }catch(e){ if(e&&e.name==='AbortError'){ toast('Đã hủy'); return; } console.error(e); }
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=fname;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); },500);
+  toast('Trình duyệt không hỗ trợ chọn vị trí — đã tải về thư mục Tải xuống');
+}
 function exportData(){
   const payload=JSON.stringify(ST,null,2);
   const blob=new Blob([payload],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
   const date=new Date().toISOString().slice(0,10);
-  a.href=url;a.download='thien-data-'+date+'.json';
-  document.body.appendChild(a);a.click();
-  document.body.removeChild(a);URL.revokeObjectURL(url);
-  toast('✓ Đã xuất dữ liệu');
+  saveFileAs('thien-data-'+date+'.json', blob);
 }
 
 function importData(input){
