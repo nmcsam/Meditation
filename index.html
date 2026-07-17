@@ -1032,6 +1032,7 @@ function updateNotifBtn(){
   if(Notification.permission==='granted'){btn.textContent='✓ Đã bật';btn.style.color='var(--teal)';btn.style.background='var(--teal-light)';btn.disabled=true;}
 }
 async function registerSW(){try{if('serviceWorker' in navigator){swReg=await navigator.serviceWorker.register('./sw.js');}}catch(e){}}
+async function requestPersist(){try{if(navigator.storage&&navigator.storage.persist){await navigator.storage.persist();}}catch(e){}}
 function timerStartStop(){
   if(!timerRunning){
     if(timerRemaining<=0){timerTotal=timerMins*60;timerRemaining=timerTotal;}
@@ -1710,6 +1711,7 @@ timerReset();
 renderAll();
 updateNotifBtn();
 registerSW();
+requestPersist();
 initSync();
 </script>
 </body>
