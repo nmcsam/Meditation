@@ -44,7 +44,7 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .page{display:none}.page.on{display:block}
 .card{background:#ffffff;border:1px solid #e8e8e8;border-radius:var(--rl);padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .card-hd{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
-.sess-block{border:1px solid var(--border2);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .15s;text-align:center}
+.sess-block{border:1px solid var(--border2);border-radius:10px;padding:10px 12px;transition:all .15s;text-align:center}
 .sess-block.done{background:#e0f4f0;border-color:#076d5e}
 .sess-lbl{font-size:11px;color:var(--muted);margin-bottom:2px}
 .sess-mins{font-size:20px;font-weight:800;color:var(--ink);line-height:1.2}
@@ -171,16 +171,16 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <!-- CARD B: THỰC TẾ (cùng dữ liệu với tab Tháng) -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div style="font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.5px;margin-bottom:6px">✅ THỰC TẾ HÔM NAY</div>
+    <div style="font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.5px;margin-bottom:6px">✅ THỰC TẾ HÔM NAY <span style="font-weight:500;color:var(--muted);text-transform:none">· ghi ở tab Tháng</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-      <div class="sess-block" id="sess1-card" onclick="openLogModal(1)">
-        <div class="sess-lbl">🌅 Sáng</div>
+      <div class="sess-block" id="sess1-card">
+        <div class="sess-lbl" id="sess1-lbl">🌅 Sáng</div>
         <div class="sess-mins" id="sess1-mins">— ph</div>
         <div style="font-size:9px;color:var(--muted)" id="sess1-type">Chưa ghi</div>
         <div style="font-size:9px;color:var(--teal)" id="sess1-status"></div>
       </div>
-      <div class="sess-block" id="sess2-card" onclick="openLogModal(2)">
-        <div class="sess-lbl">🌙 Tối</div>
+      <div class="sess-block" id="sess2-card">
+        <div class="sess-lbl" id="sess2-lbl">🌙 Tối</div>
         <div class="sess-mins" id="sess2-mins">— ph</div>
         <div style="font-size:9px;color:var(--muted)" id="sess2-type">Chưa ghi</div>
         <div style="font-size:9px;color:var(--teal)" id="sess2-status"></div>
@@ -193,7 +193,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       </div>
       <span id="today-pct" style="font-size:13px;font-weight:700;min-width:34px;text-align:right;color:var(--muted)">0%</span>
       <span id="daily-result-badge" style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;background:var(--surface3);color:var(--muted)">—</span>
-      <button onclick="addExtraSession()" style="padding:2px 8px;border-radius:5px;border:1px dashed var(--border2);background:transparent;font-size:13px;color:var(--muted);cursor:pointer">+</button>
+      
     </div>
   </div>
 
@@ -562,7 +562,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v12</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v13</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -946,7 +946,7 @@ function renderExtraSessions(){
   const k=getDK();const e=getEntry(k);const extras=e&&e.extra?e.extra:[];
   const row=document.getElementById('extra-sessions-row');if(!row)return;
   if(!extras.length){row.innerHTML='';return;}
-  row.innerHTML=extras.map((ex,i)=>'<div style="display:flex;align-items:center;gap:6px;background:var(--teal-light);border:1px solid var(--teal);border-radius:var(--r);padding:6px 9px;margin-bottom:5px"><div style="font-size:11px">✨ Thời '+(i+3)+'</div><div style="flex:1;font-size:13px;font-weight:600;color:var(--teal)">'+ex.mins+' ph</div><div style="font-size:10px;color:var(--muted)">'+(ex.types||[]).join(', ')+'</div><button onclick="openExtraLogModal('+i+')" style="border:none;background:transparent;font-size:12px;cursor:pointer">✏️</button><button onclick="removeExtraSession('+i+')" style="border:none;background:transparent;font-size:12px;cursor:pointer;color:var(--rose)">✕</button></div>').join('');
+  row.innerHTML=extras.map((ex,i)=>'<div style="display:flex;align-items:center;gap:6px;background:var(--teal-light);border:1px solid var(--teal);border-radius:var(--r);padding:6px 9px;margin-bottom:5px"><div style="font-size:11px">✨ Thời '+(i+3)+'</div><div style="flex:1;font-size:13px;font-weight:600;color:var(--teal)">'+ex.mins+' ph</div><div style="font-size:10px;color:var(--muted)">'+(ex.types||[]).join(', ')+'</div></div>').join('');
 }
 
 // ── NĂM ──
@@ -1176,11 +1176,15 @@ function renderToday(){
     document.getElementById('sess'+n+'-type').textContent=types.length?types.slice(0,2).join(', '):'Chưa ghi';
     const plan=n==='1'?getTodayPlan().p1:getTodayPlan().p2;
     const dat=plan>0 && m>=plan;
-    document.getElementById('sess'+n+'-status').textContent=m>0?(dat?'✓ Đạt kế hoạch':'△ Chưa đủ '+plan+' ph'):'';
-    document.getElementById('sess'+n+'-status').style.color=dat?'var(--teal)':'#a07800';
+    document.getElementById('sess'+n+'-status').textContent=dat?'✓ Đạt kế hoạch':(m>0?'✗ Chưa đủ '+plan+' ph':'✗ Chưa ghi ('+plan+' ph)');
     card.className='sess-block'+(m>0?' done':'');
-    card.style.background=dat?'#dff3e7':'#fdf1cf';
-    card.style.borderColor=dat?'#2e7d5b':'#d9b23a';
+    card.style.background=dat?'#dff3e7':'#c0392b';
+    card.style.borderColor=dat?'#2e7d5b':'#a93226';
+    const w=!dat;
+    document.getElementById('sess'+n+'-mins').style.color   = w?'#fff':'var(--ink)';
+    document.getElementById('sess'+n+'-lbl').style.color    = w?'rgba(255,255,255,.9)':'var(--muted)';
+    document.getElementById('sess'+n+'-type').style.color   = w?'rgba(255,255,255,.85)':'var(--muted)';
+    document.getElementById('sess'+n+'-status').style.color = w?'#fff':'var(--teal)';
   });
   const color=pct>=100?'#076d5e':pct>=70?'#f0b429':'#c0392b';
   const pctEl=document.getElementById('today-pct');
