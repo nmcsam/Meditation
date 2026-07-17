@@ -106,8 +106,31 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 </style>
 </head>
 <body>
+<div id="home-screen" onclick="enterApp()" style="position:fixed;inset:0;z-index:500;background:linear-gradient(170deg,#0b3d35,#076d5e 55%,#0a4a40);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;cursor:pointer;text-align:center;padding:24px">
+  <svg viewBox="0 0 200 200" style="width:170px;height:170px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))" aria-label="Tu sĩ ngồi thiền">
+    <circle cx="100" cy="100" r="96" fill="#f6efe2"/>
+    <circle cx="100" cy="70" r="34" fill="none" stroke="#c9a54a" stroke-width="3" opacity=".8"/>
+    <!-- thân vị tu sĩ (dáng ngồi kiết già) -->
+    <g fill="#7a3b1e">
+      <circle cx="100" cy="62" r="15"/>
+      <path d="M100 76 C 78 80 70 100 68 122 C 66 138 76 146 100 146 C 124 146 134 138 132 122 C 130 100 122 80 100 76 Z"/>
+      <path d="M60 138 C 70 128 84 124 100 124 C 116 124 130 128 140 138 C 146 144 142 152 132 152 L 68 152 C 58 152 54 144 60 138 Z"/>
+      <path d="M84 96 C 76 104 72 116 74 124 L 92 118 Z"/>
+      <path d="M116 96 C 124 104 128 116 126 124 L 108 118 Z"/>
+    </g>
+    <!-- hai bàn tay đặt trên lòng -->
+    <ellipse cx="100" cy="121" rx="12" ry="5" fill="#e8b98a"/>
+    <!-- tọa cụ -->
+    <ellipse cx="100" cy="156" rx="52" ry="8" fill="#0a4a40" opacity=".25"/>
+  </svg>
+  <div>
+    <div id="home-name" style="font-size:30px;font-weight:800;color:#fff8ec;letter-spacing:.5px">Nguyễn Hồng Sâm</div>
+    <div style="font-size:14px;color:#bfe3da;margin-top:6px">Nhật ký hành thiền · Ānāpānasati</div>
+  </div>
+  <div style="font-size:12px;color:#9fd0c4;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:8px 18px">Chạm để vào</div>
+</div>
 <div class="hdr">
-  <div><div class="app-name">🧘 Nguyễn Hồng Sâm</div><div class="app-date" id="hdr-date"></div></div>
+  <div><div class="app-name" onclick="editUserName()" title="Chạm để đổi tên" style="cursor:pointer">🧘 <span id="app-name-text">Nguyễn Hồng Sâm</span> <span style="font-size:10px;opacity:.6">✎</span></div><div class="app-date" id="hdr-date"></div></div>
   <div class="sync-row">
     <button class="sync-btn" id="sync-btn" onclick="openSyncModal()" title="Đồng bộ nhiều thiết bị">☁️ Đám mây</button>
     <button class="sync-btn" id="settings-btn" onclick="openSettingsModal()" title="Cài đặt">⚙ Cài đặt</button>
@@ -116,19 +139,35 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 </div>
 <div class="nav">
   <button class="nav-btn on" onclick="nav('today')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Hôm nay</button>
-  <button class="nav-btn" onclick="nav('plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>Kế hoạch</button>
+  
   <button class="nav-btn" onclick="nav('month')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="12" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/></svg>Tháng</button>
   <button class="nav-btn" onclick="nav('year')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M9 4v5M15 4v5"/><path d="M7 14h2v4H7zm4 0h2v4h-2zm4-2h2v6h-2z"/></svg>Năm</button>
   <button class="nav-btn" onclick="nav('chart')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Biểu đồ</button>
-  <button class="nav-btn" onclick="nav('rec')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Khuyến cáo</button>
+  <button class="nav-btn" onclick="nav('rec')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Xu hướng</button>
 </div>
 <div class="scroll">
 
 <!-- HÔM NAY -->
 <div class="page on" id="pg-today">
 
-  <!-- CARD 1: 2 thời + thanh tiến độ -->
+  <!-- CARD A: KẾ HOẠCH (đặt trong tab Tháng) -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
+    <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">🎯 KẾ HOẠCH HÔM NAY <span style="font-weight:500;text-transform:none">(chỉnh trong tab Tháng)</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div style="background:#f5f5f5;border-radius:10px;padding:10px 12px;text-align:center">
+        <div style="font-size:11px;color:var(--muted)">🌅 Sáng</div>
+        <div style="font-size:20px;font-weight:800;color:var(--ink)"><span id="ti-goal1">—</span></div>
+      </div>
+      <div style="background:#f5f5f5;border-radius:10px;padding:10px 12px;text-align:center">
+        <div style="font-size:11px;color:var(--muted)">🌙 Tối</div>
+        <div style="font-size:20px;font-weight:800;color:var(--ink)"><span id="ti-goal2">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD B: THỰC TẾ (cùng dữ liệu với tab Tháng) -->
+  <div class="card" style="padding:10px 12px;margin-bottom:6px">
+    <div style="font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.5px;margin-bottom:6px">✅ THỰC TẾ <span style="font-weight:500;color:var(--muted);text-transform:none">(chạm để ghi · cùng dữ liệu với tab Tháng)</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
       <div class="sess-block" id="sess1-card" onclick="openLogModal(1)">
         <div class="sess-lbl">🌅 Sáng</div>
@@ -151,55 +190,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <span id="today-pct" style="font-size:13px;font-weight:700;min-width:34px;text-align:right;color:var(--muted)">0%</span>
       <span id="daily-result-badge" style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;background:var(--surface3);color:var(--muted)">—</span>
       <button onclick="addExtraSession()" style="padding:2px 8px;border-radius:5px;border:1px dashed var(--border2);background:transparent;font-size:13px;color:var(--muted);cursor:pointer">+</button>
-    </div>
-  </div>
-
-  <!-- STREAK CARD -->
-  <div class="card" style="padding:8px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
-    <div style="display:flex;align-items:center;gap:6px">
-      <span style="font-size:18px">🔥</span>
-      <div>
-        <div style="font-size:9px;color:var(--muted);font-weight:600">CHUỖI HIỆN TẠI</div>
-        <div style="font-size:16px;font-weight:700;color:var(--teal)" id="streak-today-val">0 ngày</div>
-      </div>
-    </div>
-    <div style="width:1px;background:var(--border2);align-self:stretch"></div>
-    <div style="display:flex;align-items:center;gap:6px">
-      <span style="font-size:18px">🏆</span>
-      <div>
-        <div style="font-size:9px;color:var(--muted);font-weight:600">CHUỖI DÀI NHẤT</div>
-        <div style="font-size:16px;font-weight:700;color:var(--gold)" id="alltime-streak-today">—</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CARD 2: KH/TT + KH đặc biệt + Chuông -->
-  <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-      <div style="background:#f5f5f5;border-radius:10px;padding:8px 10px">
-        <div style="font-size:8px;color:var(--muted);font-weight:700;margin-bottom:4px;letter-spacing:.5px">🎯 KẾ HOẠCH</div>
-        <div style="font-size:13px;color:var(--muted)">🌅 <span id="ti-goal1" style="font-weight:700;color:var(--ink)">—</span></div>
-        <div style="font-size:13px;color:var(--muted)">🌙 <span id="ti-goal2" style="font-weight:700;color:var(--ink)">—</span></div>
-      </div>
-      <div style="background:#e0f4f0;border-radius:10px;border-left:3px solid #076d5e;padding:8px 10px">
-        <div style="font-size:8px;color:var(--teal);font-weight:700;margin-bottom:4px;letter-spacing:.5px">✅ THỰC TẾ</div>
-        <div style="font-size:13px;color:var(--muted)">🌅 <span id="ti-act1" style="font-weight:700;color:var(--teal)">—</span></div>
-        <div style="font-size:13px;color:var(--muted)">🌙 <span id="ti-act2" style="font-weight:700;color:var(--teal)">—</span></div>
-      </div>
-    </div>
-    <div style="background:var(--surface2);border-radius:8px;padding:7px 10px;margin-bottom:8px">
-      <div style="font-size:8px;font-weight:700;color:var(--muted);margin-bottom:4px;letter-spacing:.5px" id="today-special-hint">⏱ KH ĐẶC BIỆT HÔM NAY</div>
-      <div style="display:flex;gap:4px;align-items:center">
-        <span style="font-size:10px">🌅</span>
-        <button onclick="adjTodayPlan(1,-5)" style="border:none;background:var(--surface3);border-radius:3px;width:18px;height:18px;cursor:pointer;font-size:12px;color:var(--ink);display:flex;align-items:center;justify-content:center">−</button>
-        <span id="today-plan1-val" style="font-size:12px;font-weight:700;min-width:28px;text-align:center;color:var(--ink)">—</span>
-        <button onclick="adjTodayPlan(1,5)" style="border:none;background:var(--surface3);border-radius:3px;width:18px;height:18px;cursor:pointer;font-size:12px;color:var(--ink);display:flex;align-items:center;justify-content:center">+</button>
-        <span style="font-size:10px;margin-left:6px">🌙</span>
-        <button onclick="adjTodayPlan(2,-5)" style="border:none;background:var(--surface3);border-radius:3px;width:18px;height:18px;cursor:pointer;font-size:12px;color:var(--ink);display:flex;align-items:center;justify-content:center">−</button>
-        <span id="today-plan2-val" style="font-size:12px;font-weight:700;min-width:28px;text-align:center;color:var(--ink)">—</span>
-        <button onclick="adjTodayPlan(2,5)" style="border:none;background:var(--surface3);border-radius:3px;width:18px;height:18px;cursor:pointer;font-size:12px;color:var(--ink);display:flex;align-items:center;justify-content:center">+</button>
-        <button onclick="resetTodayPlan()" style="margin-left:auto;border:none;background:transparent;font-size:10px;color:var(--muted);cursor:pointer">↺</button>
-      </div>
     </div>
   </div>
 
@@ -262,6 +252,14 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">🏆 KỶ LỤC CÁ NHÂN</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal)">
+        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI HIỆN TẠI</div>
+        <div style="font-size:20px;font-weight:700;color:var(--teal)" id="streak-today-val">0 ngày</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid var(--gold)">
+        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🏆 CHUỖI DÀI NHẤT</div>
+        <div style="font-size:20px;font-weight:700;color:var(--gold)" id="alltime-streak-today">—</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal)">
         <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">⏱ PHIÊN DÀI NHẤT</div>
         <div style="font-size:20px;font-weight:700;color:var(--teal)" id="alltime-max-sess">—</div>
         <div style="font-size:10px;color:var(--muted);margin-top:2px" id="alltime-max-sess-date"></div>
@@ -295,42 +293,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <button id="custom-audio-clear"></button>
 </div>
 
-<div class="page" id="pg-plan">
-  <div class="card">
-    <div class="card-hd">Đặt mục tiêu hằng ngày</div>
-    <div class="frow">
-      <label>🌅 Buổi sáng (phút)</label>
-      <input class="finput" type="number" id="goal1-input" min="5" max="1200" value="30" oninput="updateGoal(1,this.value)">
-    </div>
-    <div class="frow">
-      <label>🌙 Buổi tối (phút)</label>
-      <input class="finput" type="number" id="goal2-input" min="5" max="1200" value="30" oninput="updateGoal(2,this.value)">
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Loại thiền yêu thích</div>
-    <div class="tags" id="pref-tags">
-      <span class="tag on" onclick="this.classList.toggle('on')">Ānāpāna</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Mettā</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Vipassanā</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Từ bi</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Tụng kinh</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Kinh hành</span>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-hd">Kế hoạch vs Thực tế — 7 ngày</div>
-    <div class="lg">
-      <div class="lg-item"><div class="lg-dot" style="background:#076d5e"></div>Sáng</div>
-      <div class="lg-item"><div class="lg-dot" style="background:#7a1c38"></div>Tối</div>
-    </div>
-    <div id="pva-bars"></div>
-  </div>
-  <div class="mrow">
-    <div class="mcell"><div class="mcell-label">Tổng tuần</div><div class="mcell-val" id="week-total">0<span class="mcell-unit"> ph</span></div></div>
-    <div class="mcell"><div class="mcell-label">Hoàn thành</div><div class="mcell-val" id="week-pct">0<span class="mcell-unit">%</span></div></div>
-    <div class="mcell"><div class="mcell-label">TB ngày</div><div class="mcell-val" id="week-avg">0<span class="mcell-unit"> ph</span></div></div>
-    <div class="mcell"><div class="mcell-label">Ngày đạt KH</div><div class="mcell-val" id="week-days">0<span class="mcell-unit">/7</span></div></div>
-  </div>
-</div>
+
 
 <!-- THÁNG -->
 <div class="page" id="pg-month">
@@ -352,9 +315,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="lg-item"><div class="lg-dot" style="background:#FF4136"></div>Bỏ</div>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px">
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px">
     <div class="mcell"><div class="mcell-label">Ngày thiền</div><div class="mcell-val" id="mo-days">0</div></div>
     <div class="mcell"><div class="mcell-label">Tổng phút</div><div class="mcell-val" id="mo-mins">0</div></div>
+    <div class="mcell"><div class="mcell-label">TB ngày</div><div class="mcell-val" id="mo-avg">0<span class="mcell-unit"> ph</span></div></div>
     <div class="mcell"><div class="mcell-label">Chuỗi dài</div><div class="mcell-val" id="mo-streak">0</div></div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:6px">
@@ -394,7 +358,27 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="lg-item"><div class="lg-dot" style="background:#7a1c38"></div>Tối</div>
     </div>
   </div>
-</div>
+<div class="card">
+    <div class="card-hd">⚙ Cài đặt kế hoạch (áp dụng hằng ngày)</div>
+    <div class="frow">
+      <label>🌅 Buổi sáng (phút)</label>
+      <input class="finput" type="number" id="goal1-input" min="5" max="1200" value="30" oninput="updateGoal(1,this.value)">
+    </div>
+    <div class="frow">
+      <label>🌙 Buổi tối (phút)</label>
+      <input class="finput" type="number" id="goal2-input" min="5" max="1200" value="30" oninput="updateGoal(2,this.value)">
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Loại thiền yêu thích</div>
+    <div class="tags" id="pref-tags">
+      <span class="tag on" onclick="this.classList.toggle('on')">Ānāpāna</span>
+      <span class="tag" onclick="this.classList.toggle('on')">Mettā</span>
+      <span class="tag" onclick="this.classList.toggle('on')">Vipassanā</span>
+      <span class="tag" onclick="this.classList.toggle('on')">Từ bi</span>
+      <span class="tag" onclick="this.classList.toggle('on')">Tụng kinh</span>
+      <span class="tag" onclick="this.classList.toggle('on')">Kinh hành</span>
+    </div>
+  </div>
+  </div>
 
 <!-- NĂM -->
 <div class="page" id="pg-year">
@@ -441,8 +425,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 <!-- KHUYẾN CÁO -->
 <div class="page" id="pg-rec">
   <div class="card">
-    <div class="card-hd">Phân tích &amp; Khuyến cáo</div>
-    <div id="rec-list"><div style="color:var(--muted);font-size:13px;padding:8px 0">Ghi lại buổi thiền để nhận khuyến cáo.</div></div>
+    <div class="card-hd">📈 Xu hướng 30 ngày (so với 30 ngày trước)</div>
+    <div id="rec-list"><div style="color:var(--muted);font-size:13px;padding:8px 0">Ghi lại buổi thiền để xem xu hướng.</div></div>
   </div>
   <div class="card">
     <div class="card-hd">Thành tích</div>
@@ -652,7 +636,19 @@ let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
 let charts={},audioCtx=null,bellType='bowl';
 let wakeLock=null,swReg=null;
 
-function save(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}queueCloudSave();}
+function save(){ST.updatedAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}queueCloudSave();}
+function getUserName(){ return (ST.userName&&String(ST.userName).trim()) || 'Nguyễn Hồng Sâm'; }
+function applyUserName(){
+  const n=getUserName();
+  const a=document.getElementById('app-name-text'); if(a) a.textContent=n;
+  const h=document.getElementById('home-name'); if(h) h.textContent=n;
+  try{ document.title=n; }catch(e){}
+}
+function editUserName(){
+  const n=prompt('Tên hiển thị trên app:', getUserName());
+  if(n && n.trim()){ ST.userName=n.trim(); save(); applyUserName(); toast('✓ Đã đổi tên'); }
+}
+function enterApp(){ const h=document.getElementById('home-screen'); if(h) h.style.display='none'; }
 function load(){try{const s=localStorage.getItem(KEY);if(s)ST=Object.assign(ST,JSON.parse(s));}catch(e){}}
 
 // ==== CLOUD SYNC (Firebase Firestore) ====
@@ -673,7 +669,7 @@ function initFirebase(){
   try{ if(!fbDb){ if(!firebase.apps.length)firebase.initializeApp(firebaseConfig); fbDb=firebase.firestore(); } return true; }
   catch(e){ console.error(e); return false; }
 }
-function initSync(){ updateSyncBtn(); if(syncCode) connectSync(syncCode,true); }
+function initSync(){ updateSyncBtn(); } // Không tự động kết nối khi mở app — bấm ☁️ để đồng bộ
 function updateSyncBtn(){
   const b=document.getElementById('sync-btn'); if(!b)return;
   const on=!!syncCode && !!fbDb && !pendingConflict;
@@ -737,9 +733,25 @@ function connectSync(code,silent){
       attachSyncListener(ref); updateSyncBtn();
       if(!silent){ toast('✓ Đã kết nối'); closeSyncModal(); }
     }else{
-      pendingConflict={remoteST:remoteST,ref:ref};
-      updateSyncBtn();
-      openSyncModal();
+      const remoteUp=doc.data().updatedAt||0, localUp=ST.updatedAt||0;
+      const strip=o=>{const c=Object.assign({},o);delete c.updatedAt;return JSON.stringify(c);};
+      if(strip(remoteST)===strip(ST)){
+        ST.updatedAt=Math.max(localUp,remoteUp);
+        try{ localStorage.setItem(KEY,JSON.stringify(ST)); }catch(e){}
+        attachSyncListener(ref); updateSyncBtn();
+        if(!silent){ toast('✓ Đã kết nối — dữ liệu hai bên giống nhau'); closeSyncModal(); }
+      }else if(remoteUp>localUp){
+        applyRemote(remoteST, remoteUp); attachSyncListener(ref); updateSyncBtn();
+        if(!silent){ toast('☁️ Đã nhận bản mới hơn từ đám mây'); closeSyncModal(); }
+      }else if(localUp>remoteUp){
+        pushToCloud(); attachSyncListener(ref); updateSyncBtn();
+        if(!silent){ toast('✓ Đã đẩy bản mới hơn của máy này lên đám mây'); closeSyncModal(); }
+      }else{
+        pendingConflict={remoteST:remoteST,ref:ref};
+        updateSyncBtn();
+        if(silent){ toast('⚠️ Dữ liệu máy và đám mây khác nhau — mở ☁️ để chọn bên giữ lại'); }
+        else openSyncModal();
+      }
     }
   }).catch(function(err){
     console.error(err);
@@ -771,8 +783,9 @@ function applyRemote(remoteST, updatedAt){
   ST=Object.assign(ST,remoteST); ST.updatedAt=updatedAt||Date.now();
   try{ localStorage.setItem(KEY,JSON.stringify(ST)); }catch(e){}
   renderAll();
-  document.getElementById('goal1-input').value=ST.goal1;
-  document.getElementById('goal2-input').value=ST.goal2;
+  applyUserName();
+  const _g1=document.getElementById('goal1-input'); if(_g1) _g1.value=ST.goal1;
+  const _g2=document.getElementById('goal2-input'); if(_g2) _g2.value=ST.goal2;
 }
 function resolveKeepLocal(){
   if(!pendingConflict)return;
@@ -826,7 +839,7 @@ function syncErr(msg){const st=document.getElementById('sync-status');if(st){st.
 
 function nav(id){
   try{ localStorage.setItem('thien_last_tab', id); }catch(e){}
-  const ids=['today','plan','month','year','chart','rec'];
+  const ids=['today','month','year','chart','rec'];
   document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('on',ids[i]===id));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.getElementById('pg-'+id).classList.add('on');
@@ -863,6 +876,7 @@ function resetTodayPlan(){
 }
 
 function renderTodayPlanUI(){
+  if(!document.getElementById('today-plan1-val')) return; // khối KH đặc biệt đã bỏ
   const p=getTodayPlan();
   document.getElementById('today-plan1-val').textContent=p.p1;
   document.getElementById('today-plan2-val').textContent=p.p2;
@@ -1176,8 +1190,8 @@ function renderTimerInfo(){
   const k=getDK();const e=getEntry(k);const p=getTodayPlan();
   document.getElementById('ti-goal1').textContent=p.p1+' ph';
   document.getElementById('ti-goal2').textContent=p.p2+' ph';
-  document.getElementById('ti-act1').textContent=e&&e.mins1?e.mins1+' ph':'— ph';
-  document.getElementById('ti-act2').textContent=e&&e.mins2?e.mins2+' ph':'— ph';
+  const _ta1=document.getElementById('ti-act1'); if(_ta1) _ta1.textContent=e&&e.mins1?e.mins1+' ph':'— ph';
+  const _ta2=document.getElementById('ti-act2'); if(_ta2) _ta2.textContent=e&&e.mins2?e.mins2+' ph':'— ph';
 }
 
 function renderStreak(){
@@ -1318,6 +1332,7 @@ function renderMonthPVA(){
 
 // PLAN PAGE
 function renderPlanPage(){
+  if(!document.getElementById('pva-bars')) return; // tab Kế hoạch đã bỏ
   const days=getLast(7);
   const maxV=Math.max(ST.goal1,ST.goal2,...days.flatMap(function(k){const e=getEntry(k);return e?[e.mins1||0,e.mins2||0]:[0,0];}),10);
   let html='';
@@ -1424,6 +1439,8 @@ function renderCalendar(){
   document.getElementById('mo-days').textContent=totalD;
   document.getElementById('mo-mins').textContent=totalM;
   document.getElementById('mo-streak').textContent=streak;
+  const _avg=document.getElementById('mo-avg');
+  if(_avg){ const _d=+document.getElementById('mo-days').textContent||0; const _m=+document.getElementById('mo-mins').textContent||0; _avg.innerHTML=(_d? Math.round(_m/_d):0)+'<span class="mcell-unit"> ph</span>'; }
 
   // Tính thêm: max, min, đánh giá
   let maxMins=0,minMins=Infinity,maxDate='',minDate='';
@@ -1685,59 +1702,91 @@ function renderCharts(){
 
 // RECOMMENDATIONS
 function renderRec(){
-  const days14=getLast(14);
-  const actuals=days14.map(function(k){const e=getEntry(k);return e?(e.mins1||0)+(e.mins2||0):0;});
-  const total=actuals.reduce(function(a,b){return a+b;},0);
-  const planned=(ST.goal1+ST.goal2)*14;const pct=planned>0?total/planned:0;
-  const nonZ=actuals.filter(function(x){return x>0;});
-  const morning=days14.filter(function(k){const e=getEntry(k);return e&&e.mins1>0;}).length;
-  const evening=days14.filter(function(k){const e=getEntry(k);return e&&e.mins2>0;}).length;
-  const both=days14.filter(function(k){const e=getEntry(k);return e&&e.mins1>0&&e.mins2>0;}).length;
-  const recs=[];
-  if(nonZ.length===0)recs.push({i:'🙏',t:'<strong>Bắt đầu hành trình.</strong> Ghi lại buổi thiền đầu tiên hôm nay.'});
-  else if(pct<0.5)recs.push({i:'⚠️',t:'<strong>Đạt '+Math.round(pct*100)+'% kế hoạch.</strong> Cân nhắc giảm mục tiêu để dễ duy trì hơn.'});
-  else if(pct>=0.9)recs.push({i:'✅',t:'<strong>Xuất sắc!</strong> Đạt '+Math.round(pct*100)+'% kế hoạch.'});
-  else recs.push({i:'📈',t:'<strong>Tiến bộ tốt</strong> — '+Math.round(pct*100)+'% kế hoạch 2 tuần qua.'});
-  if(morning>evening+3)recs.push({i:'🌙',t:'<strong>Buổi tối còn yếu.</strong> Thêm Mettā buổi tối giúp tâm an trước khi ngủ.'});
-  else if(evening>morning+3)recs.push({i:'🌅',t:'<strong>Buổi sáng còn yếu.</strong> Ānāpānasati sáng sớm tạo nền tảng định tĩnh cho cả ngày.'});
-  if(both<7)recs.push({i:'⚖️',t:'<strong>Chỉ '+both+'/14 ngày đủ 2 thời.</strong> Hai thời thiền mỗi ngày là lý tưởng.'});
-  recs.push({i:'📖',t:'<strong>Gợi ý Pa-Auk:</strong> Kết hợp ānāpānasati sáng với mettā tối.'});
-  document.getElementById('rec-list').innerHTML=recs.map(function(r){return '<div class="rec-item"><span class="rec-ico">'+r.i+'</span><div class="rec-body">'+r.t+'</div></div>';}).join('');
-  const ach=[];
-  let s=0;for(let i=0;;i++){const e=getEntry(getDK(i));if(!e||(!e.mins1&&!e.mins2))break;s++;}
-  if(s>=3)ach.push('🔥 '+s+' ngày liên tiếp');
-  if(s>=7)ach.push('⭐ 7 ngày không gián đoạn');
-  if(s>=30)ach.push('🏆 30 ngày tinh tấn');
-  const totalEver=ST.data.reduce(function(a,e){return a+(e.mins1||0)+(e.mins2||0);},0);
-  if(totalEver>=500)ach.push('🏅 500+ phút');
-  if(totalEver>=2000)ach.push('🥇 2000+ phút');
-  const bothD=ST.data.filter(function(e){return e.mins1>0&&e.mins2>0;}).length;
-  if(bothD>=10)ach.push('🌟 10 ngày đủ 2 thời');
-  document.getElementById('achievements').innerHTML=ach.length?ach.map(function(a){return '<div style="padding:7px 0;border-bottom:.5px solid var(--border);font-size:13px">'+a+'</div>';}).join(''):'<div style="color:var(--muted);font-size:13px;padding:8px 0">Tiếp tục thiền để mở thành tích.</div>';
-}
-
-async function saveFileAs(fname, blob){
-  if(window.showSaveFilePicker){
-    try{
-      const ext='.'+fname.split('.').pop();
-      const mimes={'.json':'application/json','.csv':'text/csv'};
-      const h=await window.showSaveFilePicker({suggestedName:fname, types:[{description:'Tệp '+ext.slice(1).toUpperCase(), accept:{[mimes[ext]||'application/octet-stream']:[ext]}}]});
-      const w=await h.createWritable(); await w.write(blob); await w.close();
-      toast('✓ Đã lưu vào vị trí bạn chọn'); return;
-    }catch(e){ if(e&&e.name==='AbortError'){ toast('Đã hủy'); return; } console.error(e); }
-  }
-  try{
-    const file=new File([blob], fname, {type:blob.type||'application/octet-stream'});
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({files:[file], title:fname});
-      toast('✓ Đã chuyển tới nơi bạn chọn'); return;
+  const box=document.getElementById('rec-list'); if(!box) return;
+  // Gom số liệu 1 cửa sổ 30 ngày, bắt đầu lùi "off" ngày từ hôm nay
+  function winStats(off){
+    let entD=0,full=0,sOk=0,tOk=0,mins=0,tot=0,can=0,kem=0,rated=0;
+    for(let k=off;k<off+30;k++){
+      const e=getEntry(getDK(k));
+      if(e&&((e.mins1||0)+(e.mins2||0))>0) entD++;
+      if(e&&e.mins1>0&&e.mins2>0) full++;
+      if(e&&(e.mins1||0)>=ST.goal1) sOk++;
+      if(e&&(e.mins2||0)>=ST.goal2) tOk++;
+      if(e) mins+=(e.mins1||0)+(e.mins2||0)+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
+      for(const r of [e&&e.rate_s, e&&e.rate_t]){
+        if(r){ rated++; if(r==='tot')tot++; else if(r==='can')can++; else if(r==='kem')kem++; }
+      }
     }
-  }catch(e){ if(e&&e.name==='AbortError'){ toast('Đã hủy'); return; } console.error(e); }
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download=fname;
-  document.body.appendChild(a); a.click();
-  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); },500);
-  toast('Trình duyệt không hỗ trợ chọn vị trí — đã tải về thư mục Tải xuống');
+    return {entD,full,sOk,tOk,mins,avg:Math.round(mins/30),tot,can,kem,rated};
+  }
+  const A=winStats(0), B=winStats(30);
+  const pc=(x)=>Math.round(x/30*100);
+  const arrow=(a,b)=>{ const d=a-b; if(Math.abs(d)<2) return '<span style="color:var(--muted)">→ giữ nguyên</span>';
+    return d>0? '<span style="color:var(--teal)">▲ +'+d+'</span>' : '<span style="color:var(--rose)">▼ '+d+'</span>'; };
+  function bar(pct,color){ return '<div style="height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;margin-top:3px"><div style="height:100%;width:'+Math.min(100,pct)+'%;background:'+color+';border-radius:3px"></div></div>'; }
+  function row(icon,label,valHtml,barHtml,sub){
+    return '<div style="padding:8px 0;border-bottom:1px solid var(--surface3)">'
+      +'<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'
+      +'<span style="font-size:12px;font-weight:600;color:var(--ink)">'+icon+' '+label+'</span>'
+      +'<span style="font-size:13px;font-weight:700">'+valHtml+'</span></div>'
+      +(barHtml||'')
+      +(sub?'<div style="font-size:10px;color:var(--muted);margin-top:3px">'+sub+'</div>':'')
+      +'</div>';
+  }
+  // Chuỗi hiện tại đủ 2 thời
+  let cur=0; for(let k=0;;k++){ const e=getEntry(getDK(k)); if(e&&e.mins1>0&&e.mins2>0) cur++; else { if(k===0){continue;} break; } if(k>3660)break; }
+  const ratedPct = (x)=> A.rated? Math.round(x/A.rated*100) : 0;
+  let html='';
+  html+=row('🧘','Đủ 2 thời/ngày', pc(A.full)+'% <span style="font-size:11px;font-weight:500">('+A.full+'/30 ngày)</span> '+arrow(pc(A.full),pc(B.full)), bar(pc(A.full),'var(--teal)'), '30 ngày trước: '+pc(B.full)+'%');
+  html+=row('🌅','Đạt KH sáng (≥'+ST.goal1+' ph)', pc(A.sOk)+'% '+arrow(pc(A.sOk),pc(B.sOk)), bar(pc(A.sOk),'#076d5e'), '30 ngày trước: '+pc(B.sOk)+'%');
+  html+=row('🌙','Đạt KH tối (≥'+ST.goal2+' ph)', pc(A.tOk)+'% '+arrow(pc(A.tOk),pc(B.tOk)), bar(pc(A.tOk),'#7a1c38'), '30 ngày trước: '+pc(B.tOk)+'%');
+  html+=row('⏱','Trung bình phút/ngày', A.avg+' ph '+arrow(A.avg,B.avg), bar(Math.round(A.avg/((ST.goal1+ST.goal2)||1)*100),'var(--gold)'), '30 ngày trước: '+B.avg+' ph · mục tiêu '+(ST.goal1+ST.goal2)+' ph/ngày');
+  html+=row('📅','Ngày có hành thiền', pc(A.entD)+'% ('+A.entD+'/30) '+arrow(pc(A.entD),pc(B.entD)), bar(pc(A.entD),'#8e44ad'), '');
+  html+=row('🔥','Chuỗi đủ 2 thời hiện tại', cur+' ngày', '', '');
+  // Phân bố đánh giá
+  if(A.rated>0){
+    html+='<div style="padding:8px 0;border-bottom:1px solid var(--surface3)">'
+      +'<div style="font-size:12px;font-weight:600;margin-bottom:4px">📊 Chất lượng các thời (tự đánh giá, 30 ngày — '+A.rated+' lượt)</div>'
+      +'<div style="display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--surface3)">'
+      +'<div style="width:'+ratedPct(A.tot)+'%;background:#2ecc71"></div>'
+      +'<div style="width:'+ratedPct(A.can)+'%;background:#c8a000"></div>'
+      +'<div style="width:'+ratedPct(A.kem)+'%;background:#e74c3c"></div></div>'
+      +'<div style="display:flex;gap:10px;font-size:10px;color:var(--muted);margin-top:4px">'
+      +'<span>○ Tốt '+ratedPct(A.tot)+'% ('+A.tot+')</span><span>△ Cố gắng '+ratedPct(A.can)+'% ('+A.can+')</span><span>✕ Kém '+ratedPct(A.kem)+'% ('+A.kem+')</span></div></div>';
+  }
+  // Lời khuyên theo điểm yếu nhất
+  const adv=[];
+  if(pc(A.full)<50) adv.push('Tỷ lệ đủ 2 thời còn dưới 50% — nên ưu tiên <b>đều đặn</b> trước, dù mỗi thời ngắn hơn: có mặt đủ sáng và tối mỗi ngày rồi mới tăng dần thời lượng.');
+  if(pc(A.tOk) < pc(A.sOk)-15) adv.push('Buổi <b>tối</b> đang yếu hơn buổi sáng rõ rệt ('+pc(A.tOk)+'% so với '+pc(A.sOk)+'%) — thử cố định một giờ ngồi tối và đặt chuông nhắc trước 15 phút.');
+  if(pc(A.sOk) < pc(A.tOk)-15) adv.push('Buổi <b>sáng</b> đang yếu hơn buổi tối ('+pc(A.sOk)+'% so với '+pc(A.tOk)+'%) — thử ngủ sớm hơn và ngồi ngay sau khi thức dậy, trước khi làm việc khác.');
+  if(A.rated>0 && ratedPct(A.kem)>25) adv.push('Tỷ lệ thời "Kém" trên 25% — khi tâm nhiều tán loạn, nên quay về niệm hơi thở tại điểm xúc chạm, giữ thời lượng vừa sức thay vì cố kéo dài.');
+  if(A.avg < B.avg-10) adv.push('Tổng thời lượng đang <b>giảm</b> so với tháng trước ('+A.avg+' so với '+B.avg+' ph/ngày) — xem lại lịch sinh hoạt gần đây để giữ nền nếp.');
+  if(A.avg >= (ST.goal1+ST.goal2) && pc(A.full)>=80) adv.push('Anh đang duy trì rất tốt (đủ 2 thời '+pc(A.full)+'%, trung bình '+A.avg+' ph/ngày) — có thể giữ ổn định hoặc tăng nhẹ 5–10 phút mỗi thời khi thấy thuận duyên.');
+  if(!adv.length) adv.push('Duy trì đều đặn hai thời mỗi ngày; khi nền nếp vững, tăng dần thời lượng theo sức của mình.');
+  html+='<div style="padding-top:8px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">💡 Lời khuyên</div>'
+    + adv.map(x=>'<div style="font-size:12px;color:var(--ink);line-height:1.6;padding:4px 0">• '+x+'</div>').join('') + '</div>';
+  box.innerHTML=html;
+  const ach=document.getElementById('achievements');
+  if(ach){
+    let totalMins=0,totalDays=0,best=0,run=0;
+    const ds=[...ST.data].sort((x,y)=>x.date<y.date?-1:1);
+    let prev=null;
+    for(const e of ds){
+      const m=(e.mins1||0)+(e.mins2||0)+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
+      if(m>0) totalDays++;
+      totalMins+=m;
+      if(e.mins1>0&&e.mins2>0){
+        if(prev){ const d1=new Date(prev),d2=new Date(e.date); run=((d2-d1)===86400000)? run+1 : 1; }
+        else run=1;
+        prev=e.date; if(run>best)best=run;
+      } else { prev=null; run=0; }
+    }
+    const hrs=Math.floor(totalMins/60);
+    const badge=(em,t,v)=>'<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--surface3)"><span style="font-size:18px">'+em+'</span><div style="flex:1;font-size:12px;color:var(--ink)">'+t+'</div><div style="font-size:14px;font-weight:700;color:var(--teal)">'+v+'</div></div>';
+    ach.innerHTML = badge('⏳','Tổng thời gian hành thiền', hrs+' giờ')
+      + badge('📅','Tổng số ngày có hành thiền', totalDays+' ngày')
+      + badge('🔥','Chuỗi đủ 2 thời dài nhất', best+' ngày');
+  }
 }
 function exportData(){
   const payload=JSON.stringify(ST,null,2);
@@ -1866,9 +1915,10 @@ document.getElementById('goal1-input').value=ST.goal1;
 document.getElementById('goal2-input').value=ST.goal2;
 timerReset();
 renderAll();
+applyUserName();
 try{
   const lt=localStorage.getItem('thien_last_tab');
-  if(lt && lt!=='today' && ['plan','month','year','chart','rec'].includes(lt)) nav(lt);
+  if(lt && lt!=='today' && ['month','year','chart','rec'].includes(lt)) nav(lt);
 }catch(e){}
 updateNotifBtn();
 registerSW();
