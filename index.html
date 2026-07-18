@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="NHS">
+<meta name="apple-mobile-web-app-title" content="Meditation">
 <meta name="theme-color" content="#076d5e">
 <link rel="manifest" href="manifest.json">
 <title>Nguyễn Hồng Sâm</title>
@@ -101,7 +101,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 .toast.on{opacity:1}
 .detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:none;align-items:flex-end}
 .detail-overlay.on{display:flex}
-.detail-sheet{background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:18px 16px 34px;width:100%;max-width:540px;margin:0 auto}
+.detail-sheet{background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:18px 16px 34px;width:100%;max-width:540px;margin:0 auto;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .detail-sheet h3{font-size:15px;font-weight:700;margin-bottom:14px}
 .detail-close{float:right;font-size:20px;cursor:pointer;color:var(--muted);background:none;border:none}
 </style>
@@ -141,7 +141,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div style="font-size:12px;color:#9fd0c4;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:8px 18px">Chạm để vào</div>
 </div>
 <div class="hdr">
-  <div><div class="app-name" onclick="editUserName()" title="Chạm để đổi tên" style="cursor:pointer">🧘 <span id="app-name-text">Nguyễn Hồng Sâm</span> <span style="font-size:10px;opacity:.6">✎</span></div><div class="app-date" id="hdr-date"></div></div>
+  <div><div class="app-name">🧘 <span id="app-name-text">Nguyễn Hồng Sâm</span></div><div class="app-date" id="hdr-date"></div></div>
   <div class="sync-row">
     <button class="sync-btn" id="sync-btn" onclick="openSyncModal()" title="Đồng bộ nhiều thiết bị">☁️ Đám mây</button>
     <button class="sync-btn" id="settings-btn" onclick="openSettingsModal()" title="Cài đặt">⚙ Cài đặt</button>
@@ -178,7 +178,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <!-- CARD B: THỰC TẾ (cùng dữ liệu với tab Tháng) -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div style="font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.5px;margin-bottom:6px">✅ THỰC TẾ HÔM NAY <span style="font-weight:500;color:var(--muted);text-transform:none">· ghi ở tab Tháng</span></div>
+    <div style="font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.5px;margin-bottom:6px">✅ THỰC TẾ HÔM NAY</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
       <div class="sess-block" id="sess1-card">
         <div class="sess-lbl" id="sess1-lbl">🌅 Sáng</div>
@@ -538,7 +538,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           </div>
           <div>
             <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Tổng (phút)</div>
-            <input type="number" id="dd-mins1" min="0" max="1200" oninput="" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface);color:var(--teal);text-align:center">
+            <input type="number" id="dd-mins1" readonly tabindex="-1" title="Tự tính từ giờ bắt đầu và kết thúc" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
           </div>
         </div>
       </div>
@@ -557,7 +557,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           </div>
           <div>
             <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Tổng (phút)</div>
-            <input type="number" id="dd-mins2" min="0" max="1200" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface);color:var(--teal);text-align:center">
+            <input type="number" id="dd-mins2" readonly tabindex="-1" title="Tự tính từ giờ bắt đầu và kết thúc" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
           </div>
         </div>
       </div>
@@ -569,7 +569,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v14</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v15</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1623,7 +1623,7 @@ function setDayRating(sess, r){
 function calcMins(sess){
   const s=document.getElementById('dd-start'+sess).value;
   const e=document.getElementById('dd-end'+sess).value;
-  if(!s||!e)return;
+  if(!s||!e){ document.getElementById('dd-mins'+sess).value=0; return; }
   const [sh,sm]=s.split(':').map(Number);
   const [eh,em]=e.split(':').map(Number);
   let diff=(eh*60+em)-(sh*60+sm);
