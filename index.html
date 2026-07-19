@@ -37,7 +37,8 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .sync-row{display:flex;align-items:center;gap:8px}
 .sync-code-input{width:100%;padding:10px;font-size:16px;letter-spacing:2px;text-align:center;font-weight:700;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);text-transform:uppercase}
 .nav{display:flex;background:#ffffff;border-bottom:1px solid #e0e0e0}
-.nav-btn{flex:1;border:none;background:transparent;padding:9px 2px 7px;font-size:10px;font-weight:500;color:#999999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-bottom:2px solid transparent}
+.nav-btn{flex:1;border:none;background:transparent;padding:9px 2px 7px;font-size:10px;font-weight:500;color:#999999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-bottom:2px solid transparent;border-radius:10px 10px 0 0;transition:background .12s}
+.nav-btn.on{background:linear-gradient(180deg,rgba(7,109,94,.14) 0%,rgba(7,109,94,.05) 60%,rgba(7,109,94,0) 100%);box-shadow:0 1px 0 rgba(255,255,255,.8) inset}
 .nav-btn svg{width:17px;height:17px;stroke-width:1.7}
 .nav-btn.on{color:#076d5e;font-weight:700;border-bottom-color:#076d5e}
 .scroll{flex:1;overflow-y:auto;padding:12px 12px 80px;background:transparent}
@@ -67,7 +68,7 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .toggle input:checked+.toggle-slider{background:var(--teal)}
 .toggle input:checked+.toggle-slider:before{transform:translateX(16px)}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
-.tag{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid #ddd;color:#666;cursor:pointer;background:transparent}
+.tag{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid #cfc4a8;color:#5c5340;cursor:pointer;background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 55%),linear-gradient(180deg,#fdfaf3 0%,#eee5cf 100%);box-shadow:0 2px 5px rgba(80,58,20,.15),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 3px rgba(140,115,65,.14) inset}
 .tag.on{background:#e0f4f0;border-color:#076d5e;color:#076d5e;font-weight:600}
 .frow{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .finput{width:80px;padding:7px 10px;font-size:15px;font-weight:600;border:1px solid #ddd;border-radius:var(--r);background:#ffffff;color:#1a1a1a;text-align:center}
@@ -79,7 +80,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 .cal-hdr{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:4px}
 .cal-hdr-cell{font-size:10px;font-weight:600;color:var(--muted);padding:3px 0}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cal-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#666;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer}
+.cal-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;color:#666;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;background-image:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 55%);box-shadow:0 2px 4px rgba(70,50,15,.16),0 1px 0 rgba(255,255,255,.6) inset,0 -1px 3px rgba(90,65,25,.14) inset;transition:transform .08s}
+.cal-cell:active{transform:scale(.94)}
 .cal-cell.full{background:#2ECC40;color:#fff;font-weight:700}
 .cal-cell.partial{background:#FFDC00;color:#1a1a1a;font-weight:700}
 .cal-cell.missed{background:#FF4136;color:#fff;font-weight:600;opacity:.75}
@@ -93,9 +95,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 .rec-ico{font-size:20px;flex-shrink:0}
 .rec-body{font-size:13px;color:var(--ink);line-height:1.6}
 .rec-body strong{font-weight:600}
-.btn{width:100%;padding:11px;border-radius:var(--r);border:1px solid var(--border2);background:transparent;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;margin-top:6px}
-.btn-p{background:#076d5e;border-color:#076d5e;color:#ffffff;font-weight:700;letter-spacing:.3px}
-.btn-d{color:var(--rose);border-color:var(--rose-light)}
+.btn{width:100%;padding:11px;border-radius:var(--r);border:1px solid #cbbf9f;background:linear-gradient(180deg,rgba(255,255,255,.95) 0%,rgba(255,255,255,.3) 30%,rgba(255,255,255,0) 60%),linear-gradient(180deg,#fffdf7 0%,#f2ebd8 60%,#e2d5b4 100%);font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;margin-top:6px;box-shadow:0 4px 8px rgba(80,58,20,.20),0 1px 0 rgba(255,255,255,.95) inset,0 -3px 5px rgba(140,115,65,.18) inset;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(1.5px);box-shadow:0 1px 3px rgba(80,58,20,.2),0 2px 4px rgba(140,115,65,.2) inset}
+.btn-p{background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.15) 25%,rgba(255,255,255,0) 55%),linear-gradient(180deg,#0e8a77 0%,#076d5e 55%,#044a3f 100%);border-color:#03392f;color:#ffffff;font-weight:700;letter-spacing:.3px;box-shadow:0 5px 10px rgba(4,60,50,.4),0 1px 0 rgba(255,255,255,.4) inset,0 -3px 6px rgba(0,25,20,.35) inset;text-shadow:0 1px 1px rgba(0,0,0,.3)}
+.btn-d{color:var(--rose);border-color:#e0b0a6;background:linear-gradient(180deg,rgba(255,255,255,.95) 0%,rgba(255,255,255,.3) 30%,rgba(255,255,255,0) 60%),linear-gradient(180deg,#fff8f6 0%,#fde9e4 60%,#f5d4cb 100%);box-shadow:0 4px 8px rgba(120,50,35,.18),0 1px 0 rgba(255,255,255,.95) inset,0 -3px 5px rgba(170,90,70,.16) inset}
 .lg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
 .lg-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
 .lg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
@@ -264,16 +267,16 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div class="card" style="padding:10px 12px">
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">🏆 KỶ LỤC CÁ NHÂN</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal)">
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
         <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI HIỆN TẠI</div>
         <div style="font-size:20px;font-weight:700;color:var(--teal)" id="streak-today-val">0 ngày</div>
       </div>
-      <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid var(--gold)">
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--gold);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
         <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI ĐỦ 2 THỜI DÀI NHẤT</div>
         <div style="font-size:20px;font-weight:700;color:var(--gold)" id="alltime-streak">—</div>
         <div style="font-size:10px;color:var(--muted);margin-top:2px">ngày liên tiếp đủ 2 thời</div>
       </div>
-      <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal)">
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
         <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">⏱ PHIÊN DÀI NHẤT</div>
         <div style="font-size:20px;font-weight:700;color:var(--teal)" id="alltime-max-sess">—</div>
         <div style="font-size:10px;color:var(--muted);margin-top:2px" id="alltime-max-sess-date"></div>
@@ -571,7 +574,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v17</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v18</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
