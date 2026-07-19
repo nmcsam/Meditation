@@ -31,8 +31,8 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .hdr{padding:12px 14px 8px;background:#076d5e;border-bottom:none;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
 .app-name{font-size:16px;font-weight:700;color:#ffffff;}
 .app-date{font-size:11px;color:rgba(255,255,255,.8);margin-top:1px}
-.streak{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.2);color:#ffffff;border:1px solid rgba(255,255,255,.4)}
-.sync-btn{height:30px;padding:0 12px;border-radius:20px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;font-weight:700;white-space:nowrap;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;font-family:inherit}
+.streak{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.45) 0%,rgba(255,255,255,.15) 55%,rgba(255,255,255,.05) 100%);color:#ffffff;border:1px solid rgba(255,255,255,.6);box-shadow:0 3px 6px rgba(0,0,0,.22),0 1px 0 rgba(255,255,255,.5) inset,0 -2px 4px rgba(0,0,0,.18) inset;text-shadow:0 1px 1px rgba(0,0,0,.3)}
+.sync-btn{height:30px;padding:0 12px;border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.4) 0%,rgba(255,255,255,.12) 50%,rgba(255,255,255,.05) 100%);border:1px solid rgba(255,255,255,.55);color:#fff;font-size:12px;font-weight:700;white-space:nowrap;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;font-family:inherit;box-shadow:0 3px 6px rgba(0,0,0,.22),0 1px 0 rgba(255,255,255,.45) inset,0 -2px 4px rgba(0,0,0,.18) inset;text-shadow:0 1px 1px rgba(0,0,0,.3)}
 .sync-btn.connected{background:rgba(255,255,255,.4);border-color:rgba(255,255,255,.6)}
 .sync-row{display:flex;align-items:center;gap:8px}
 .sync-code-input{width:100%;padding:10px;font-size:16px;letter-spacing:2px;text-align:center;font-weight:700;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);text-transform:uppercase}
@@ -42,14 +42,16 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .nav-btn.on{color:#076d5e;font-weight:700;border-bottom-color:#076d5e}
 .scroll{flex:1;overflow-y:auto;padding:12px 12px 80px;background:transparent}
 .page{display:none}.page.on{display:block}
-.card{background:#ffffff;border:1px solid #e8e8e8;border-radius:var(--rl);padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 26%),linear-gradient(180deg,#ffffff 0%,#fdfaf4 60%,#f1ead9 100%);border:1px solid #ded4bd;border-radius:var(--rl);padding:12px 14px;margin-bottom:10px;box-shadow:0 6px 14px rgba(70,50,15,.16),0 2px 0 rgba(255,255,255,1) inset,0 -3px 6px rgba(150,125,75,.10) inset;position:relative}
 .card-hd{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
-.sess-block{border:1px solid var(--border2);border-radius:10px;padding:10px 12px;transition:all .15s;text-align:center}
+.sess-block{border:1px solid var(--border2);border-radius:10px;padding:10px 12px;transition:all .15s;text-align:center;position:relative;overflow:hidden;box-shadow:0 5px 10px rgba(60,40,12,.22),0 1px 0 rgba(255,255,255,.55) inset,0 -3px 6px rgba(0,0,0,.14) inset}
+.sess-block::before{content:'';position:absolute;left:0;right:0;top:0;height:52%;background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.12) 65%,rgba(255,255,255,0) 100%);pointer-events:none;z-index:0;border-radius:10px 10px 40% 40%}
+.sess-block>*{position:relative;z-index:1}
 .sess-block.done{background:#e0f4f0;border-color:#076d5e}
 .sess-lbl{font-size:11px;color:var(--muted);margin-bottom:2px}
 .sess-mins{font-size:20px;font-weight:800;color:var(--ink);line-height:1.2}
 .mrow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
-.mcell{background:#f5f5f5;border-radius:var(--r);padding:10px 12px;border:1px solid rgba(28,16,8,.08)}
+.mcell{background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 40%),linear-gradient(180deg,#fbf8f1 0%,#efe8d6 100%);border-radius:var(--r);padding:10px 12px;border:1px solid #d8cdb2;box-shadow:0 3px 7px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.95) inset,0 -2px 4px rgba(150,125,75,.12) inset}
 .mcell-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 .mcell-val{font-size:22px;font-weight:700;color:var(--ink);line-height:1}
 .mcell-unit{font-size:11px;font-weight:400;color:var(--muted)}
@@ -165,11 +167,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">🎯 KẾ HOẠCH HÔM NAY</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-      <div style="background:#f5f5f5;border-radius:10px;padding:10px 12px;text-align:center">
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#fbf7ef 0%,#ece3cd 100%);border:1px solid #d8cdb2;border-radius:10px;padding:10px 12px;text-align:center;box-shadow:0 4px 8px rgba(70,50,15,.16),0 1px 0 rgba(255,255,255,.95) inset,0 -2px 4px rgba(150,125,75,.14) inset">
         <div style="font-size:11px;color:var(--muted)">🌅 Sáng</div>
         <div style="font-size:20px;font-weight:800;color:var(--ink)"><span id="ti-goal1">—</span></div>
       </div>
-      <div style="background:#f5f5f5;border-radius:10px;padding:10px 12px;text-align:center">
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#fbf7ef 0%,#ece3cd 100%);border:1px solid #d8cdb2;border-radius:10px;padding:10px 12px;text-align:center;box-shadow:0 4px 8px rgba(70,50,15,.16),0 1px 0 rgba(255,255,255,.95) inset,0 -2px 4px rgba(150,125,75,.14) inset">
         <div style="font-size:11px;color:var(--muted)">🌙 Tối</div>
         <div style="font-size:20px;font-weight:800;color:var(--ink)"><span id="ti-goal2">—</span></div>
       </div>
@@ -569,7 +571,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v16</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v17</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
