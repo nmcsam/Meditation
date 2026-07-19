@@ -120,22 +120,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div id="lock-err" style="font-size:12px;color:#ffd1c8;min-height:16px"></div>
 </div>
 <div id="home-screen" onclick="enterApp()" style="position:fixed;inset:0;z-index:500;background:linear-gradient(170deg,#0b3d35,#076d5e 55%,#0a4a40);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;cursor:pointer;text-align:center;padding:24px">
-  <svg viewBox="0 0 200 200" style="width:170px;height:170px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))" aria-label="Tu sĩ ngồi thiền">
-    <circle cx="100" cy="100" r="96" fill="#f6efe2"/>
-    <circle cx="100" cy="70" r="34" fill="none" stroke="#c9a54a" stroke-width="3" opacity=".8"/>
-    <!-- thân vị tu sĩ (dáng ngồi kiết già) -->
-    <g fill="#7a3b1e">
-      <circle cx="100" cy="62" r="15"/>
-      <path d="M100 76 C 78 80 70 100 68 122 C 66 138 76 146 100 146 C 124 146 134 138 132 122 C 130 100 122 80 100 76 Z"/>
-      <path d="M60 138 C 70 128 84 124 100 124 C 116 124 130 128 140 138 C 146 144 142 152 132 152 L 68 152 C 58 152 54 144 60 138 Z"/>
-      <path d="M84 96 C 76 104 72 116 74 124 L 92 118 Z"/>
-      <path d="M116 96 C 124 104 128 116 126 124 L 108 118 Z"/>
-    </g>
-    <!-- hai bàn tay đặt trên lòng -->
-    <ellipse cx="100" cy="121" rx="12" ry="5" fill="#e8b98a"/>
-    <!-- tọa cụ -->
-    <ellipse cx="100" cy="156" rx="52" ry="8" fill="#0a4a40" opacity=".25"/>
-  </svg>
+  <div style="position:relative;width:210px;height:210px;border-radius:50%;overflow:hidden;border:2.5px solid rgba(201,165,74,.8);box-shadow:0 18px 34px rgba(0,0,0,.5),0 4px 12px rgba(255,255,255,.3) inset">
+    <img src="home-buddha.jpg" alt="Meditation" style="width:100%;height:100%;object-fit:cover;display:block">
+    <div style="position:absolute;inset:0;border-radius:50%;pointer-events:none;background:radial-gradient(ellipse 62% 40% at 38% 16%,rgba(255,255,255,.9) 0%,rgba(255,255,255,.4) 42%,rgba(255,255,255,0) 68%),radial-gradient(circle 9% at 25% 13%,rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%),radial-gradient(ellipse 68% 24% at 50% 100%,rgba(255,255,255,.55) 0%,rgba(255,255,255,.18) 45%,rgba(255,255,255,0) 68%),radial-gradient(circle at 50% 34%,rgba(0,0,0,0) 52%,rgba(6,50,42,.25) 82%,rgba(3,30,25,.55) 100%)"></div>
+  </div>
   <div>
     <div onclick="event.stopPropagation();editUserName()" style="cursor:pointer" title="Chạm để đổi tên">
       <span id="home-name" style="font-size:30px;font-weight:800;color:#fff8ec;letter-spacing:.5px">Nguyễn Hồng Sâm</span>
@@ -574,7 +562,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v18</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v19</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
