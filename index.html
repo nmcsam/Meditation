@@ -47,6 +47,17 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .page{display:none}.page.on{display:block}
 .card{background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 26%),linear-gradient(180deg,#ffffff 0%,#fdfaf4 60%,#f1ead9 100%);border:1px solid #ded4bd;border-radius:var(--rl);padding:12px 14px;margin-bottom:10px;box-shadow:0 6px 14px rgba(70,50,15,.16),0 2px 0 rgba(255,255,255,1) inset,0 -3px 6px rgba(150,125,75,.10) inset;position:relative}
 .card-hd{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+.gioi-ball{aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 7px 13px -3px rgba(40,26,6,.42),0 2px 4px rgba(40,26,6,.15);color:#fff;user-select:none;transition:transform .1s}
+.gioi-ball:active{transform:scale(.92)}
+.gioi-ball::before{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;background:radial-gradient(ellipse 42% 28% at 32% 19%,rgba(255,255,255,.92) 0%,rgba(255,255,255,0) 72%),radial-gradient(circle 6% at 65% 13%,rgba(255,255,255,.95) 0%,rgba(255,255,255,0) 100%)}
+.gioi-ball>*{position:relative;z-index:1}
+.gb-kept{background:radial-gradient(circle at 32% 26%,#8fe0ba 0%,#1d9a6c 52%,#08573a 100%)}
+.gb-miss{background:radial-gradient(circle at 32% 26%,#f5a99a 0%,#cf4c3b 55%,#8c2013 100%)}
+.gb-today{background:radial-gradient(circle at 32% 26%,#ffe9ab 0%,#dfa72c 55%,#93680b 100%)}
+.gb-future{background:radial-gradient(circle at 32% 26%,#fffdf4 0%,#e9ddbc 55%,#bfab80 100%);color:#5c4d20}
+.gioi-ball .gd{font-size:15px;font-weight:800;line-height:1;text-shadow:0 1px 0 rgba(0,0,0,.15)}
+.gioi-ball .gs{font-size:8.5px;opacity:.92;margin-top:2px}
+.gioi-ball .gk{font-size:11px;margin-top:1px;font-weight:800}
 .sess-block{border:1px solid var(--border2);border-radius:10px;padding:10px 12px;transition:all .15s;text-align:center;position:relative;overflow:hidden;box-shadow:0 5px 10px rgba(60,40,12,.22),0 1px 0 rgba(255,255,255,.55) inset,0 -3px 6px rgba(0,0,0,.14) inset}
 .sess-block::before{content:'';position:absolute;left:0;right:0;top:0;height:52%;background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.12) 65%,rgba(255,255,255,0) 100%);pointer-events:none;z-index:0;border-radius:10px 10px 40% 40%}
 .sess-block>*{position:relative;z-index:1}
@@ -256,7 +267,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="position:relative;height:140px"><canvas id="chart-monthly"></canvas></div>
   </div>
   <div class="card">
-    <div class="card-hd">☸ Giữ 8 giới theo tháng (đã giữ / kế hoạch)</div>
+    <div class="card-hd">☸ Giữ 8 giới — so sánh các tháng (số ngày đã giữ)</div>
     <div style="height:170px"><canvas id="chart-gioi"></canvas></div>
   </div>
 
@@ -382,6 +393,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     </div>
   </div>
 <div class="card">
+    <div class="card-hd">☸ Giữ 8 giới — <span id="gioi-balls-label">tháng này</span> (KH &amp; thực tế từng ngày)</div>
+    <div id="gioi-balls" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:10px"></div>
+    <div style="font-size:10.5px;color:var(--muted);margin-top:8px">Mỗi quả cầu là một ngày trong kế hoạch tháng (số lớn: ngày ÂM lịch, số nhỏ: ngày dương). Chạm vào quả cầu để mở ngày đó và ghi kết quả. 🟢 Đã giữ · 🔴 Đã qua chưa giữ · 🟡 Hôm nay · ⚪ Sắp tới.</div>
+  </div>
+  <div class="card">
     <div class="card-hd">⚙ Cài đặt kế hoạch (áp dụng hằng ngày)</div>
     <div class="frow">
       <label>🌅 Buổi sáng (phút)</label>
@@ -598,7 +614,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v24</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v25</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -789,6 +805,29 @@ function renderGioiDays(){
     var on=cur.indexOf(d)>=0;
     return '<span class="tag'+(on?' on':'')+'" style="'+(on?'background:#076d5e;color:#fff;border-color:#076d5e;':'')+'cursor:pointer" onclick="toggleGioiDay('+d+')">'+(d===1?'Mùng 1':d)+'</span>';
   }).join('');
+}
+function renderGioiBalls(){
+  var box=document.getElementById('gioi-balls');if(!box)return;
+  var lbl=document.getElementById('gioi-balls-label');
+  if(lbl){var now=new Date();lbl.textContent=(calYear===now.getFullYear()&&calMonth===now.getMonth())?'tháng này':('tháng '+(calMonth+1)+'/'+calYear);}
+  var days=new Date(calYear,calMonth+1,0).getDate(),todayK=getDK(),html='';
+  for(var d=1;d<=days;d++){
+    var k=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var e=getEntry(k),kept=!!(e&&e.gioi),planned=gioiPlannedKey(k);
+    if(!planned&&!kept)continue;
+    var cls,mark;
+    if(kept){cls='gb-kept';mark='✓';}
+    else if(k===todayK){cls='gb-today';mark='…';}
+    else if(k<todayK){cls='gb-miss';mark='✗';}
+    else{cls='gb-future';mark='';}
+    var L=lunarOfKey(k);
+    html+='<div class="gioi-ball '+cls+'" onclick="showDayDetail(\''+k+'\')">'
+      +'<div class="gd">'+L[0]+'</div>'
+      +'<div class="gs">'+d+'/'+(calMonth+1)+(planned?'':' ·ngoài KH')+'</div>'
+      +(mark?'<div class="gk">'+mark+'</div>':'')
+      +'</div>';
+  }
+  box.innerHTML=html||'<div style="color:var(--muted);font-size:12px">Tháng này không có ngày kế hoạch giữ giới.</div>';
 }
 function gioiMonthStats(y,m){ // m: 0-11 (tháng dương)
   var days=new Date(y,m+1,0).getDate(),p=0,kk=0;
@@ -1644,6 +1683,7 @@ function renderCalendar(){
   document.getElementById('mo-mins').textContent=totalM;
   document.getElementById('mo-streak').textContent=streak;
   renderGioiDays();
+  renderGioiBalls();
   (function(){
     const g=gioiMonthStats(calYear,calMonth);
     const t=document.getElementById('mo-gioi-txt'),bar=document.getElementById('mo-gioi-bar'),note=document.getElementById('mo-gioi-note');
@@ -1923,8 +1963,8 @@ function renderCharts(){
     if(charts.gioi)charts.gioi.destroy();
     charts.gioi=new Chart(gEl,{type:'bar',
       data:{labels:gLabels,datasets:[
-        {label:'Kế hoạch',data:gPlan,backgroundColor:'rgba(184,134,11,.25)',borderColor:'#b8860b',borderWidth:1.5,borderRadius:3},
-        {label:'Đã giữ',data:gKept,backgroundColor:'#0a7a4f',borderRadius:3}
+        {type:'line',label:'Kế hoạch',data:gPlan,borderColor:'#b8860b',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false},
+        {label:'Đã giữ',data:gKept,backgroundColor:'#0a7a4f',borderRadius:4}
       ]},
       options:Object.assign({},base,{plugins:{legend:{display:true,labels:{color:tc,font:{size:10},boxWidth:12}}}})
     });
