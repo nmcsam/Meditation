@@ -156,6 +156,17 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 <!-- HÔM NAY -->
 <div class="page on" id="pg-today">
 
+  <!-- Banner nhắc sao lưu (chỉ hiện khi dữ liệu chưa được bảo vệ) -->
+  <div id="backup-warn" style="display:none;background:linear-gradient(180deg,#FFF3D6,#FCE3A6);border:1px solid #E6B94D;border-left:4px solid #D4A017;border-radius:10px;padding:9px 11px;margin-bottom:8px">
+    <div style="font-size:12px;font-weight:700;color:#6b4c00;margin-bottom:3px">💾 Dữ liệu chưa được sao lưu</div>
+    <div style="font-size:11px;color:#7a5a10;line-height:1.5;margin-bottom:7px">Dữ liệu đang chỉ nằm trên máy này và có thể mất nếu xoá dữ liệu trình duyệt hoặc lâu không mở (nhất là trên iPhone). Nên bật đồng bộ hoặc xuất một bản để giữ an toàn.</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button onclick="openSyncModal()" style="flex:1;min-width:110px;border:none;border-radius:8px;padding:7px;font-size:11px;font-weight:700;background:#D4A017;color:#fff;cursor:pointer">☁️ Bật đồng bộ</button>
+      <button onclick="exportData()" style="flex:1;min-width:100px;border:1px solid #D4A017;border-radius:8px;padding:7px;font-size:11px;font-weight:700;background:#fff;color:#6b4c00;cursor:pointer">⬇ Xuất JSON</button>
+      <button onclick="snoozeBackupWarn()" style="border:none;border-radius:8px;padding:7px 10px;font-size:11px;font-weight:600;background:transparent;color:#7a5a10;cursor:pointer">Để sau</button>
+    </div>
+  </div>
+
   <!-- CARD A: KẾ HOẠCH (đặt trong tab Tháng) -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">🎯 KẾ HOẠCH HÔM NAY</div>
@@ -599,6 +610,19 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <button class="btn" style="flex:1" onclick="bkShowList()">🕘 Bản sao lưu</button>
       </div>
       <div id="bk-list" style="margin-top:10px"></div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-hd">⏰ Nhắc giờ ngồi thiền</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Nhắc bạn vào thời sáng và tối. Nhắc hoạt động khi app đang mở hoặc chạy nền — để chắc chắn nhận được, nên cho phép thông báo và giữ app ở nền.</p>
+      <label style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:13px;color:var(--ink)">
+        <span>Bật nhắc giờ</span>
+        <span class="toggle"><input type="checkbox" id="remind-on" onchange="remindToggle()"><span class="toggle-slider"></span></span>
+      </label>
+      <div style="display:flex;gap:10px">
+        <label style="flex:1;font-size:12px;color:var(--muted)">🌅 Sáng<br><input type="time" id="remind-t1" value="05:30" onchange="remindSave()" style="width:100%;margin-top:4px;padding:8px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink);font-size:14px"></label>
+        <label style="flex:1;font-size:12px;color:var(--muted)">🌙 Tối<br><input type="time" id="remind-t2" value="20:00" onchange="remindSave()" style="width:100%;margin-top:4px;padding:8px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink);font-size:14px"></label>
+      </div>
+      <div id="remind-status" style="font-size:11px;color:var(--muted);margin-top:8px"></div>
     </div>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">🔒 Mật khẩu mở app</div>
@@ -1864,6 +1888,7 @@ function exportData(){
   const blob=new Blob([payload],{type:'application/json'});
   const date=new Date().toISOString().slice(0,10);
   saveFileAs('thien-data-'+date+'.json', blob);
+  try{ markBackupDone(); }catch(e){}
 }
 
 function importData(input){
@@ -1898,6 +1923,7 @@ function openSettingsModal(){
   if(st) st.textContent = syncCode ? ('Đang đồng bộ — mã: '+syncCode) : 'Chưa kết nối đồng bộ.';
   bkRefreshUI();
   document.getElementById('bk-list').innerHTML='';
+  try{ remindLoadUI(); }catch(e){}
   document.getElementById('settings-modal').classList.add('on');
 }
 function closeSettingsModal(){ document.getElementById('settings-modal').classList.remove('on'); }
@@ -1997,6 +2023,89 @@ registerSW();
 requestPersist();
 initSync();
 setTimeout(bkCheckAuto, 4000);
+
+// ==== NHẮC SAO LƯU (an toàn dữ liệu) ====
+function backupIsSafe(){
+  if(typeof syncCode!=='undefined' && syncCode) return true; // đang đồng bộ đám mây
+  let last=0; try{ last=parseInt(localStorage.getItem('thien_last_backup')||'0',10)||0; }catch(e){}
+  return (Date.now()-last) < 30*864e5; // đã xuất/sao lưu trong 30 ngày
+}
+function markBackupDone(){ try{ localStorage.setItem('thien_last_backup', String(Date.now())); }catch(e){} refreshBackupWarn(); }
+function snoozeBackupWarn(){ try{ localStorage.setItem('thien_bk_snooze', String(Date.now())); }catch(e){} var el=document.getElementById('backup-warn'); if(el) el.style.display='none'; }
+function refreshBackupWarn(){
+  var el=document.getElementById('backup-warn'); if(!el) return;
+  var snooze=0; try{ snooze=parseInt(localStorage.getItem('thien_bk_snooze')||'0',10)||0; }catch(e){}
+  var snoozed=(Date.now()-snooze) < 7*864e5; // ẩn 7 ngày sau khi bấm "Để sau"
+  var hasData=ST.data && ST.data.some(function(e){return e && ((e.mins1||0)>0||(e.mins2||0)>0);});
+  el.style.display=(!backupIsSafe() && !snoozed && hasData) ? 'block' : 'none';
+}
+
+// ==== NHẮC GIỜ NGỒI THIỀN ====
+var remindTimers=[];
+function remindCfg(){
+  try{ return JSON.parse(localStorage.getItem('thien_remind')||'null') || {on:false,t1:'05:30',t2:'20:00'}; }
+  catch(e){ return {on:false,t1:'05:30',t2:'20:00'}; }
+}
+function remindWrite(c){ try{ localStorage.setItem('thien_remind', JSON.stringify(c)); }catch(e){} }
+function remindLoadUI(){
+  var c=remindCfg();
+  var on=document.getElementById('remind-on'); if(on) on.checked=!!c.on;
+  var t1=document.getElementById('remind-t1'); if(t1) t1.value=c.t1||'05:30';
+  var t2=document.getElementById('remind-t2'); if(t2) t2.value=c.t2||'20:00';
+  remindStatus();
+}
+function remindStatus(){
+  var s=document.getElementById('remind-status'); if(!s) return;
+  var c=remindCfg();
+  if(!c.on){ s.textContent='Đang tắt.'; return; }
+  if(!('Notification' in window)){ s.textContent='⚠️ Trình duyệt không hỗ trợ thông báo.'; return; }
+  if(Notification.permission==='denied'){ s.textContent='⚠️ Thông báo đang bị chặn trong cài đặt trình duyệt.'; return; }
+  if(Notification.permission!=='granted'){ s.textContent='Cần cho phép thông báo để nhận nhắc.'; return; }
+  s.textContent='✓ Đã bật · nhắc lúc '+c.t1+' và '+c.t2;
+}
+function remindToggle(){
+  var on=document.getElementById('remind-on') && document.getElementById('remind-on').checked;
+  if(on && ('Notification' in window) && Notification.permission!=='granted'){
+    try{ Notification.requestPermission().then(function(){ remindSave(); }); return; }catch(e){}
+  }
+  remindSave();
+}
+function remindSave(){
+  var onEl=document.getElementById('remind-on'), t1El=document.getElementById('remind-t1'), t2El=document.getElementById('remind-t2');
+  var c={ on:!!(onEl&&onEl.checked), t1:(t1El&&t1El.value)||'05:30', t2:(t2El&&t2El.value)||'20:00' };
+  remindWrite(c); remindStatus(); scheduleReminders();
+}
+function nextTimeMs(hhmm){
+  var p=(hhmm||'').split(':'); if(p.length<2) return null;
+  var now=new Date(); var t=new Date(); t.setHours(parseInt(p[0],10),parseInt(p[1],10),0,0);
+  if(t.getTime()<=now.getTime()) t.setDate(t.getDate()+1);
+  return t.getTime()-now.getTime();
+}
+function scheduleReminders(){
+  remindTimers.forEach(function(id){clearTimeout(id);}); remindTimers=[];
+  var c=remindCfg();
+  if(!c.on) return;
+  if(!('Notification' in window) || Notification.permission!=='granted') return;
+  [['t1',1,'sáng 🌅'],['t2',2,'tối 🌙']].forEach(function(item){
+    var key=item[0], sess=item[1], lbl=item[2];
+    var ms=nextTimeMs(c[key]); if(ms==null) return;
+    var id=setTimeout(function(){
+      var e=getEntry(getDK());
+      var done = sess===1 ? (e && (e.mins1||0)>0) : (e && (e.mins2||0)>0);
+      if(!done) sendNotif('Đến giờ ngồi thiền', 'Mời bạn vào thời '+lbl);
+      scheduleReminders(); // đặt lại cho ngày kế tiếp
+    }, ms + 500);
+    remindTimers.push(id);
+  });
+}
+
+// Khởi động các tính năng mới + đặt lại khi quay lại app
+try{ remindLoadUI(); }catch(e){}
+try{ scheduleReminders(); }catch(e){}
+try{ refreshBackupWarn(); }catch(e){}
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState==='visible'){ try{scheduleReminders();}catch(e){} try{refreshBackupWarn();}catch(e){} }
+});
 </script>
 </body>
 </html>
