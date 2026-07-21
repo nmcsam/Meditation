@@ -262,6 +262,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:20px;font-weight:700;color:var(--teal)" id="streak-today-val">0 ngày</div>
       </div>
       <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--gold);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
+        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🏆 CHUỖI DÀI NHẤT</div>
+        <div style="font-size:20px;font-weight:700;color:var(--gold)" id="alltime-streak-any">—</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">ngày liên tiếp có thiền</div>
+      </div>
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--gold);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
         <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI ĐỦ 2 THỜI DÀI NHẤT</div>
         <div style="font-size:20px;font-weight:700;color:var(--gold)" id="alltime-streak">—</div>
         <div style="font-size:10px;color:var(--muted);margin-top:2px">ngày liên tiếp đủ 2 thời</div>
@@ -1429,6 +1434,7 @@ function renderAlltimeStats(){
   let maxSess=0,maxSessDate=''; // phiên đơn dài nhất (sáng hoặc tối)
   let maxDay=0,maxDayDate='';   // tổng ngày nhiều nhất
   let bestStreak=0,curStreak=0;
+  let bestAny=0,curAny=0; // chuỗi dài nhất — chỉ cần có thiền (sáng HOẶC tối), giống "chuỗi hiện tại"
 
   const sorted=[...ST.data].filter(e=>e.date).sort((a,b)=>a.date.localeCompare(b.date));
 
@@ -1452,6 +1458,16 @@ function renderAlltimeStats(){
       } else curStreak=1;
       bestStreak=Math.max(bestStreak,curStreak);
     } else curStreak=0;
+
+    // Chuỗi dài nhất (chỉ cần có thiền — sáng HOẶC tối)
+    if(m1>0||m2>0){
+      if(i>0){
+        const prevA=sorted[i-1];
+        const diffA=(new Date(e.date)-new Date(prevA.date))/(1000*60*60*24);
+        curAny=diffA===1?curAny+1:1;
+      } else curAny=1;
+      bestAny=Math.max(bestAny,curAny);
+    } else curAny=0;
   });
 
   const fmt=m=>m>=60?Math.round(m/60*10)/10+'h':m+'ph';
@@ -1462,6 +1478,8 @@ function renderAlltimeStats(){
   elDay.textContent=maxDay>0?fmt(maxDay):'—';
   elDayD.textContent=maxDay>0?fmtD(maxDayDate):'';
   elStreak.textContent=bestStreak>0?bestStreak+' ngày':'—';
+  const elStreakAny=document.getElementById('alltime-streak-any');
+  if(elStreakAny)elStreakAny.textContent=bestAny>0?bestAny+' ngày':'—';
   const el2=document.getElementById('alltime-streak-today');
   if(el2)el2.textContent=bestStreak>0?bestStreak+' ngày':'—';
 }
