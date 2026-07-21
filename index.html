@@ -1248,7 +1248,8 @@ function renderToday(){
     document.getElementById('sess'+n+'-type').textContent=types.length?types.slice(0,2).join(', '):'Chưa ghi';
     const plan=n==='1'?getTodayPlan().p1:getTodayPlan().p2;
     const dat=plan>0 && m>=plan;
-    document.getElementById('sess'+n+'-status').textContent=dat?'✓ Đạt kế hoạch':(m>0?'✗ Chưa đủ '+plan+' ph':'✗ Chưa ghi ('+plan+' ph)');
+    var stTxt = m===0 ? '⏳ Chưa thiền' : (dat ? '✓ Đã xong' : '◔ Chưa đủ · còn '+(plan-m)+' ph');
+    document.getElementById('sess'+n+'-status').textContent = stTxt;
     card.className='sess-block'+(m>0?' done':'');
     card.style.background=dat?'#dff3e7':'#c0392b';
     card.style.borderColor=dat?'#2e7d5b':'#a93226';
@@ -1256,7 +1257,15 @@ function renderToday(){
     document.getElementById('sess'+n+'-mins').style.color   = w?'#fff':'var(--ink)';
     document.getElementById('sess'+n+'-lbl').style.color    = w?'rgba(255,255,255,.9)':'var(--muted)';
     document.getElementById('sess'+n+'-type').style.color   = w?'rgba(255,255,255,.85)':'var(--muted)';
-    document.getElementById('sess'+n+'-status').style.color = w?'#fff':'var(--teal)';
+    var stEl=document.getElementById('sess'+n+'-status');
+    stEl.style.display='inline-block';
+    stEl.style.marginTop='4px';
+    stEl.style.fontSize='11px';
+    stEl.style.fontWeight='700';
+    stEl.style.padding='2px 9px';
+    stEl.style.borderRadius='11px';
+    if(dat){ stEl.style.background='rgba(46,125,91,.16)'; stEl.style.color='#2e7d5b'; }
+    else { stEl.style.background='rgba(255,255,255,.25)'; stEl.style.color='#fff'; }
   });
   const color=pct>=100?'#076d5e':pct>=70?'#f0b429':'#c0392b';
   const pctEl=document.getElementById('today-pct');
