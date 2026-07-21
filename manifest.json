@@ -1,26 +1,26 @@
 {
-  "name": "Cúng Dường",
-  "short_name": "Cúng Dường",
-  "description": "Theo dõi thiện pháp - Phước báu tăng trưởng",
-  "start_url": "/Cung-duong/",
-  "scope": "/Cung-duong/",
+  "name": "Meditation",
+  "short_name": "Meditation",
+  "description": "Theo dõi thời thiền hằng ngày",
+  "start_url": "/Meditation/",
+  "scope": "/Meditation/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#FFF8E7",
-  "theme_color": "#5C3D00",
+  "background_color": "#ffffff",
+  "theme_color": "#076d5e",
   "lang": "vi",
   "icons": [
     {
-      "src": "icon-lion2-192.png",
+      "src": "icon-med2-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "icon-lion2-512.png",
+      "src": "icon-med2-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
