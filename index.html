@@ -577,7 +577,12 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <input type="hidden" id="dd-mins1">
           </div>
         </div>
-        <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-s" rows="2" placeholder="Ghi chú thời 1 sáng..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-s-tot" onclick="setDayRating('s','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-s-can" onclick="setDayRating('s','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-s-kem" onclick="setDayRating('s','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
+        <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-s" rows="4" placeholder="Ghi chú thời 1 sáng..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea>
+<div style="display:flex;gap:6px;margin-top:5px">
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="noteCopy('dd-note-s')">📋 Copy</button>
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="notePaste('dd-note-s')">📥 Dán</button>
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="noteClear('dd-note-s')">✕ Xóa</button>
+</div></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-s-tot" onclick="setDayRating('s','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-s-can" onclick="setDayRating('s','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-s-kem" onclick="setDayRating('s','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
         <div id="dd-row1b" style="display:none;margin-top:8px">
           <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">Thời 2</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end">
@@ -595,7 +600,12 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             </div>
           </div>
           <div id="dd-tot1" style="margin-top:6px;font-size:12px;font-weight:800;color:var(--teal);text-align:right"></div>
-          <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-1b" rows="2" placeholder="Ghi chú thời 2 sáng..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-1b-tot" onclick="setDayRating('1b','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-1b-can" onclick="setDayRating('1b','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-1b-kem" onclick="setDayRating('1b','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
+          <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-1b" rows="4" placeholder="Ghi chú thời 2 sáng..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea>
+<div style="display:flex;gap:6px;margin-top:5px">
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="noteCopy('dd-note-1b')">📋 Copy</button>
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="notePaste('dd-note-1b')">📥 Dán</button>
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="noteClear('dd-note-1b')">✕ Xóa</button>
+</div></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-1b-tot" onclick="setDayRating('1b','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-1b-can" onclick="setDayRating('1b','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-1b-kem" onclick="setDayRating('1b','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
         </div>
         <button type="button" id="dd-add1b" class="qbtn2" onclick="ddToggleRow(1)" style="margin-top:6px;padding:5px 10px;font-size:11.5px;border:1px dashed var(--border2);border-radius:8px;background:transparent;color:var(--teal);font-weight:700;cursor:pointer">＋ Thêm thời 2 (sáng)</button>
       </div>
@@ -618,7 +628,12 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <input type="hidden" id="dd-mins2">
           </div>
         </div>
-        <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-t" rows="2" placeholder="Ghi chú thời 1 chiều/tối..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-t-tot" onclick="setDayRating('t','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-t-can" onclick="setDayRating('t','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-t-kem" onclick="setDayRating('t','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
+        <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-t" rows="4" placeholder="Ghi chú thời 1 chiều/tối..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea>
+<div style="display:flex;gap:6px;margin-top:5px">
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="noteCopy('dd-note-t')">📋 Copy</button>
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="notePaste('dd-note-t')">📥 Dán</button>
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="noteClear('dd-note-t')">✕ Xóa</button>
+</div></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-t-tot" onclick="setDayRating('t','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-t-can" onclick="setDayRating('t','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-t-kem" onclick="setDayRating('t','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
         <div id="dd-row2b" style="display:none;margin-top:8px">
           <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">Thời 2</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end">
@@ -636,7 +651,12 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             </div>
           </div>
           <div id="dd-tot2" style="margin-top:6px;font-size:12px;font-weight:800;color:var(--teal);text-align:right"></div>
-          <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-2b" rows="2" placeholder="Ghi chú thời 2 chiều/tối..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-2b-tot" onclick="setDayRating('2b','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-2b-can" onclick="setDayRating('2b','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-2b-kem" onclick="setDayRating('2b','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
+          <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-2b" rows="4" placeholder="Ghi chú thời 2 chiều/tối..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea>
+<div style="display:flex;gap:6px;margin-top:5px">
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="noteCopy('dd-note-2b')">📋 Copy</button>
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="notePaste('dd-note-2b')">📥 Dán</button>
+  <button type="button" style="padding:5px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer" onclick="noteClear('dd-note-2b')">✕ Xóa</button>
+</div></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-2b-tot" onclick="setDayRating('2b','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-2b-can" onclick="setDayRating('2b','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-2b-kem" onclick="setDayRating('2b','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
         </div>
         <button type="button" id="dd-add2b" class="qbtn2" onclick="ddToggleRow(2)" style="margin-top:6px;padding:5px 10px;font-size:11.5px;border:1px dashed var(--border2);border-radius:8px;background:transparent;color:var(--teal);font-weight:700;cursor:pointer">＋ Thêm thời 2 (chiều/tối)</button>
       </div>
@@ -652,7 +672,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v43</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v44</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1974,6 +1994,25 @@ function setDayRating(sess, r){
   save();updateRatingBtns(e);renderPieChart();
 }
 
+async function noteCopy(id){
+  var el=document.getElementById(id); if(!el)return;
+  var t=el.value||'';
+  if(!t){ toast('Ô ghi chú đang trống'); return; }
+  try{ await navigator.clipboard.writeText(t); toast('✓ Đã copy ghi chú'); }
+  catch(e){ try{ el.focus(); el.select(); document.execCommand('copy'); toast('✓ Đã copy ghi chú'); }catch(e2){ toast('Không copy được'); } }
+}
+async function notePaste(id){
+  var el=document.getElementById(id); if(!el)return;
+  try{
+    var t=await navigator.clipboard.readText();
+    if(t){ el.value=(el.value?el.value+'\n':'')+t; toast('✓ Đã dán vào ghi chú'); }
+    else toast('Bộ nhớ tạm đang trống');
+  }catch(e){ el.focus(); toast('Hãy chạm giữ vào ô rồi chọn Dán'); }
+}
+function noteClear(id){
+  var el=document.getElementById(id); if(!el)return;
+  el.value=''; toast('Đã xóa nội dung ô ghi chú (bấm Lưu để ghi)');
+}
 function _pairMins(s,e){
   if(!s||!e)return 0;
   const [sh,sm]=s.split(':').map(Number);
