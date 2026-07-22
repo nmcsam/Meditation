@@ -606,9 +606,17 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           </div>
           <div>
             <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Tổng (phút)</div>
-            <input type="number" id="dd-mins1" readonly tabindex="-1" title="Tự tính từ giờ bắt đầu và kết thúc" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
+            <input type="number" id="dd-mins1" readonly tabindex="-1" title="Tự tính từ tất cả các thời" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
           </div>
         </div>
+        <div id="dd-row1b" style="display:none;margin-top:6px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Thời 2 — bắt đầu / kết thúc</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <input type="time" id="dd-start1b" oninput="calcMins(1)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+            <input type="time" id="dd-end1b" oninput="calcMins(1)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+          </div>
+        </div>
+        <button type="button" id="dd-add1b" class="qbtn2" onclick="ddToggleRow(1)" style="margin-top:6px;padding:5px 10px;font-size:11.5px;border:1px dashed var(--border2);border-radius:8px;background:transparent;color:var(--teal);font-weight:700;cursor:pointer">＋ Thêm thời 2 (sáng)</button>
       </div>
 
       <!-- Buổi tối -->
@@ -628,6 +636,14 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <input type="number" id="dd-mins2" readonly tabindex="-1" title="Tự tính từ giờ bắt đầu và kết thúc" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
           </div>
         </div>
+        <div id="dd-row2b" style="display:none;margin-top:6px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Thời 2 — bắt đầu / kết thúc</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <input type="time" id="dd-start2b" oninput="calcMins(2)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+            <input type="time" id="dd-end2b" oninput="calcMins(2)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+          </div>
+        </div>
+        <button type="button" id="dd-add2b" class="qbtn2" onclick="ddToggleRow(2)" style="margin-top:6px;padding:5px 10px;font-size:11.5px;border:1px dashed var(--border2);border-radius:8px;background:transparent;color:var(--teal);font-weight:700;cursor:pointer">＋ Thêm thời 2 (chiều/tối)</button>
       </div>
     </div>
 
@@ -637,7 +653,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v35</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v37</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1886,6 +1902,15 @@ function showDayDetail(k){
   const e=getEntry(k);const d=new Date(k);
   const isPast=k<getDK();const isToday=k===getDK();
   document.getElementById('dd-title').textContent=DAYS7[d.getDay()]+', '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' · '+lunarLabelKey(k);
+  ['1','2'].forEach(function(n){
+    const sb=document.getElementById('dd-start'+n+'b'), eb=document.getElementById('dd-end'+n+'b');
+    if(sb)sb.value=(e&&e['start'+n+'b'])||'';
+    if(eb)eb.value=(e&&e['end'+n+'b'])||'';
+    const has=!!(e&&(e['start'+n+'b']||e['end'+n+'b']));
+    const r=document.getElementById('dd-row'+n+'b'), btn=document.getElementById('dd-add'+n+'b');
+    if(r)r.style.display=has?'block':'none';
+    if(btn)btn.textContent=has?'－ Bỏ thời 2':'＋ Thêm thời 2 '+(n==='1'?'(sáng)':'(chiều/tối)');
+  });
   const _gc=document.getElementById('dd-gioi');
   if(_gc){ _gc.checked=!!(e&&e.gioi);
     const _gh=document.getElementById('dd-gioi-hint');
@@ -1942,15 +1967,32 @@ function setDayRating(sess, r){
   save();updateRatingBtns(e.ratingS,e.ratingT);renderPieChart();
 }
 
-function calcMins(sess){
-  const s=document.getElementById('dd-start'+sess).value;
-  const e=document.getElementById('dd-end'+sess).value;
-  if(!s||!e){ document.getElementById('dd-mins'+sess).value=0; return; }
+function _pairMins(s,e){
+  if(!s||!e)return 0;
   const [sh,sm]=s.split(':').map(Number);
   const [eh,em]=e.split(':').map(Number);
   let diff=(eh*60+em)-(sh*60+sm);
   if(diff<0)diff+=24*60; // qua nửa đêm
-  if(diff>0)document.getElementById('dd-mins'+sess).value=diff;
+  return diff>0?diff:0;
+}
+function calcMins(sess){
+  const t1=_pairMins(document.getElementById('dd-start'+sess).value, document.getElementById('dd-end'+sess).value);
+  const b=document.getElementById('dd-start'+sess+'b');
+  const t2=b?_pairMins(b.value, document.getElementById('dd-end'+sess+'b').value):0;
+  document.getElementById('dd-mins'+sess).value=t1+t2;
+}
+function ddToggleRow(sess){
+  const r=document.getElementById('dd-row'+sess+'b');
+  const btn=document.getElementById('dd-add'+sess+'b');
+  if(!r)return;
+  const show=r.style.display==='none';
+  r.style.display=show?'block':'none';
+  if(btn)btn.textContent=show?'－ Bỏ thời 2':'＋ Thêm thời 2 '+(sess===1?'(sáng)':'(chiều/tối)');
+  if(!show){ // bỏ thời 2: xóa giờ và tính lại
+    document.getElementById('dd-start'+sess+'b').value='';
+    document.getElementById('dd-end'+sess+'b').value='';
+  }
+  calcMins(sess);
 }
 
 function saveDayDetail(){
@@ -1966,6 +2008,10 @@ function saveDayDetail(){
   e.end1=document.getElementById('dd-end1').value;
   e.start2=document.getElementById('dd-start2').value;
   e.end2=document.getElementById('dd-end2').value;
+  e.start1b=document.getElementById('dd-start1b').value;
+  e.end1b=document.getElementById('dd-end1b').value;
+  e.start2b=document.getElementById('dd-start2b').value;
+  e.end2b=document.getElementById('dd-end2b').value;
   const _g=document.getElementById('dd-gioi'); if(_g) e.gioi=_g.checked;
   save();renderAll();
   document.getElementById('day-detail').classList.remove('on');
@@ -2205,6 +2251,7 @@ function renderAll(){
   const today=new Date();
   document.getElementById('hdr-date').textContent=DAYS7[today.getDay()]+', '+today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear()+' · '+lunarLabelKey(getDK());
   renderToday();renderStreak();renderPlanPage();renderMonthPVA();renderTimerInfo();renderTodayPlanUI();renderExtraSessions();renderAlltimeStats();
+  try{renderCalendar();}catch(e){}  // vẽ lại cả tab Tháng (lịch + cầu 8 giới) để thao tác nào cũng thấy ngay
   try{renderPieChart();}catch(e){}
   setTimeout(renderCharts,200);
 }
