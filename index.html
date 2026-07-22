@@ -67,9 +67,10 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .grow-lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.4px}
 .trow{display:flex;align-items:center;gap:5px;flex-wrap:nowrap}
 .tbadge{flex:none;font-size:9.5px;font-weight:800;color:#fff;background:#8a8a8a;border-radius:6px;padding:3px 5px}
-.tin{flex:3 1 0;min-width:72px;padding:5px 2px;font-size:12px;text-align:center;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink)}
-.tmin{flex:2 1 0;min-width:52px;padding:5px 2px;font-size:12px;font-weight:800;border:1px solid var(--teal);border-radius:8px;background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none}
-.rbtn{flex:2 1 0;min-width:0;padding:5px 2px;border-radius:8px;border:1.5px solid var(--border2);background:transparent;font-size:9.5px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--ink);text-align:center}
+.tin{flex:3 1 0;min-width:66px;padding:5px 2px;font-size:12px;text-align:center;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink)}
+.tmin{flex:2 1 0;min-width:48px;padding:5px 2px;font-size:12px;font-weight:800;border:1px solid var(--teal);border-radius:8px;background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none}
+.rbtn{flex:2 1 0;min-width:0;padding:5px 1px;border-radius:8px;border:1.5px solid var(--border2);background:transparent;font-size:9.5px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--ink);text-align:center;overflow:hidden}
+.rbtn.rcan{flex:3 1 0;min-width:60px}
 .nbtn{flex:2 1 0;min-width:0;padding:5px 2px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);font-size:9.5px;font-weight:700;cursor:pointer;color:var(--ink);white-space:nowrap;text-align:center}
 .vsep{flex:none;width:0;height:24px;border-left:2px dashed rgba(90,60,10,.4);margin:0 1px}
 .tnote{width:100%;margin-top:6px;padding:8px 10px;font-size:13.5px;min-height:96px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink);resize:none;font-family:inherit}
@@ -578,7 +579,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <input type="text" id="dd-min1a" readonly tabindex="-1" class="tmin" title="Tổng phút"><input type="hidden" id="dd-mins1">
             <span class="vsep"></span>
             <button id="rating-s-tot" onclick="setDayRating('s','tot')" class="rbtn">Tốt</button>
-            <button id="rating-s-can" onclick="setDayRating('s','can')" class="rbtn">Trung bình</button>
+            <button id="rating-s-can" onclick="setDayRating('s','can')" class="rbtn rcan">Trung bình</button>
             <button id="rating-s-kem" onclick="setDayRating('s','kem')" class="rbtn">Kém</button>
             <span class="vsep"></span>
             <button type="button" onclick="noteCopy('dd-note-s')" class="nbtn" title="Copy ghi chú">📋 Copy</button>
@@ -593,7 +594,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <input type="text" id="dd-min1bt" readonly tabindex="-1" class="tmin" title="Tổng phút">
             <span class="vsep"></span>
             <button id="rating-1b-tot" onclick="setDayRating('1b','tot')" class="rbtn">Tốt</button>
-            <button id="rating-1b-can" onclick="setDayRating('1b','can')" class="rbtn">Trung bình</button>
+            <button id="rating-1b-can" onclick="setDayRating('1b','can')" class="rbtn rcan">Trung bình</button>
             <button id="rating-1b-kem" onclick="setDayRating('1b','kem')" class="rbtn">Kém</button>
             <span class="vsep"></span>
             <button type="button" onclick="noteCopy('dd-note-1b')" class="nbtn" title="Copy ghi chú">📋 Copy</button>
@@ -615,7 +616,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <input type="text" id="dd-min2a" readonly tabindex="-1" class="tmin" title="Tổng phút"><input type="hidden" id="dd-mins2">
             <span class="vsep"></span>
             <button id="rating-t-tot" onclick="setDayRating('t','tot')" class="rbtn">Tốt</button>
-            <button id="rating-t-can" onclick="setDayRating('t','can')" class="rbtn">Trung bình</button>
+            <button id="rating-t-can" onclick="setDayRating('t','can')" class="rbtn rcan">Trung bình</button>
             <button id="rating-t-kem" onclick="setDayRating('t','kem')" class="rbtn">Kém</button>
             <span class="vsep"></span>
             <button type="button" onclick="noteCopy('dd-note-t')" class="nbtn" title="Copy ghi chú">📋 Copy</button>
@@ -630,7 +631,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <input type="text" id="dd-min2bt" readonly tabindex="-1" class="tmin" title="Tổng phút">
             <span class="vsep"></span>
             <button id="rating-2b-tot" onclick="setDayRating('2b','tot')" class="rbtn">Tốt</button>
-            <button id="rating-2b-can" onclick="setDayRating('2b','can')" class="rbtn">Trung bình</button>
+            <button id="rating-2b-can" onclick="setDayRating('2b','can')" class="rbtn rcan">Trung bình</button>
             <button id="rating-2b-kem" onclick="setDayRating('2b','kem')" class="rbtn">Kém</button>
             <span class="vsep"></span>
             <button type="button" onclick="noteCopy('dd-note-2b')" class="nbtn" title="Copy ghi chú">📋 Copy</button>
@@ -653,7 +654,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v52</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v53</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
