@@ -130,6 +130,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 </style>
 </head>
 <body>
+<div id="gioi-upd-bar" style="display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:350;background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.3) 40%,rgba(255,255,255,0) 70%),linear-gradient(180deg,#0e8a77 0%,#076d5e 60%,#044a3f 100%);color:#fff;border:1px solid #03392f;border-radius:14px;box-shadow:0 8px 20px rgba(4,60,50,.45),0 1px 0 rgba(255,255,255,.4) inset;padding:10px 12px;align-items:center;gap:10px;max-width:92vw">
+  <span id="gioi-upd-txt" style="font-size:12.5px;font-weight:700;text-shadow:0 1px 1px rgba(0,0,0,.25)"></span>
+  <button id="gioi-upd-btn" style="flex:none;padding:8px 12px;border:none;border-radius:10px;background:#c9a54a;color:#2c1f00;font-size:12.5px;font-weight:800;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.25)">📝 Cập nhật ngày này</button>
+  <button onclick="document.getElementById('gioi-upd-bar').style.display='none'" style="flex:none;border:none;background:transparent;color:#d8efe9;font-size:15px;cursor:pointer;padding:2px 4px">✕</button>
+</div>
 <input type="date" id="gioi-date-pick" style="position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none">
 <div id="lock-screen" style="display:none;position:fixed;inset:0;z-index:700;background:linear-gradient(170deg,#0b3d35,#076d5e 55%,#0a4a40);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px">
   <div style="font-size:44px">🔒</div>
@@ -636,7 +641,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v31</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v32</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -907,6 +912,16 @@ function gioiTapActual(pk,actualK){
     if(actualK&&actualK!==v) gioiSetKept(actualK,false); // đổi sang ngày khác: bỏ ngày cũ
     gioiSetKept(v,true);
     toast('✓ Đã ghi giữ 8 giới ngày '+v.split('-').reverse().join('/'));
+    var bar=document.getElementById('gioi-upd-bar');
+    if(bar){
+      var t=document.getElementById('gioi-upd-txt');
+      if(t)t.textContent='✓ Đã ghi 8 giới ngày '+v.split('-').reverse().join('/');
+      var btn=document.getElementById('gioi-upd-btn');
+      if(btn)btn.onclick=function(){ bar.style.display='none'; showDayDetail(v); };
+      bar.style.display='flex';
+      clearTimeout(bar._t);
+      bar._t=setTimeout(function(){ bar.style.display='none'; },10000);
+    }
   };
   try{ if(inp.showPicker) inp.showPicker(); else inp.click(); }catch(e){ inp.click(); }
 }
