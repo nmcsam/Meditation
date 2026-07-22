@@ -202,7 +202,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div style="text-align:center;font-size:15px;font-weight:800;letter-spacing:3px;color:#8a6d1a;margin:2px 0 6px">☸ UPOSATHA</div>
   <!-- CARD ☸: KH & thực tế 8 giới cả tháng (chỉ xem; cài đặt & ghi ở tab Tháng) -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px;background:linear-gradient(180deg,#fdf1cf 0%,#f7e3ae 100%);border:1.5px solid #d9b45a;box-shadow:0 3px 8px rgba(150,110,30,.18)">
-    <div style="font-size:10px;font-weight:700;color:#8a6d1a;letter-spacing:.5px;margin-bottom:8px">☸ GIỮ GIỚI THÁNG NÀY</div>
+    <div style="font-size:10px;font-weight:700;color:#8a6d1a;letter-spacing:.5px;margin-bottom:4px">☸ GIỮ GIỚI THÁNG NÀY</div>
+    <div id="gioi-sum" style="font-size:12.5px;font-weight:800;color:#7a5410;margin-bottom:8px">Kế hoạch: 4 ngày <span style="opacity:.5">|</span> Thực tế: 0 ngày</div>
     <div style="display:flex;gap:8px;align-items:stretch">
       <div style="display:flex;flex-direction:column;justify-content:space-around;gap:6px;flex:none">
         <div class="grow-lbl" style="white-space:nowrap">KẾ HOẠCH</div>
@@ -679,7 +680,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v63</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v64</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -949,9 +950,20 @@ function _gioiPairsHTML(interactive){
   });
   return html+'</div>';
 }
+function gioiActualThisMonth(){
+  var now=new Date(), y=now.getFullYear(), m=now.getMonth(), tk=getDK(), c=0;
+  (ST.data||[]).forEach(function(e){
+    if(!e||!e.gioi||!e.date) return;
+    var p=e.date.split('-');
+    if(+p[0]===y && (+p[1]-1)===m && e.date<=tk) c++;
+  });
+  return c;
+}
 function renderGioiBalls(){
   var box=document.getElementById('gioi-balls');if(!box)return;
   box.innerHTML=_gioiPairsHTML(false);
+  var su=document.getElementById('gioi-sum');
+  if(su) su.innerHTML='Kế hoạch: 4 ngày <span style="opacity:.5">|</span> Thực tế: '+gioiActualThisMonth()+' ngày';
 }
 function gioiSetKept(k,val){
   var e=getEntry(k);
