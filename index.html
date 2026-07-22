@@ -208,17 +208,16 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="sess-block" id="sess1-card">
         <div class="sess-lbl" id="sess1-lbl">🌅 Sáng</div>
         <div class="sess-mins" id="sess1-mins">— ph</div>
-        <div style="font-size:9px;color:var(--muted)" id="sess1-type">Chưa ghi</div>
+        <div style="font-size:9px;color:var(--muted)" id="sess1-type"></div>
         <div style="font-size:9px;color:var(--teal)" id="sess1-status"></div>
       </div>
       <div class="sess-block" id="sess2-card">
         <div class="sess-lbl" id="sess2-lbl">🌙 Tối</div>
         <div class="sess-mins" id="sess2-mins">— ph</div>
-        <div style="font-size:9px;color:var(--muted)" id="sess2-type">Chưa ghi</div>
+        <div style="font-size:9px;color:var(--muted)" id="sess2-type"></div>
         <div style="font-size:9px;color:var(--teal)" id="sess2-status"></div>
       </div>
     </div>
-    <div id="gioi-today" style="display:none;border-radius:10px;padding:9px 12px;text-align:center;font-weight:800;font-size:13px;margin-bottom:8px"></div>
     <div id="extra-sessions-row"></div>
     <div style="display:flex;align-items:center;gap:6px">
       <div style="flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden">
@@ -240,6 +239,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       </div>
       <div id="gioi-balls" style="flex:1"></div>
     </div>
+    <div id="gioi-today" style="display:none;border-radius:10px;padding:8px 12px;text-align:center;font-weight:800;font-size:12.5px;margin-top:8px"></div>
   </div>
 
   <!-- CARD 3: Biểu đồ tháng + Pie chart cùng card -->
@@ -302,14 +302,14 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div class="card" style="padding:10px 12px">
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">🏆 KỶ LỤC CÁ NHÂN</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid #0a7a4f;box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset;grid-column:1/-1">
-        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🧘 CHUỖI NGÀY CÓ THIỀN DÀI NHẤT</div>
-        <div style="font-size:20px;font-weight:700;color:#0a7a4f" id="alltime-anystreak">0 ngày</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">ngày liên tiếp có hành thiền (ít nhất 1 thời)</div>
-      </div>
-      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset;grid-column:1/-1">
         <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI HIỆN TẠI</div>
         <div style="font-size:20px;font-weight:700;color:var(--teal)" id="streak-today-val">0 ngày</div>
+      </div>
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid #0a7a4f;box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
+        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🧘 CHUỖI NGÀY CÓ THIỀN DÀI NHẤT</div>
+        <div style="font-size:16px;font-weight:700;color:#0a7a4f" id="alltime-anystreak">0 ngày</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:2px">liên tiếp ≥1 thời</div>
       </div>
       <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--gold);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
         <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI ĐỦ 2 THỜI DÀI NHẤT</div>
@@ -654,7 +654,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v54</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v55</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1538,10 +1538,10 @@ function renderToday(){
     const card=document.getElementById('sess'+n+'-card');
     const types=(e&&n==='1'?e.types1:e?e.types2:[])|| [];
     document.getElementById('sess'+n+'-mins').textContent=m>0?fmtHM(m):'— ph';
-    document.getElementById('sess'+n+'-type').textContent=types.length?types.slice(0,2).join(', '):'Chưa ghi';
+    document.getElementById('sess'+n+'-type').textContent=types.length?types.slice(0,2).join(', '):'';
     const plan=n==='1'?getTodayPlan().p1:getTodayPlan().p2;
     const dat=plan>0 && m>=plan;
-    document.getElementById('sess'+n+'-status').textContent=dat?'✓ Đạt kế hoạch':(m>0?'✗ Chưa đủ '+fmtHM(plan):'✗ Chưa ghi ('+fmtHM(plan)+')');
+    document.getElementById('sess'+n+'-status').textContent=dat?'✓ Đạt kế hoạch':(m>0?'✗ Chưa đủ '+fmtHM(plan):'');
     card.className='sess-block'+(m>0?' done':'');
     card.style.background=dat?'#dff3e7':'#c0392b';
     card.style.borderColor=dat?'#2e7d5b':'#a93226';
