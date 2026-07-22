@@ -130,6 +130,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 </style>
 </head>
 <body>
+<div id="gioi-bar" style="display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:350;background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.3) 40%,rgba(255,255,255,0) 70%),linear-gradient(180deg,#0e8a77 0%,#076d5e 60%,#044a3f 100%);color:#fff;border:1px solid #03392f;border-radius:14px;box-shadow:0 8px 20px rgba(4,60,50,.45),0 1px 0 rgba(255,255,255,.4) inset;padding:10px 12px;align-items:center;gap:9px;max-width:94vw;flex-wrap:wrap;justify-content:center"></div>
 <input type="date" id="gioi-date-pick" style="position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none">
 <div id="lock-screen" style="display:none;position:fixed;inset:0;z-index:700;background:linear-gradient(170deg,#0b3d35,#076d5e 55%,#0a4a40);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px">
   <div style="font-size:44px">🔒</div>
@@ -435,7 +436,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div id="gioi-pairs-month" style="flex:1"></div>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → lịch hiện ra → chọn ngày là xong.</b> Muốn xóa hoặc đổi: chạm quả cầu xanh → xác nhận bỏ → chạm lại chọn ngày mới. Kết quả hiện ở đây và ở tab Hôm nay.</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → chọn ngày trên lịch → bấm "✓ Cập nhật — xong".</b> Cầu đã ghi (xanh): chạm vào → chọn <b>Thay đổi</b> (chọn lại ngày rồi bấm Cập nhật) hoặc <b>Xóa</b> (bấm Xóa — xong). Kết quả hiện ở đây và ở tab Hôm nay.</div>
     </div>
   </div>
   </div>
@@ -529,7 +530,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div id="gioi-pairs-month" style="flex:1"></div>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → lịch hiện ra → chọn ngày là xong.</b> Muốn xóa hoặc đổi: chạm quả cầu xanh → xác nhận bỏ → chạm lại chọn ngày mới. Kết quả hiện ở đây và ở tab Hôm nay.</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → chọn ngày trên lịch → bấm "✓ Cập nhật — xong".</b> Cầu đã ghi (xanh): chạm vào → chọn <b>Thay đổi</b> (chọn lại ngày rồi bấm Cập nhật) hoặc <b>Xóa</b> (bấm Xóa — xong). Kết quả hiện ở đây và ở tab Hôm nay.</div>
     </div>
     <div class="srow">
       <div class="srow-top"><label>Chất lượng</label><span class="sval" id="modal-q-val">Trung bình</span></div>
@@ -636,7 +637,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v33</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v34</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -897,22 +898,48 @@ function gioiSetKept(k,val){
   if(!e){e={date:k,mins1:0,mins2:0,types1:[],types2:[],notes1:'',notes2:''};ST.data.push(e);ST.data.sort(function(a,b){return a.date<b.date?-1:1;});}
   e.gioi=val;save();renderAll();
 }
+function _gfmt(k){return k.split('-').reverse().join('/');}
+function gioiBarShow(html){
+  var b=document.getElementById('gioi-bar');if(!b)return;
+  b.innerHTML=html+'<button onclick="gioiBarHide()" style="flex:none;border:none;background:transparent;color:#d8efe9;font-size:15px;cursor:pointer;padding:2px 4px">✕</button>';
+  b.style.display='flex';
+}
+function gioiBarHide(){var b=document.getElementById('gioi-bar');if(b)b.style.display='none';}
+var _gbtn='style="flex:none;padding:8px 12px;border:none;border-radius:10px;background:#c9a54a;color:#2c1f00;font-size:12.5px;font-weight:800;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.25)"';
+var _gtxt='style="font-size:12.5px;font-weight:700;text-shadow:0 1px 1px rgba(0,0,0,.25)"';
 function gioiTapActual(pk,actualK){
-  if(actualK){
-    var lbl=actualK.split('-').reverse().join('/');
-    if(confirm('Bỏ ghi ĐÃ GIỮ 8 giới ngày '+lbl+'?')) gioiSetKept(actualK,false);
-    return;
-  }
+  if(!actualK){ gioiPick(pk,''); return; }
+  gioiBarShow('<span '+_gtxt+'>Ngày '+_gfmt(actualK)+' đã ghi giữ 8 giới</span>'
+    +'<button '+_gbtn+' onclick="gioiPick(\''+pk+'\',\''+actualK+'\')">📅 Thay đổi</button>'
+    +'<button '+_gbtn+' onclick="gioiAskDelete(\''+actualK+'\')">🗑 Xóa</button>');
+}
+function gioiPick(pk,oldK){
+  gioiBarHide();
   var inp=document.getElementById('gioi-date-pick');
   if(!inp)return;
-  inp.value=pk;
+  inp.value=oldK||pk;
   inp.onchange=function(){
     var v=inp.value;
     if(!v)return;
-    gioiSetKept(v,true);
-    toast('✓ Đã ghi giữ 8 giới ngày '+v.split('-').reverse().join('/'));
+    gioiBarShow('<span '+_gtxt+'>☸ Giữ 8 giới ngày <b>'+_gfmt(v)+'</b></span>'
+      +'<button '+_gbtn+' onclick="gioiConfirmSet(\''+v+'\',\''+(oldK||'')+'\')">✓ Cập nhật — xong</button>');
   };
   try{ if(inp.showPicker) inp.showPicker(); else inp.click(); }catch(e){ inp.click(); }
+}
+function gioiConfirmSet(v,oldK){
+  if(oldK&&oldK!==v) gioiSetKept(oldK,false);
+  gioiSetKept(v,true);
+  gioiBarHide();
+  toast('✓ Đã ghi giữ 8 giới ngày '+_gfmt(v));
+}
+function gioiAskDelete(k){
+  gioiBarShow('<span '+_gtxt+'>Xóa ghi giữ 8 giới ngày <b>'+_gfmt(k)+'</b>?</span>'
+    +'<button '+_gbtn+' onclick="gioiConfirmDel(\''+k+'\')">🗑 Xóa — xong</button>');
+}
+function gioiConfirmDel(k){
+  gioiSetKept(k,false);
+  gioiBarHide();
+  toast('Đã xóa ghi giữ giới ngày '+_gfmt(k));
 }
 function gioiMonthStats(y,m){ // m: 0-11 (tháng dương)
   var days=new Date(y,m+1,0).getDate(),p=0,kk=0;
