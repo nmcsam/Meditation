@@ -654,7 +654,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v53</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v54</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1938,14 +1938,14 @@ function showDayDetail(k){
       '<b>🌙 Tối:</b> '+fmtHM(e.mins2||0)+' · '+((e.types2||[]).join(', ')||'—')+'<br>'+
       '<b>Tổng:</b> '+fmtHM((e.mins1||0)+(e.mins2||0));
     const _rl={tot:'○ Tốt',can:'△ Trung bình',kem:'✕ Kém'};
-    const _tl=function(icon,tag,rating,note){
+    const _tl=function(icon,tag,color,rating,note){
       if(!rating&&!note) return '';
-      return '<br><i style="color:var(--muted);font-size:11px">'+icon+' '+tag+': '+(rating?_rl[rating]:'')+(rating&&note?' — ':'')+(note||'')+'</i>';
+      return '<br><i style="color:'+color+';font-size:11px"><b>'+icon+' '+tag+':</b> '+(rating?_rl[rating]:'')+(rating&&note?' — ':'')+(note||'')+'</i>';
     };
-    body+=_tl('🌅','Thời 1',e.ratingS,e.noteS);
-    body+=_tl('🌅','Thời 2',e.rating1b,e.note1b);
-    body+=_tl('🌙','Thời 1',e.ratingT,e.noteT);
-    body+=_tl('🌙','Thời 2',e.rating2b,e.note2b);
+    body+=_tl('🌅','Sáng — Thời 1','#7a5410',e.ratingS,e.noteS);
+    body+=_tl('🌅','Sáng — Thời 2','#7a5410',e.rating1b,e.note1b);
+    body+=_tl('🌙','Chiều — Thời 1','#2c3e6b',e.ratingT,e.noteT);
+    body+=_tl('🌙','Chiều — Thời 2','#2c3e6b',e.rating2b,e.note2b);
     document.getElementById('dd-body').innerHTML=body;
   }
 
