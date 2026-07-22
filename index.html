@@ -295,7 +295,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           <div style="display:flex;align-items:center;gap:2px;font-size:7px;color:var(--muted)"><div style="width:10px;height:1.5px;background:#b8860b"></div>KH S</div>
           <div style="display:flex;align-items:center;gap:2px;font-size:7px;color:var(--muted)"><div style="width:10px;border-top:1.5px dashed #8b3a52"></div>KH T</div>
         </div>
-        <div id="month-chart" style="position:relative;width:100%;height:144px"></div>
+        <div id="month-chart" style="position:relative;width:100%;height:154px"></div>
       </div>
 
       <!-- Pie chart bên phải -->
@@ -678,7 +678,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v69</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v70</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1646,7 +1646,8 @@ function renderMonthPVA(){
   }
   const maxVal=Math.max(ST.goal1,ST.goal2,dataMax)*1.15;
   const H=130; // px chiều cao vùng cột
-  const LH=14; // px chiều cao label ngày
+  const LH=24; // px chiều cao label ngày (2 dòng: số + thứ)
+  const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
   // Vị trí đường KH tính từ bottom của vùng cột (px)
   const g1b=Math.round(ST.goal1/maxVal*H);
@@ -1722,7 +1723,11 @@ function renderMonthPVA(){
     const lIsToday=d===todayD;const lIsPast=d<todayD;
     let lColor=lIsToday?'var(--teal)':lHasData?'#076d5e':lIsPast?'#c0392b':'var(--muted)';
     const lWeight=lIsToday||lHasData?700:500;
-    html+='<div style="flex:1;text-align:center;font-size:7px;color:'+lColor+';font-weight:'+lWeight+';line-height:'+LH+'px">'+d+'</div>';
+    const wd=WD[new Date(y,mo,d).getDay()];
+    html+='<div style="flex:1;text-align:center;color:'+lColor+';font-weight:'+lWeight+'">'
+      +'<div style="font-size:7px;line-height:12px">'+d+'</div>'
+      +'<div style="font-size:5.5px;line-height:8px;opacity:.85">'+wd+'</div>'
+      +'</div>';
   }
   html+='</div>';
   html+='</div>'; // end outer
