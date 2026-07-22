@@ -95,7 +95,7 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .sess-lbl{font-size:11px;color:var(--muted);margin-bottom:2px}
 .sess-mins{font-size:20px;font-weight:800;color:var(--ink);line-height:1.2}
 .mrow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
-.mcell{background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 40%),linear-gradient(180deg,#fbf8f1 0%,#efe8d6 100%);border-radius:var(--r);padding:10px 12px;border:1px solid #d8cdb2;box-shadow:0 3px 7px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.95) inset,0 -2px 4px rgba(150,125,75,.12) inset}
+.mcell{background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 40%),linear-gradient(180deg,#fbf8f1 0%,#efe8d6 100%);border-radius:var(--r);padding:10px 12px;border:1px solid #d8cdb2;min-height:70px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 3px 7px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.95) inset,0 -2px 4px rgba(150,125,75,.12) inset}
 .mcell-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 .mcell-val{font-size:22px;font-weight:700;color:var(--ink);line-height:1}
 .mcell-unit{font-size:11px;font-weight:400;color:var(--muted)}
@@ -123,7 +123,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 .cal-hdr{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:4px}
 .cal-hdr-cell{font-size:10px;font-weight:600;color:var(--muted);padding:3px 0}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cal-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;color:#666;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;background-image:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 55%);box-shadow:0 2px 4px rgba(70,50,15,.16),0 1px 0 rgba(255,255,255,.6) inset,0 -1px 3px rgba(90,65,25,.14) inset;transition:transform .08s}
+.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;color:#666;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;background-image:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 55%);box-shadow:0 2px 4px rgba(70,50,15,.16),0 1px 0 rgba(255,255,255,.6) inset,0 -1px 3px rgba(90,65,25,.14) inset;transition:transform .08s}
 .cal-cell:active{transform:scale(.94)}
 .cal-cell.full{background:#2ECC40;color:#fff;font-weight:700}
 .cal-cell.partial{background:#FFDC00;color:#1a1a1a;font-weight:700}
@@ -295,7 +295,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           <div style="display:flex;align-items:center;gap:2px;font-size:7px;color:var(--muted)"><div style="width:10px;height:1.5px;background:#b8860b"></div>KH S</div>
           <div style="display:flex;align-items:center;gap:2px;font-size:7px;color:var(--muted)"><div style="width:10px;border-top:1.5px dashed #8b3a52"></div>KH T</div>
         </div>
-        <div id="month-chart" style="position:relative;width:100%;height:154px"></div>
+        <div id="month-chart" style="position:relative;width:100%;height:144px"></div>
       </div>
 
       <!-- Pie chart bên phải -->
@@ -389,19 +389,19 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="lg-item"><div class="lg-dot" style="background:#FF4136"></div>Bỏ</div>
     </div>
   </div>
+  <div class="card">
+    <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px">BIỂU ĐỒ TỪNG NGÀY</div>
+    <div style="position:relative;height:140px"><canvas id="cal-day-chart"></canvas></div>
+    <div style="display:flex;gap:12px;margin-top:6px">
+      <div class="lg-item"><div class="lg-dot" style="background:#076d5e"></div>Sáng</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#7a1c38"></div>Tối</div>
+    </div>
+  </div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px">
     <div class="mcell"><div class="mcell-label">Ngày thiền</div><div class="mcell-val" id="mo-days">0</div></div>
     <div class="mcell"><div class="mcell-label">Tổng phút</div><div class="mcell-val" id="mo-mins">0</div></div>
     <div class="mcell"><div class="mcell-label">TB ngày</div><div class="mcell-val" id="mo-avg">0<span class="mcell-unit"> ph</span></div></div>
     <div class="mcell"><div class="mcell-label">Chuỗi dài</div><div class="mcell-val" id="mo-streak">0</div></div>
-    <div class="mcell" style="grid-column:1/-1">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-        <div class="mcell-label">☸ Giữ 8 giới tháng này</div>
-        <div style="font-size:13px;font-weight:800" id="mo-gioi-txt">0/0</div>
-      </div>
-      <div style="height:7px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;margin-top:5px"><div id="mo-gioi-bar" style="height:100%;width:0%;background:#b8860b;border-radius:4px"></div></div>
-      <div style="font-size:10px;color:var(--muted);margin-top:3px" id="mo-gioi-note"></div>
-    </div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:6px">
     <div class="mcell">
@@ -432,14 +432,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div style="font-size:9px;color:var(--muted)">lần</div>
     </div>
   </div>
-  <div class="card">
-    <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px">BIỂU ĐỒ TỪNG NGÀY</div>
-    <div style="position:relative;height:140px"><canvas id="cal-day-chart"></canvas></div>
-    <div style="display:flex;gap:12px;margin-top:6px">
-      <div class="lg-item"><div class="lg-dot" style="background:#076d5e"></div>Sáng</div>
-      <div class="lg-item"><div class="lg-dot" style="background:#7a1c38"></div>Tối</div>
-    </div>
-  </div>
 <div class="card">
     <div class="card-hd">⚙ Cài đặt kế hoạch (áp dụng hằng ngày)</div>
     <div class="frow">
@@ -459,8 +451,18 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <span class="tag" onclick="this.classList.toggle('on')">Tụng kinh</span>
       <span class="tag" onclick="this.classList.toggle('on')">Kinh hành</span>
     </div>
-    <div style="margin-top:12px">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">☸ Giữ 8 giới — kế hoạch &amp; thực tế tháng này</div>
+
+  </div>
+    <div class="card" style="background:linear-gradient(180deg,#fdf1cf 0%,#f7e3ae 100%);border:1.5px solid #d9b45a">
+    <div class="card-hd" style="color:#7a5410">☸ Giữ 8 giới — kế hoạch &amp; thực tế tháng này</div>
+    <div class="mcell" style="min-height:0;display:block;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+        <div class="mcell-label">☸ Giữ 8 giới tháng này</div>
+        <div style="font-size:13px;font-weight:800" id="mo-gioi-txt">0/0</div>
+      </div>
+      <div style="height:7px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;margin-top:5px"><div id="mo-gioi-bar" style="height:100%;width:0%;background:#b8860b;border-radius:4px"></div></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px" id="mo-gioi-note"></div>
+    </div>
       <div style="display:flex;gap:8px;align-items:stretch">
         <div style="display:flex;flex-direction:column;justify-content:space-around;gap:6px;flex:none">
           <div class="grow-lbl" style="white-space:nowrap">KẾ HOẠCH</div>
@@ -469,9 +471,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div id="gioi-pairs-month" style="flex:1"></div>
       </div>
       <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → chọn ngày trên lịch → bấm "✓ Cập nhật — xong".</b> Cầu đã ghi (xanh): chạm vào → chọn <b>Thay đổi</b> (chọn lại ngày rồi bấm Cập nhật) hoặc <b>Xóa</b> (bấm Xóa — xong). Kết quả hiện ở đây và ở tab Hôm nay.</div>
-    </div>
   </div>
-  </div>
+</div>
 
 <!-- NĂM -->
 <div class="page" id="pg-year">
@@ -678,7 +679,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v70</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v71</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1646,8 +1647,7 @@ function renderMonthPVA(){
   }
   const maxVal=Math.max(ST.goal1,ST.goal2,dataMax)*1.15;
   const H=130; // px chiều cao vùng cột
-  const LH=24; // px chiều cao label ngày (2 dòng: số + thứ)
-  const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const LH=14; // px chiều cao label ngày
 
   // Vị trí đường KH tính từ bottom của vùng cột (px)
   const g1b=Math.round(ST.goal1/maxVal*H);
@@ -1723,11 +1723,7 @@ function renderMonthPVA(){
     const lIsToday=d===todayD;const lIsPast=d<todayD;
     let lColor=lIsToday?'var(--teal)':lHasData?'#076d5e':lIsPast?'#c0392b':'var(--muted)';
     const lWeight=lIsToday||lHasData?700:500;
-    const wd=WD[new Date(y,mo,d).getDay()];
-    html+='<div style="flex:1;text-align:center;color:'+lColor+';font-weight:'+lWeight+'">'
-      +'<div style="font-size:7px;line-height:12px">'+d+'</div>'
-      +'<div style="font-size:5.5px;line-height:8px;opacity:.85">'+wd+'</div>'
-      +'</div>';
+    html+='<div style="flex:1;text-align:center;font-size:7px;color:'+lColor+';font-weight:'+lWeight+';line-height:'+LH+'px">'+d+'</div>';
   }
   html+='</div>';
   html+='</div>'; // end outer
@@ -1847,6 +1843,7 @@ function renderAlltimeStats(){
 }
 
 function renderCalendar(){
+  const WDC=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const labels=['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
   document.getElementById('cal-month-label').textContent=labels[calMonth]+' '+calYear;
   const firstDay=new Date(calYear,calMonth,1).getDay();
@@ -1868,7 +1865,8 @@ function renderCalendar(){
     if(isToday)cls+=' today';
     const gioiP=gioiPlannedKey(k);
     const gioiMark=gioiP?'<span style="position:absolute;top:0;right:2px;font-size:8px;color:'+((e&&e.gioi)?'#0a7a4f':'#b8860b')+'">☸</span>':((e&&e.gioi)?'<span style="position:absolute;top:0;right:2px;font-size:8px;color:#0a7a4f">☸</span>':'');
-    html+='<div class="'+cls+'" style="position:relative" onclick="showDayDetail(\''+k+'\')">'+d+gioiMark+'</div>';
+    const wdc=WDC[new Date(calYear,calMonth,d).getDay()];
+    html+='<div class="'+cls+'" style="position:relative" onclick="showDayDetail(\''+k+'\')"><div style="line-height:1.05">'+d+'</div><div style="font-size:6.5px;line-height:1;opacity:.8;font-weight:600">'+wdc+'</div>'+gioiMark+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
   document.getElementById('mo-days').textContent=totalD;
