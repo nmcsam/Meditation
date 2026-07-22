@@ -678,7 +678,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v67</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v68</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1974,7 +1974,7 @@ function showDayDetail(k){
     const has=!!(e&&(e['start'+n+'b']||e['end'+n+'b']||e['note'+n+'b']||e['rating'+n+'b']));
     const r=document.getElementById('dd-row'+n+'b'), btn=document.getElementById('dd-add'+n+'b');
     if(r)r.style.display=has?'block':'none';
-    if(btn)btn.textContent=has?'－ Bỏ thời 2':'＋ Thêm thời 2 '+(n==='1'?'(sáng)':'(chiều/tối)');
+    if(btn){ btn.textContent='＋ Thêm thời 2 '+(n==='1'?'(sáng)':'(chiều/tối)'); btn.style.display=has?'none':'inline-block'; }
   });
   const _gc=document.getElementById('dd-gioi');
   if(_gc){ _gc.checked=!!(e&&e.gioi);
@@ -2100,13 +2100,8 @@ function ddToggleRow(sess){
   const r=document.getElementById('dd-row'+sess+'b');
   const btn=document.getElementById('dd-add'+sess+'b');
   if(!r)return;
-  const show=r.style.display==='none';
-  r.style.display=show?'block':'none';
-  if(btn)btn.textContent=show?'－ Bỏ thời 2':'＋ Thêm thời 2 '+(sess===1?'(sáng)':'(chiều/tối)');
-  if(!show){ // bỏ thời 2: xóa giờ và tính lại
-    document.getElementById('dd-start'+sess+'b').value='';
-    document.getElementById('dd-end'+sess+'b').value='';
-  }
+  r.style.display='block';
+  if(btn)btn.style.display='none';
   calcMins(sess);
 }
 
