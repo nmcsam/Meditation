@@ -130,6 +130,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 </style>
 </head>
 <body>
+<input type="date" id="gioi-date-pick" style="position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none">
 <div id="lock-screen" style="display:none;position:fixed;inset:0;z-index:700;background:linear-gradient(170deg,#0b3d35,#076d5e 55%,#0a4a40);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px">
   <div style="font-size:44px">🔒</div>
   <div style="font-size:17px;font-weight:700;color:#fff8ec">Nhập mật khẩu để mở app</div>
@@ -434,7 +435,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div id="gioi-pairs-month" style="flex:1"></div>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo từng tháng. Giữ giới ngày nào: mở ngày đó trên lịch phía trên → tick ☸, kết quả tự hiện ở đây và ở tab Hôm nay. Chạm nhanh quả cầu THỰC TẾ cũng đánh dấu được cho đúng ngày kế hoạch.</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → lịch hiện ra → chọn ngày đã giữ giới là xong</b> (chọn ngày khác sẽ tự dời). Kết quả hiện ở đây và ở tab Hôm nay.</div>
     </div>
   </div>
   </div>
@@ -528,7 +529,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div id="gioi-pairs-month" style="flex:1"></div>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo từng tháng. Giữ giới ngày nào: mở ngày đó trên lịch phía trên → tick ☸, kết quả tự hiện ở đây và ở tab Hôm nay. Chạm nhanh quả cầu THỰC TẾ cũng đánh dấu được cho đúng ngày kế hoạch.</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → lịch hiện ra → chọn ngày đã giữ giới là xong</b> (chọn ngày khác sẽ tự dời). Kết quả hiện ở đây và ở tab Hôm nay.</div>
     </div>
     <div class="srow">
       <div class="srow-top"><label>Chất lượng</label><span class="sval" id="modal-q-val">Trung bình</span></div>
@@ -635,7 +636,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v30</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v31</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -897,8 +898,17 @@ function gioiSetKept(k,val){
   e.gioi=val;save();renderAll();
 }
 function gioiTapActual(pk,actualK){
-  if(actualK){ if(confirm('Bỏ đánh dấu ĐÃ GIỮ 8 giới của ngày '+actualK.split('-').reverse().join('/')+'?')) gioiSetKept(actualK,false); }
-  else{ if(confirm('Đánh dấu ĐÃ GIỮ 8 giới cho ngày '+pk.split('-').reverse().join('/')+'? (Giữ vào ngày khác thì mở ngày đó trên lịch và tick ☸)')) gioiSetKept(pk,true); }
+  var inp=document.getElementById('gioi-date-pick');
+  if(!inp)return;
+  inp.value=actualK||pk;
+  inp.onchange=function(){
+    var v=inp.value;
+    if(!v)return;
+    if(actualK&&actualK!==v) gioiSetKept(actualK,false); // đổi sang ngày khác: bỏ ngày cũ
+    gioiSetKept(v,true);
+    toast('✓ Đã ghi giữ 8 giới ngày '+v.split('-').reverse().join('/'));
+  };
+  try{ if(inp.showPicker) inp.showPicker(); else inp.click(); }catch(e){ inp.click(); }
 }
 function gioiMonthStats(y,m){ // m: 0-11 (tháng dương)
   var days=new Date(y,m+1,0).getDate(),p=0,kk=0;
