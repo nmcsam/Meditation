@@ -678,7 +678,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v60</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v61</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1567,13 +1567,12 @@ function renderToday(){
     const dat=plan>0 && m>=plan;
     document.getElementById('sess'+n+'-status').textContent=dat?'✓ Đạt kế hoạch':(m>0?'✗ Chưa đủ '+fmtHM(plan):'');
     card.className='sess-block'+(m>0?' done':'');
-    card.style.background=dat?'#dff3e7':'#c0392b';
-    card.style.borderColor=dat?'#2e7d5b':'#a93226';
-    const w=!dat;
-    document.getElementById('sess'+n+'-mins').style.color   = w?'#fff':'var(--ink)';
-    document.getElementById('sess'+n+'-lbl').style.color    = w?'rgba(255,255,255,.9)':'var(--muted)';
-    document.getElementById('sess'+n+'-type').style.color   = w?'rgba(255,255,255,.85)':'var(--muted)';
-    document.getElementById('sess'+n+'-status').style.color = w?'#fff':'var(--teal)';
+    card.style.background=dat?'linear-gradient(180deg,#0f8a6d 0%,#0a6b54 100%)':'#c0392b';
+    card.style.borderColor=dat?'#0a5c47':'#a93226';
+    document.getElementById('sess'+n+'-mins').style.color   = '#fff';
+    document.getElementById('sess'+n+'-lbl').style.color    = 'rgba(255,255,255,.92)';
+    document.getElementById('sess'+n+'-type').style.color   = 'rgba(255,255,255,.85)';
+    document.getElementById('sess'+n+'-status').style.color = '#fff';
   });
   const color=pct>=100?'#076d5e':pct>=70?'#f0b429':'#c0392b';
   const pctEl=document.getElementById('today-pct');
