@@ -160,7 +160,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div class="sync-row">
     <button class="sync-btn" id="sync-btn" onclick="openSyncModal()" title="Đồng bộ nhiều thiết bị">☁️ Đám mây</button>
     <button class="sync-btn" id="settings-btn" onclick="openSettingsModal()" title="Cài đặt">⚙ Cài đặt</button>
-    <span class="streak" id="streak-el">0 ngày 🔥</span>
+    <span class="streak" id="streak-el" style="display:none">0 ngày 🔥</span><button class="sync-btn" onclick="globalSave()">💾 Lưu</button>
   </div>
 </div>
 <div class="nav">
@@ -672,7 +672,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v44</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v45</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -754,6 +754,15 @@ let charts={},audioCtx=null,bellType='bowl';
 let wakeLock=null,swReg=null;
 
 function save(){ST.updatedAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}queueCloudSave();}
+function globalSave(){
+  try{
+    const dd=document.getElementById('day-detail');
+    if(dd&&dd.classList.contains('on')){ saveDayDetail(); return; } // đang mở bảng ngày: lưu bảng đó
+  }catch(e){}
+  save();
+  try{ renderAll(); }catch(e){}
+  toast('✓ Đã lưu dữ liệu');
+}
 function getUserName(){ return (ST.userName&&String(ST.userName).trim()) || 'Nguyễn Hồng Sâm'; }
 function applyUserName(){
   const n=getUserName();
