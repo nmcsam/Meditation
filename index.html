@@ -594,7 +594,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
       <!-- Buổi sáng -->
       <div style="background:var(--surface2);border-radius:var(--r);padding:8px 10px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">🌅 Buổi sáng</div>
+        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">🌅 Buổi sáng <span style="font-weight:500">· Thời 1</span></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end">
           <div>
             <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Bắt đầu</div>
@@ -606,22 +606,34 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           </div>
           <div>
             <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Tổng (phút)</div>
-            <input type="number" id="dd-mins1" readonly tabindex="-1" title="Tự tính từ tất cả các thời" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
+            <input type="number" id="dd-min1a" readonly tabindex="-1" title="Tự tính từ giờ bắt đầu và kết thúc" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
+            <input type="hidden" id="dd-mins1">
           </div>
         </div>
-        <div id="dd-row1b" style="display:none;margin-top:6px">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Thời 2 — bắt đầu / kết thúc</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <input type="time" id="dd-start1b" oninput="calcMins(1)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
-            <input type="time" id="dd-end1b" oninput="calcMins(1)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+        <div id="dd-row1b" style="display:none;margin-top:8px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">Thời 2</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end">
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Bắt đầu</div>
+              <input type="time" id="dd-start1b" oninput="calcMins(1)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Kết thúc</div>
+              <input type="time" id="dd-end1b" oninput="calcMins(1)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Tổng (phút)</div>
+              <input type="number" id="dd-min1bt" readonly tabindex="-1" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
+            </div>
           </div>
+          <div id="dd-tot1" style="margin-top:6px;font-size:12px;font-weight:800;color:var(--teal);text-align:right"></div>
         </div>
         <button type="button" id="dd-add1b" class="qbtn2" onclick="ddToggleRow(1)" style="margin-top:6px;padding:5px 10px;font-size:11.5px;border:1px dashed var(--border2);border-radius:8px;background:transparent;color:var(--teal);font-weight:700;cursor:pointer">＋ Thêm thời 2 (sáng)</button>
       </div>
 
       <!-- Buổi tối -->
       <div style="background:var(--surface2);border-radius:var(--r);padding:8px 10px">
-        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">🌙 Buổi tối</div>
+        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">🌙 Buổi tối <span style="font-weight:500">· Thời 1</span></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end">
           <div>
             <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Bắt đầu</div>
@@ -633,15 +645,27 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           </div>
           <div>
             <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Tổng (phút)</div>
-            <input type="number" id="dd-mins2" readonly tabindex="-1" title="Tự tính từ giờ bắt đầu và kết thúc" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
+            <input type="number" id="dd-min2a" readonly tabindex="-1" title="Tự tính từ giờ bắt đầu và kết thúc" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
+            <input type="hidden" id="dd-mins2">
           </div>
         </div>
-        <div id="dd-row2b" style="display:none;margin-top:6px">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Thời 2 — bắt đầu / kết thúc</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <input type="time" id="dd-start2b" oninput="calcMins(2)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
-            <input type="time" id="dd-end2b" oninput="calcMins(2)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+        <div id="dd-row2b" style="display:none;margin-top:8px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">Thời 2</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end">
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Bắt đầu</div>
+              <input type="time" id="dd-start2b" oninput="calcMins(2)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Kết thúc</div>
+              <input type="time" id="dd-end2b" oninput="calcMins(2)" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink)">
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Tổng (phút)</div>
+              <input type="number" id="dd-min2bt" readonly tabindex="-1" style="width:100%;padding:6px 8px;font-size:14px;font-weight:700;border:1px solid var(--teal);border-radius:var(--r);background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none">
+            </div>
           </div>
+          <div id="dd-tot2" style="margin-top:6px;font-size:12px;font-weight:800;color:var(--teal);text-align:right"></div>
         </div>
         <button type="button" id="dd-add2b" class="qbtn2" onclick="ddToggleRow(2)" style="margin-top:6px;padding:5px 10px;font-size:11.5px;border:1px dashed var(--border2);border-radius:8px;background:transparent;color:var(--teal);font-weight:700;cursor:pointer">＋ Thêm thời 2 (chiều/tối)</button>
       </div>
@@ -653,7 +677,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v37</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v38</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1911,6 +1935,7 @@ function showDayDetail(k){
     if(r)r.style.display=has?'block':'none';
     if(btn)btn.textContent=has?'－ Bỏ thời 2':'＋ Thêm thời 2 '+(n==='1'?'(sáng)':'(chiều/tối)');
   });
+  calcMins(1);calcMins(2);
   const _gc=document.getElementById('dd-gioi');
   if(_gc){ _gc.checked=!!(e&&e.gioi);
     const _gh=document.getElementById('dd-gioi-hint');
@@ -1977,9 +2002,14 @@ function _pairMins(s,e){
 }
 function calcMins(sess){
   const t1=_pairMins(document.getElementById('dd-start'+sess).value, document.getElementById('dd-end'+sess).value);
-  const b=document.getElementById('dd-start'+sess+'b');
-  const t2=b?_pairMins(b.value, document.getElementById('dd-end'+sess+'b').value):0;
+  const bEl=document.getElementById('dd-start'+sess+'b');
+  const rowB=document.getElementById('dd-row'+sess+'b');
+  const t2=(bEl&&rowB&&rowB.style.display!=='none')?_pairMins(bEl.value, document.getElementById('dd-end'+sess+'b').value):0;
+  const a1=document.getElementById('dd-min'+sess+'a'); if(a1)a1.value=t1;
+  const bt=document.getElementById('dd-min'+sess+'bt'); if(bt)bt.value=t2;
   document.getElementById('dd-mins'+sess).value=t1+t2;
+  const tot=document.getElementById('dd-tot'+sess);
+  if(tot)tot.textContent='Tổng buổi '+((sess===1||sess==='1')?'sáng':'tối')+' (2 thời): '+(t1+t2)+' phút';
 }
 function ddToggleRow(sess){
   const r=document.getElementById('dd-row'+sess+'b');
