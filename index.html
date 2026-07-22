@@ -220,7 +220,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <!-- CARD ☸: KH & thực tế 8 giới cả tháng (chỉ xem; cài đặt & ghi ở tab Tháng) -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div style="font-size:10px;font-weight:700;color:#8a6d1a;letter-spacing:.5px;margin-bottom:8px">☸ GIỮ 8 GIỚI THÁNG NÀY <span style="font-weight:500;color:var(--muted);text-transform:none">· cập nhật ở tab Tháng</span></div>
+    <div style="font-size:10px;font-weight:700;color:#8a6d1a;letter-spacing:.5px;margin-bottom:8px">☸ GIỮ GIỚI THÁNG NÀY</div>
     <div style="display:flex;gap:8px;align-items:stretch">
       <div style="display:flex;flex-direction:column;justify-content:space-around;gap:6px;flex:none">
         <div class="grow-lbl">KẾ<br>HOẠCH</div>
@@ -228,7 +228,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       </div>
       <div id="gioi-balls" style="flex:1"></div>
     </div>
-    <div style="font-size:9.5px;color:var(--muted);margin-top:7px">Số <b style="color:#0a7a4f">xanh</b>: ngày dương · số <b style="color:#c0392b">đỏ</b>: ngày âm. Thực tế: 🟢 đã giữ (đúng hoặc khác ngày KH) · 🔴 chưa giữ · 🟡 hôm nay · ⚪ chưa tới.</div>
   </div>
 
   <!-- CARD 3: Biểu đồ tháng + Pie chart cùng card -->
@@ -548,46 +547,12 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <h3 id="dd-title">Chi tiết ngày</h3>
     <div id="dd-body" style="font-size:13px;color:var(--ink);line-height:2;margin-bottom:12px"></div>
 
-    <!-- Ghi chú kết quả -->
-    <div style="margin-bottom:10px">
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Ghi chú buổi thiền</div>
-      <div style="margin-bottom:6px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">🌅 Buổi sáng</div>
-        <div style="display:flex;align-items:center;gap:8px;margin:2px 0 10px;padding:9px 12px;background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#fdf6e0 0%,#f2e5bd 100%);border:1px solid #d9c37a;border-radius:10px">
-          <label style="font-size:13px;font-weight:800;color:#6b5410;display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="dd-gioi" style="transform:scale(1.25)">☸ Giữ 8 giới ngày này</label>
-          <span id="dd-gioi-hint" style="font-size:11px;color:#8a6d1a"></span>
-        </div>
-        <textarea id="dd-note-s" rows="2" placeholder="Ghi chú buổi sáng..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea>
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">🌙 Buổi tối</div>
-        <textarea id="dd-note-t" rows="2" placeholder="Ghi chú buổi tối..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea>
-      </div>
+    <!-- Tổng trên cùng -->
+    <div style="margin-bottom:12px;background:var(--surface2);border-radius:var(--r);padding:10px 12px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px"><span>🌅 Tổng buổi sáng:</span><span id="dd-sum-s" style="color:var(--teal)">0 ph</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px"><span>🌙 Tổng buổi tối:</span><span id="dd-sum-t" style="color:var(--teal)">0 ph</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;border-top:1px dashed var(--border2);padding-top:5px"><span>Σ Tổng ngày:</span><span id="dd-sum-all" style="color:var(--gold)">0 ph</span></div>
     </div>
-
-    <!-- Đánh giá kết quả -->
-    <div style="margin-bottom:14px">
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Đánh giá kết quả</div>
-      <!-- Buổi sáng -->
-      <div style="margin-bottom:8px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">🌅 Buổi sáng</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">
-          <button id="rating-s-tot" onclick="setDayRating('s','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button>
-          <button id="rating-s-can" onclick="setDayRating('s','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button>
-          <button id="rating-s-kem" onclick="setDayRating('s','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button>
-        </div>
-      </div>
-      <!-- Buổi tối -->
-      <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">🌙 Buổi tối</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">
-          <button id="rating-t-tot" onclick="setDayRating('t','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button>
-          <button id="rating-t-can" onclick="setDayRating('t','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button>
-          <button id="rating-t-kem" onclick="setDayRating('t','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button>
-        </div>
-      </div>
-    </div>
-
     <!-- Sửa dữ liệu ngày đã qua -->
     <div id="dd-edit-section" style="margin-bottom:14px">
       <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Sửa dữ liệu</div>
@@ -610,6 +575,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <input type="hidden" id="dd-mins1">
           </div>
         </div>
+        <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-s" rows="2" placeholder="Ghi chú thời 1 sáng..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-s-tot" onclick="setDayRating('s','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-s-can" onclick="setDayRating('s','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-s-kem" onclick="setDayRating('s','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
         <div id="dd-row1b" style="display:none;margin-top:8px">
           <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">Thời 2</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end">
@@ -627,6 +593,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             </div>
           </div>
           <div id="dd-tot1" style="margin-top:6px;font-size:12px;font-weight:800;color:var(--teal);text-align:right"></div>
+          <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-1b" rows="2" placeholder="Ghi chú thời 2 sáng..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-1b-tot" onclick="setDayRating('1b','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-1b-can" onclick="setDayRating('1b','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-1b-kem" onclick="setDayRating('1b','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
         </div>
         <button type="button" id="dd-add1b" class="qbtn2" onclick="ddToggleRow(1)" style="margin-top:6px;padding:5px 10px;font-size:11.5px;border:1px dashed var(--border2);border-radius:8px;background:transparent;color:var(--teal);font-weight:700;cursor:pointer">＋ Thêm thời 2 (sáng)</button>
       </div>
@@ -649,6 +616,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <input type="hidden" id="dd-mins2">
           </div>
         </div>
+        <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-t" rows="2" placeholder="Ghi chú thời 1 chiều/tối..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-t-tot" onclick="setDayRating('t','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-t-can" onclick="setDayRating('t','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-t-kem" onclick="setDayRating('t','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
         <div id="dd-row2b" style="display:none;margin-top:8px">
           <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">Thời 2</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:end">
@@ -666,9 +634,14 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             </div>
           </div>
           <div id="dd-tot2" style="margin-top:6px;font-size:12px;font-weight:800;color:var(--teal);text-align:right"></div>
+          <div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Ghi chú thời</div><textarea id="dd-note-2b" rows="2" placeholder="Ghi chú thời 2 chiều/tối..." style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);resize:none;font-family:inherit"></textarea></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Đánh giá</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"><button id="rating-2b-tot" onclick="setDayRating('2b','tot')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Tốt</button><button id="rating-2b-can" onclick="setDayRating('2b','can')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Cố gắng thêm</button><button id="rating-2b-kem" onclick="setDayRating('2b','kem')" style="padding:7px 4px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer">Kém</button></div></div>
         </div>
         <button type="button" id="dd-add2b" class="qbtn2" onclick="ddToggleRow(2)" style="margin-top:6px;padding:5px 10px;font-size:11.5px;border:1px dashed var(--border2);border-radius:8px;background:transparent;color:var(--teal);font-weight:700;cursor:pointer">＋ Thêm thời 2 (chiều/tối)</button>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;margin:2px 0 10px;padding:9px 12px;background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#fdf6e0 0%,#f2e5bd 100%);border:1px solid #d9c37a;border-radius:10px">
+          <label style="font-size:13px;font-weight:800;color:#6b5410;display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="dd-gioi" style="transform:scale(1.25)">☸ Giữ 8 giới ngày này</label>
+          <span id="dd-gioi-hint" style="font-size:11px;color:#8a6d1a"></span>
+        </div>
     </div>
 
     <button class="btn btn-p" onclick="saveDayDetail()">&#10003; Lưu</button>
@@ -677,7 +650,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v38</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v40</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1930,7 +1903,7 @@ function showDayDetail(k){
     const sb=document.getElementById('dd-start'+n+'b'), eb=document.getElementById('dd-end'+n+'b');
     if(sb)sb.value=(e&&e['start'+n+'b'])||'';
     if(eb)eb.value=(e&&e['end'+n+'b'])||'';
-    const has=!!(e&&(e['start'+n+'b']||e['end'+n+'b']));
+    const has=!!(e&&(e['start'+n+'b']||e['end'+n+'b']||e['note'+n+'b']||e['rating'+n+'b']));
     const r=document.getElementById('dd-row'+n+'b'), btn=document.getElementById('dd-add'+n+'b');
     if(r)r.style.display=has?'block':'none';
     if(btn)btn.textContent=has?'－ Bỏ thời 2':'＋ Thêm thời 2 '+(n==='1'?'(sáng)':'(chiều/tối)');
@@ -1957,9 +1930,11 @@ function showDayDetail(k){
   // Ghi chú
   document.getElementById('dd-note-s').value=e?e.noteS||'':'';
   document.getElementById('dd-note-t').value=e?e.noteT||'':'';
+  const _n1b=document.getElementById('dd-note-1b'); if(_n1b)_n1b.value=e?e.note1b||'':'';
+  const _n2b=document.getElementById('dd-note-2b'); if(_n2b)_n2b.value=e?e.note2b||'':'';
 
   // Đánh giá sáng + tối
-  updateRatingBtns(e?e.ratingS:null, e?e.ratingT:null);
+  updateRatingBtns(e);
 
   // Sửa dữ liệu
   document.getElementById('dd-mins1').value=e?e.mins1||0:0;
@@ -1973,13 +1948,18 @@ function showDayDetail(k){
   document.getElementById('day-detail').classList.add('on');
 }
 
-function updateRatingBtns(ratingS, ratingT){
+function updateRatingBtns(e){
   const colors={'tot':'#2ecc71','can':'#FFFF00','kem':'#e74c3c'};
-  ['tot','can','kem'].forEach(r=>{
-    const bs=document.getElementById('rating-s-'+r);
-    const bt=document.getElementById('rating-t-'+r);
-    if(bs){const a=ratingS===r;bs.style.background=a?colors[r]:'transparent';bs.style.color='#000000';bs.style.borderColor=a?colors[r]:'var(--border2)';}
-    if(bt){const a=ratingT===r;bt.style.background=a?colors[r]:'transparent';bt.style.color='#000000';bt.style.borderColor=a?colors[r]:'var(--border2)';}
+  const vals={'s':e?e.ratingS:null,'t':e?e.ratingT:null,'1b':e?e.rating1b:null,'2b':e?e.rating2b:null};
+  ['s','t','1b','2b'].forEach(p=>{
+    ['tot','can','kem'].forEach(r=>{
+      const btn=document.getElementById('rating-'+p+'-'+r);
+      if(!btn)return;
+      const a=vals[p]===r;
+      btn.style.background=a?colors[r]:'transparent';
+      btn.style.color='#000000';
+      btn.style.borderColor=a?colors[r]:'var(--border2)';
+    });
   });
 }
 
@@ -1987,9 +1967,9 @@ function setDayRating(sess, r){
   const k=currentDayKey;if(!k)return;
   let e=getEntry(k);
   if(!e){e={date:k,mins1:0,mins2:0,q1:3,q2:3,types1:[],types2:[]};ST.data.push(e);}
-  if(sess==='s'){e.ratingS=e.ratingS===r?null:r;}
-  else{e.ratingT=e.ratingT===r?null:r;}
-  save();updateRatingBtns(e.ratingS,e.ratingT);renderPieChart();
+  const field={'s':'ratingS','t':'ratingT','1b':'rating1b','2b':'rating2b'}[sess];
+  e[field]=e[field]===r?null:r;
+  save();updateRatingBtns(e);renderPieChart();
 }
 
 function _pairMins(s,e){
@@ -2010,6 +1990,11 @@ function calcMins(sess){
   document.getElementById('dd-mins'+sess).value=t1+t2;
   const tot=document.getElementById('dd-tot'+sess);
   if(tot)tot.textContent='Tổng buổi '+((sess===1||sess==='1')?'sáng':'tối')+' (2 thời): '+(t1+t2)+' phút';
+  const m1=+((document.getElementById('dd-mins1')||{}).value)||0;
+  const m2=+((document.getElementById('dd-mins2')||{}).value)||0;
+  const ss=document.getElementById('dd-sum-s'); if(ss)ss.textContent=m1+' ph';
+  const st=document.getElementById('dd-sum-t'); if(st)st.textContent=m2+' ph';
+  const sa=document.getElementById('dd-sum-all'); if(sa)sa.textContent=(m1+m2)+' ph';
 }
 function ddToggleRow(sess){
   const r=document.getElementById('dd-row'+sess+'b');
@@ -2043,6 +2028,8 @@ function saveDayDetail(){
   e.start2b=document.getElementById('dd-start2b').value;
   e.end2b=document.getElementById('dd-end2b').value;
   const _g=document.getElementById('dd-gioi'); if(_g) e.gioi=_g.checked;
+  const _n1b=document.getElementById('dd-note-1b'); if(_n1b) e.note1b=_n1b.value.trim();
+  const _n2b=document.getElementById('dd-note-2b'); if(_n2b) e.note2b=_n2b.value.trim();
   save();renderAll();
   document.getElementById('day-detail').classList.remove('on');
   toast('✓ Đã lưu ngày '+k);
