@@ -678,7 +678,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v68</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v69</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -782,7 +782,7 @@ function editUserName(){
 }
 function enterApp(){
   const h=document.getElementById('home-screen'); if(h) h.style.display='none';
-  try{ localStorage.setItem('thien_entered','1'); }catch(e){}
+  try{ sessionStorage.setItem('thien_entered','1'); }catch(e){}
 }
 // ===== Mật khẩu mở app (lưu cục bộ trên máy) =====
 function hashPass(p){let h=5381;for(let i=0;i<p.length;i++){h=((h<<5)+h+p.charCodeAt(i))|0;}return 'h'+h;}
@@ -2466,12 +2466,13 @@ renderAll();
 applyUserName();
 initLock();
 try{
-  // Làm mới trang: nếu đã từng vào app thì bỏ qua trang bìa, quay thẳng về tab đang xem
-  if(localStorage.getItem('thien_entered')==='1'){
+  // Kéo xuống làm mới (cùng phiên): bỏ qua trang bìa + giữ nguyên tab đang xem.
+  // Mở app mới (phiên mới): hiện trang bìa và vào từ trang đầu như bình thường.
+  if(sessionStorage.getItem('thien_entered')==='1'){
     const h=document.getElementById('home-screen'); if(h) h.style.display='none';
+    const lt=localStorage.getItem('thien_last_tab');
+    if(lt && lt!=='today' && ['month','year','chart','rec'].includes(lt)) nav(lt);
   }
-  const lt=localStorage.getItem('thien_last_tab');
-  if(lt && lt!=='today' && ['month','year','chart','rec'].includes(lt)) nav(lt);
 }catch(e){}
 updateNotifBtn();
 registerSW();
