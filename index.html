@@ -75,6 +75,17 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .vsep{flex:none;width:0;height:24px;border-left:2px dashed rgba(90,60,10,.4);margin:0 1px}
 .tnote{width:100%;margin-top:6px;padding:8px 10px;font-size:13.5px;min-height:96px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink);resize:none;font-family:inherit}
 .ttot{margin-top:5px;font-size:11.5px;font-weight:800;color:var(--teal);text-align:right}
+@media (min-width:700px){
+  .tin{font-size:14px;min-width:92px;padding:7px 4px}
+  .tmin{font-size:14px;min-width:76px;padding:7px 4px}
+  .tbadge{font-size:11px;padding:4px 7px}
+  .rbtn{font-size:12px;padding:7px 4px}
+  .rbtn.rcan{min-width:92px}
+  .nbtn{font-size:12px;padding:7px 8px}
+  .tnote{font-size:14.5px}
+  .ttot{font-size:13px}
+  .vsep{height:30px}
+}
 .sess-block{border:1px solid var(--border2);border-radius:10px;padding:10px 12px;transition:all .15s;text-align:center;position:relative;overflow:hidden;box-shadow:0 5px 10px rgba(60,40,12,.22),0 1px 0 rgba(255,255,255,.55) inset,0 -3px 6px rgba(0,0,0,.14) inset}
 .sess-block::before{content:'';position:absolute;left:0;right:0;top:0;height:52%;background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.12) 65%,rgba(255,255,255,0) 100%);pointer-events:none;z-index:0;border-radius:10px 10px 40% 40%}
 .sess-block>*{position:relative;z-index:1}
@@ -558,9 +569,14 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <!-- DAY DETAIL -->
 <div class="detail-overlay" id="day-detail">
-  <div class="detail-sheet">
+  <div class="detail-sheet" id="dd-sheet">
     <button class="detail-close" onclick="document.getElementById('day-detail').classList.remove('on')">&#10005;</button>
-    <h3 id="dd-title">Chi tiết ngày</h3>
+    <div style="position:absolute;top:10px;right:52px;display:flex;gap:6px;align-items:center">
+      <button onclick="ddZoom(-1)" style="width:34px;height:30px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);font-size:13px;font-weight:800;cursor:pointer;color:var(--ink)">A−</button>
+      <span id="dd-zoom-pct" style="font-size:10.5px;font-weight:700;color:var(--muted);min-width:34px;text-align:center">100%</span>
+      <button onclick="ddZoom(1)" style="width:34px;height:30px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);font-size:15px;font-weight:800;cursor:pointer;color:var(--ink)">A+</button>
+    </div>
+    <h3 id="dd-title" style="padding-right:150px">Chi tiết ngày</h3>
     <div id="dd-body" style="font-size:13px;color:var(--ink);line-height:2;margin-bottom:12px"></div>
 
     <!-- Tổng trên cùng -->
@@ -658,7 +674,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v57</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v58</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1914,8 +1930,22 @@ function prevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCale
 function nextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
 let currentDayKey=null;
 
+var ddScale=1;
+try{ ddScale=parseFloat(localStorage.getItem('dd_zoom'))||1; }catch(e){}
+function ddApplyZoom(){
+  const sh=document.getElementById('dd-sheet');
+  if(sh) sh.style.zoom=ddScale;
+  const p=document.getElementById('dd-zoom-pct');
+  if(p) p.textContent=Math.round(ddScale*100)+'%';
+}
+function ddZoom(dir){
+  ddScale=Math.min(1.7, Math.max(0.7, +(ddScale+dir*0.1).toFixed(2)));
+  try{ localStorage.setItem('dd_zoom', ddScale); }catch(e){}
+  ddApplyZoom();
+}
 function showDayDetail(k){
   currentDayKey=k;
+  ddApplyZoom();
   const e=getEntry(k);const d=new Date(k);
   const isPast=k<getDK();const isToday=k===getDK();
   document.getElementById('dd-title').textContent=DAYS7[d.getDay()]+', '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' · '+lunarLabelKey(k);
