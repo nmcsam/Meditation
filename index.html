@@ -434,12 +434,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div id="gioi-pairs-month" style="flex:1"></div>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:7px">Chạm quả cầu hàng THỰC TẾ để đánh dấu/bỏ đã giữ. Giữ vào ngày khác: mở ngày đó trên lịch phía trên và tick ☸ — cầu sẽ tự hiện ngày thật.</div>
-      <button class="btn" style="margin-top:10px;font-size:12.5px" onclick="var w=document.getElementById('gioi-days-wrap');w.style.display=w.style.display==='none'?'block':'none'">▸ Chỉnh ngày kế hoạch (ÂL 1–30)</button>
-      <div id="gioi-days-wrap" style="display:none;margin-top:8px">
-        <div class="tags" id="gioi-days-row"></div>
-        <div style="font-size:10.5px;color:var(--muted);margin-top:6px">Chạm để chọn/bỏ ngày âm lịch thọ trì. Tháng thiếu (29 ngày): kế hoạch ngày 30 tự tính vào ngày 29.</div>
-      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo từng tháng. Giữ giới ngày nào: mở ngày đó trên lịch phía trên → tick ☸, kết quả tự hiện ở đây và ở tab Hôm nay. Chạm nhanh quả cầu THỰC TẾ cũng đánh dấu được cho đúng ngày kế hoạch.</div>
     </div>
   </div>
   </div>
@@ -533,12 +528,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div id="gioi-pairs-month" style="flex:1"></div>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:7px">Chạm quả cầu hàng THỰC TẾ để đánh dấu/bỏ đã giữ. Giữ vào ngày khác: mở ngày đó trên lịch phía trên và tick ☸ — cầu sẽ tự hiện ngày thật.</div>
-      <button class="btn" style="margin-top:10px;font-size:12.5px" onclick="var w=document.getElementById('gioi-days-wrap');w.style.display=w.style.display==='none'?'block':'none'">▸ Chỉnh ngày kế hoạch (ÂL 1–30)</button>
-      <div id="gioi-days-wrap" style="display:none;margin-top:8px">
-        <div class="tags" id="gioi-days-row"></div>
-        <div style="font-size:10.5px;color:var(--muted);margin-top:6px">Chạm để chọn/bỏ ngày âm lịch thọ trì. Tháng thiếu (29 ngày): kế hoạch ngày 30 tự tính vào ngày 29.</div>
-      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo từng tháng. Giữ giới ngày nào: mở ngày đó trên lịch phía trên → tick ☸, kết quả tự hiện ở đây và ở tab Hôm nay. Chạm nhanh quả cầu THỰC TẾ cũng đánh dấu được cho đúng ngày kế hoạch.</div>
     </div>
     <div class="srow">
       <div class="srow-top"><label>Chất lượng</label><span class="sval" id="modal-q-val">Trung bình</span></div>
@@ -645,7 +635,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v29</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v30</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -818,12 +808,7 @@ function convertSolar2Lunar(dd,mm,yy){var dayNumber=_jd(dd,mm,yy),k=Math.floor((
  return [lunarDay,lunarMonth,lunarYear,lunarLeap];}
 function lunarOfKey(k){var p=k.split('-');return convertSolar2Lunar(+p[2],+p[1],+p[0]);}
 function lunarLabelKey(k){var L=lunarOfKey(k);return L[0]+'/'+L[1]+(L[3]?'n':'')+' ÂL';}
-function getGioiDays(){
-  var g=ST.gioiDays;
-  if(!g||!g.length) return [8,15,23,30];
-  if(JSON.stringify(g)===JSON.stringify([8,14,15,23,29,30])) return [8,15,23,30]; // mặc định cũ -> mặc định mới
-  return g;
-}
+function getGioiDays(){return [8,15,23,30];}
 function gioiPlannedKey(k){
   var L=lunarOfKey(k),set=getGioiDays();
   if(set.indexOf(L[0])>=0)return true;
@@ -847,10 +832,17 @@ function _gkey(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).pad
 function gioiOccurrences(){
   var now=new Date(),y=now.getFullYear(),m=now.getMonth();
   var days=new Date(y,m+1,0).getDate(),todayK=getDK();
-  var plans=[],keptDays=[];
+  var found={},plans=[],keptDays=[];
   for(var d=1;d<=days;d++){
-    var k=_gkey(y,m,d);
-    if(gioiPlannedKey(k))plans.push(k);
+    var k=_gkey(y,m,d),L=lunarOfKey(k),ld=L[0],t=0;
+    if(ld===8||ld===15||ld===23)t=ld;
+    else if(ld===30)t=30;
+    else if(ld===29){
+      var nx=new Date(k+'T12:00:00');nx.setDate(nx.getDate()+1);
+      var nk=nx.getFullYear()+'-'+String(nx.getMonth()+1).padStart(2,'0')+'-'+String(nx.getDate()).padStart(2,'0');
+      if(lunarOfKey(nk)[0]===1)t=30; // tháng thiếu: 29 là ngày cuối -> tính là kỳ 30
+    }
+    if(t&&!found[t]){found[t]=1;plans.push(k);}
     var e=getEntry(k);if(e&&e.gioi)keptDays.push(k);
   }
   var used={};
@@ -1758,7 +1750,6 @@ function renderCalendar(){
   document.getElementById('mo-days').textContent=totalD;
   document.getElementById('mo-mins').textContent=totalM;
   document.getElementById('mo-streak').textContent=streak;
-  renderGioiDays();
   var _gp=document.getElementById('gioi-pairs-month');
   if(_gp)_gp.innerHTML=_gioiPairsHTML(true);
   (function(){
