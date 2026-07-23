@@ -264,19 +264,20 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
       <!-- Biểu đồ tháng chiếm phần lớn -->
       <div style="flex:1;min-width:0">
-        <div style="display:flex;align-items:center;gap:4px;margin-bottom:6px">
-          <button onclick="prevChartMonth()" style="border:1px solid var(--border2);background:var(--surface2);border-radius:6px;font-size:14px;color:var(--ink);cursor:pointer;padding:2px 8px;line-height:1">‹</button>
-          <span id="chart-month-label" style="font-size:11px;font-weight:700;color:var(--ink);min-width:80px;text-align:center">THÁNG NÀY</span>
-          <button onclick="nextChartMonth()" style="border:1px solid var(--border2);background:var(--surface2);border-radius:6px;font-size:14px;color:var(--ink);cursor:pointer;padding:2px 8px;line-height:1">›</button>
-        </div>
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;white-space:nowrap;overflow:hidden">
-            <span style="font-size:10.5px;font-weight:700;color:var(--ink);flex:none">Kế hoạch: <b id="mpva-plan">0</b></span>
-            <span style="color:var(--border2);flex:none">|</span>
-            <span style="font-size:10.5px;font-weight:700;color:var(--ink);flex:none">Thực tế: <b id="mpva-actual" style="color:var(--teal)">0</b></span>
-            <span style="color:var(--border2);flex:none">|</span>
-            <span id="month-pva-pct" style="font-size:11px;font-weight:800;color:var(--teal);flex:none">0%</span>
-            <span style="color:var(--border2);flex:none">|</span>
-            <span id="mpva-verdict" style="font-size:10.5px;font-weight:800;flex:none">—</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+          <div style="display:flex;align-items:center;gap:4px">
+            <button onclick="prevChartMonth()" style="border:1px solid var(--border2);background:var(--surface2);border-radius:6px;font-size:14px;color:var(--ink);cursor:pointer;padding:2px 8px;line-height:1">‹</button>
+            <span id="chart-month-label" style="font-size:11px;font-weight:700;color:var(--ink);min-width:80px;text-align:center">THÁNG NÀY</span>
+            <button onclick="nextChartMonth()" style="border:1px solid var(--border2);background:var(--surface2);border-radius:6px;font-size:14px;color:var(--ink);cursor:pointer;padding:2px 8px;line-height:1">›</button>
+          </div>
+          <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+            <span style="font-size:10.5px;font-weight:700;color:var(--ink)">Kế hoạch: <b id="mpva-plan">0</b></span>
+            <span style="color:var(--border2)">|</span>
+            <span style="font-size:10.5px;font-weight:700;color:var(--ink)">Thực tế: <b id="mpva-actual" style="color:var(--teal)">0</b></span>
+            <span style="color:var(--border2)">|</span>
+            <span id="month-pva-pct" style="font-size:11px;font-weight:800;color:var(--teal)">0%</span>
+            <span style="color:var(--border2)">|</span>
+            <span id="mpva-verdict" style="font-size:10.5px;font-weight:800">—</span>
             <span id="mpva-full" style="display:none">0</span><span id="mpva-miss" style="display:none">0</span><span id="mpva-gioi" style="display:none">0/0</span>
           </div>
         </div>
@@ -663,7 +664,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v84</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v85</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
