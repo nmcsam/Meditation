@@ -664,7 +664,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v82</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v83</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1889,8 +1889,16 @@ function renderMonthPVA(){
   document.getElementById('month-pva-pct').textContent=pct+'%';
   (function(){
     var v=document.getElementById('mpva-verdict'); if(!v)return;
-    var dat=pct>=100;
+    // Đạt/không đạt so với KẾ HOẠCH TÍNH TỚI THỜI ĐIỂM HIỆN TẠI:
+    // tháng này: KH ngày x số ngày đã trôi qua (tới hôm nay); tháng cũ: trọn tháng; tháng tương lai: chưa xét.
+    var _now=new Date();
+    var _cmp=(y*12+mo)-(_now.getFullYear()*12+_now.getMonth());
+    var elapsed=_cmp<0?daysInMonth:(_cmp>0?0:_now.getDate());
+    var planToDate=(ST.goal1+ST.goal2)*elapsed;
+    if(elapsed<=0){ v.textContent='—'; v.style.color='var(--muted)'; return; }
+    var dat=actualTotal>=planToDate;
     v.textContent=dat?'✓ đạt':'✗ không đạt';
+    v.title='So với kế hoạch tới nay: '+fmtHM(planToDate);
     v.style.color=dat?'#0a7a4f':'#c0392b';
   })();
   document.getElementById('month-pva-pct').style.color=color;
