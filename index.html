@@ -458,7 +458,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div style="font-size:10px;color:var(--muted);margin-top:3px" id="mo-gioi-note"></div>
     </div>
       <div id="gioi-pairs-month"></div>
-      <div style="font-size:10px;color:var(--muted);margin-top:8px">Kế hoạch là trọn tháng — mỗi chấm một ngày (số dương ghi phía trên, chấm <b>nét đứt</b> là chưa giữ). <b>Chạm vào chấm ngày để ghi giữ 8 giới — chấm chuyển xanh ☸ ngay.</b> Chạm chấm xanh → bấm <b>Xóa — xong</b> nếu ghi nhầm. Kết quả hiện ở đây và ở tab Hôm nay.</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px">Mỗi chấm một ngày, số dương phía trên. <b>Hàng KẾ HOẠCH</b>: chạm chấm để đánh dấu ngày dự định giữ giới (chấm <b style="color:#c9891a">vàng</b>) — chạm lại để bỏ. <b>Hàng THỰC TẾ</b>: chạm chấm ngày đã giữ (chấm <b style="color:#0a7a4f">xanh</b>); chạm chấm xanh → bấm <b>Xóa — xong</b> nếu nhầm. Kế hoạch và thực tế có thể khác ngày. Kết quả hiện ở đây và ở tab Hôm nay.</div>
   </div>
 </div>
 
@@ -545,7 +545,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="margin-top:12px">
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">☸ Giữ 8 giới — kế hoạch &amp; thực tế tháng này</div>
       <div id="gioi-pairs-month"></div>
-      <div style="font-size:10px;color:var(--muted);margin-top:8px">Kế hoạch là trọn tháng — mỗi chấm một ngày (số dương ghi phía trên, chấm <b>nét đứt</b> là chưa giữ). <b>Chạm vào chấm ngày để ghi giữ 8 giới — chấm chuyển xanh ☸ ngay.</b> Chạm chấm xanh → bấm <b>Xóa — xong</b> nếu ghi nhầm. Kết quả hiện ở đây và ở tab Hôm nay.</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px">Mỗi chấm một ngày, số dương phía trên. <b>Hàng KẾ HOẠCH</b>: chạm chấm để đánh dấu ngày dự định giữ giới (chấm <b style="color:#c9891a">vàng</b>) — chạm lại để bỏ. <b>Hàng THỰC TẾ</b>: chạm chấm ngày đã giữ (chấm <b style="color:#0a7a4f">xanh</b>); chạm chấm xanh → bấm <b>Xóa — xong</b> nếu nhầm. Kế hoạch và thực tế có thể khác ngày. Kết quả hiện ở đây và ở tab Hôm nay.</div>
     </div>
     <div class="srow">
       <div class="srow-top"><label>Chất lượng</label><span class="sval" id="modal-q-val">Trung bình</span></div>
@@ -661,7 +661,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v75</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v76</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -948,6 +948,57 @@ function gioiKeptCount(y,m){
   }
   return {kept:c, dim:dim};
 }
+function gioiPlanArr(y,m){
+  if(!ST.gioiPlan) ST.gioiPlan={};
+  var ym=y+'-'+String(m+1).padStart(2,'0');
+  return ST.gioiPlan[ym]||[];
+}
+function gioiTogglePlan(k){
+  var p=k.split('-'), y=+p[0], m=+p[1]-1, d=+p[2];
+  if(!ST.gioiPlan) ST.gioiPlan={};
+  var ym=p[0]+'-'+p[1];
+  var arr=(ST.gioiPlan[ym]||[]).slice(), i=arr.indexOf(d);
+  if(i>=0) arr.splice(i,1); else arr.push(d);
+  arr.sort(function(a,b){return a-b;});
+  ST.gioiPlan[ym]=arr;
+  save(); renderAll();
+  toast(i>=0?('Đã bỏ kế hoạch ngày '+_gfmt(k)):('☸ Kế hoạch giữ giới ngày '+_gfmt(k)));
+}
+function gioiStrip2HTML(interactive, y, m){
+  var now=new Date();
+  if(y===undefined){ y=now.getFullYear(); m=now.getMonth(); }
+  var dim=new Date(y,m+1,0).getDate();
+  var isCur=(y===now.getFullYear()&&m===now.getMonth());
+  var td=isCur?now.getDate():-1;
+  var plan={}; gioiPlanArr(y,m).forEach(function(d){plan[d]=1;});
+  function key(d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+  // hàng số ngày
+  var nums='<div style="display:flex">';
+  for(var d=1;d<=dim;d++){
+    nums+='<div style="flex:1;text-align:center;font-size:6px;font-weight:'+(d===td?'800':'600')+';color:'+(d===td?'#c9891a':'var(--muted)')+';line-height:1.3">'+d+'</div>';
+  }
+  nums+='</div>';
+  function dotRow(kind){
+    var h='<div style="display:flex;align-items:center">';
+    for(var d=1;d<=dim;d++){
+      var k=key(d), on;
+      if(kind==='plan') on=!!plan[d];
+      else { var e=getEntry(k); on=!!(e&&e.gioi); }
+      var dot='width:100%;max-width:9px;aspect-ratio:1;border-radius:50%;margin:0 auto;box-sizing:border-box;';
+      if(kind==='plan') dot+=on?'background:#c9891a;border:1px solid #a06a10;':'background:transparent;border:1.2px dashed #b08d3f88;';
+      else dot+=on?'background:#0a7a4f;border:1px solid #085c3c;box-shadow:0 1px 2px rgba(10,90,60,.35);':'background:transparent;border:1.2px dashed #b08d3f88;';
+      var cell='flex:1;min-width:0'+(interactive?';cursor:pointer':'');
+      var click=interactive?(' onclick="'+(kind==='plan'?'gioiTogglePlan':'gioiToggleDay')+'(\''+k+'\')"'):'';
+      h+='<div style="'+cell+'"'+click+'><div style="height:15px;display:flex;align-items:center;justify-content:center"><div style="'+dot+'"></div></div></div>';
+    }
+    return h+'</div>';
+  }
+  return '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 6px;align-items:center">'
+    +'<div></div><div>'+nums+'</div>'
+    +'<div class="grow-lbl" style="white-space:nowrap;font-size:8px">KẾ HOẠCH</div><div>'+dotRow('plan')+'</div>'
+    +'<div class="grow-lbl" style="white-space:nowrap;font-size:8px">THỰC TẾ</div><div>'+dotRow('actual')+'</div>'
+    +'</div>';
+}
 function gioiStripHTML(interactive, y, m){
   var now=new Date();
   if(y===undefined){ y=now.getFullYear(); m=now.getMonth(); }
@@ -978,10 +1029,11 @@ function gioiToggleDay(k){
 }
 function renderGioiBalls(){
   var box=document.getElementById('gioi-balls');if(!box)return;
-  box.innerHTML=gioiStripHTML(false);
+  box.innerHTML=gioiStrip2HTML(false);
   var now=new Date(), gc=gioiKeptCount(now.getFullYear(), now.getMonth());
+  var P=gioiPlanArr(now.getFullYear(), now.getMonth()).length;
   var su=document.getElementById('gioi-sum');
-  if(su) su.innerHTML='<span style="color:#0a7a4f">Đã giữ: '+gc.kept+'/'+gc.dim+' ngày</span>';
+  if(su) su.innerHTML='Kế hoạch: '+P+' <span style="opacity:.5">|</span> <span style="color:#0a7a4f">Thực tế: '+gc.kept+' ngày</span>';
 }
 function gioiSetKept(k,val){
   var e=getEntry(k);
@@ -1935,17 +1987,19 @@ function renderCalendar(){
   document.getElementById('mo-mins').textContent=totalM;
   document.getElementById('mo-streak').textContent=streak;
   var _gp=document.getElementById('gioi-pairs-month');
-  if(_gp)_gp.innerHTML=gioiStripHTML(true, calYear, calMonth);
+  if(_gp)_gp.innerHTML=gioiStrip2HTML(true, calYear, calMonth);
   (function(){
     const gc=gioiKeptCount(calYear,calMonth);
+    const P=gioiPlanArr(calYear,calMonth).length;
     const t=document.getElementById('mo-gioi-txt'),bar=document.getElementById('mo-gioi-bar'),note=document.getElementById('mo-gioi-note');
     if(!t)return;
-    t.textContent=gc.kept+'/'+gc.dim+' ngày';
-    const pct=gc.dim>0?Math.min(100,Math.round(gc.kept/gc.dim*100)):0;
-    if(bar){bar.style.width=pct+'%';bar.style.background=gc.kept>=gc.dim?'#0a7a4f':(gc.kept>0?'#b8860b':'rgba(0,0,0,.15)');}
+    t.textContent=P>0?(gc.kept+'/'+P+' ngày'):(gc.kept+' ngày');
+    const pct=P>0?Math.min(100,Math.round(gc.kept/P*100)):(gc.dim>0?Math.min(100,Math.round(gc.kept/gc.dim*100)):0);
+    if(bar){bar.style.width=pct+'%';bar.style.background=(P>0&&gc.kept>=P)||gc.kept>=gc.dim?'#0a7a4f':(gc.kept>0?'#b8860b':'rgba(0,0,0,.15)');}
     if(note){
       if(gc.kept>=gc.dim){note.textContent='✓ TRỌN THÁNG — thọ trì 8 giới đủ '+gc.dim+' ngày';note.style.color='#0a7a4f';t.style.color='#0a7a4f';}
-      else{note.textContent='Đã giữ '+gc.kept+' ngày trong tháng ('+gc.dim+' ngày)';note.style.color='var(--muted)';t.style.color=gc.kept>0?'#0a7a4f':'var(--ink)';}
+      else if(P>0&&gc.kept>=P){note.textContent='✓ ĐỦ — thực tế '+gc.kept+' / kế hoạch '+P+' ngày';note.style.color='#0a7a4f';t.style.color='#0a7a4f';}
+      else{note.textContent='Kế hoạch: '+P+' ngày · Thực tế: '+gc.kept+' ngày';note.style.color='var(--muted)';t.style.color=gc.kept>0?'#0a7a4f':'var(--ink)';}
     }
   })();
   const _avg=document.getElementById('mo-avg');
