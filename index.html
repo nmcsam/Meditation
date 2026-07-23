@@ -248,7 +248,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:9px" id="sess2-status"></div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:6px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:12.5px;font-weight:800;white-space:nowrap">Tổng số giờ thiền: <span id="today-total" style="color:var(--teal)">0ph</span></span>
       <div style="flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden">
         <div id="today-bar" style="height:100%;border-radius:3px;width:0%"></div>
       </div>
@@ -661,7 +662,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v79</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v80</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1738,6 +1739,8 @@ function renderToday(){
     const _g=document.getElementById('ti-goal'+n); if(_g)_g.style.color='#fff';
   });
   const color=pct>=100?'#076d5e':pct>=70?'#f0b429':'#c0392b';
+  const _tt=document.getElementById('today-total');
+  if(_tt){ const _m1=e&&e.mins1?e.mins1:0, _m2=e&&e.mins2?e.mins2:0; _tt.textContent=fmtHM(_m1+_m2); }
   const pctEl=document.getElementById('today-pct');
   pctEl.textContent=pct+'%';pctEl.style.color=pct>0?color:'var(--muted)';
   document.getElementById('today-bar').style.width=Math.min(100,pct)+'%';
