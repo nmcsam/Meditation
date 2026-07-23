@@ -470,6 +470,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div id="gioi-pairs-month" style="flex:1"></div>
       </div>
+      <div id="gioi-extra-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:9px"></div>
+      <button type="button" onclick="gioiExtraPick()" style="margin-top:8px;padding:6px 12px;font-size:12px;border:1.5px dashed #b8860b;border-radius:9px;background:transparent;color:#7a5410;font-weight:800;cursor:pointer">＋ Ghi thêm ngày giữ giới</button>
       <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → chọn ngày trên lịch → bấm "✓ Cập nhật — xong".</b> Cầu đã ghi (xanh): chạm vào → chọn <b>Thay đổi</b> (chọn lại ngày rồi bấm Cập nhật) hoặc <b>Xóa</b> (bấm Xóa — xong). Kết quả hiện ở đây và ở tab Hôm nay.</div>
   </div>
 </div>
@@ -563,6 +565,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div id="gioi-pairs-month" style="flex:1"></div>
       </div>
+      <div id="gioi-extra-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:9px"></div>
+      <button type="button" onclick="gioiExtraPick()" style="margin-top:8px;padding:6px 12px;font-size:12px;border:1.5px dashed #b8860b;border-radius:9px;background:transparent;color:#7a5410;font-weight:800;cursor:pointer">＋ Ghi thêm ngày giữ giới</button>
       <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → chọn ngày trên lịch → bấm "✓ Cập nhật — xong".</b> Cầu đã ghi (xanh): chạm vào → chọn <b>Thay đổi</b> (chọn lại ngày rồi bấm Cập nhật) hoặc <b>Xóa</b> (bấm Xóa — xong). Kết quả hiện ở đây và ở tab Hôm nay.</div>
     </div>
     <div class="srow">
@@ -679,7 +683,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v72</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v73</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1017,6 +1021,49 @@ function gioiConfirmDel(k,pk){
   gioiBarHide();
   toast('Đã xóa ghi giữ giới ngày '+_gfmt(k));
 }
+function gioiMonthBreakdown(y,m){
+  var days=new Date(y,m+1,0).getDate(), total=0, keptSet={};
+  for(var d=1;d<=days;d++){
+    var key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var e=getEntry(key);
+    if(e&&e.gioi){ total++; keptSet[key]=1; }
+  }
+  var planKept=0, planTotal=0, now=new Date();
+  if(y===now.getFullYear()&&m===now.getMonth()){
+    var occ=gioiOccurrences(); planTotal=occ.length;
+    occ.forEach(function(o){ if(o.state==='kept'&&o.actual&&keptSet[o.actual]){ planKept++; delete keptSet[o.actual]; } });
+  }else{
+    for(var d2=1;d2<=days;d2++){
+      var k2=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d2).padStart(2,'0');
+      if(gioiPlannedKey(k2)){ planTotal++; if(keptSet[k2]){ planKept++; delete keptSet[k2]; } }
+    }
+  }
+  return {planTotal:planTotal, planKept:planKept, extras:Object.keys(keptSet).sort(), total:total};
+}
+function gioiExtraPick(){
+  gioiBarHide();
+  var inp=document.getElementById('gioi-date-pick'); if(!inp)return;
+  inp.value=getDK();
+  var handler=function(){
+    var v=inp.value; if(!v)return;
+    gioiBarShow('<span '+_gtxt+'>☸ Giữ 8 giới ngày <b>'+_gfmt(v)+'</b></span>'
+      +'<button '+_gbtn+' onclick="gioiExtraConfirm(\''+v+'\')">✓ Cập nhật — xong</button>');
+  };
+  inp.onchange=handler; inp.oninput=handler;
+  try{ if(inp.showPicker) inp.showPicker(); else inp.click(); }catch(e){ inp.click(); }
+}
+function gioiExtraConfirm(v){
+  var e=getEntry(v);
+  if(e&&e.gioi){ gioiBarHide(); toast('Ngày '+_gfmt(v)+' đã được ghi giữ giới rồi'); return; }
+  gioiSetKept(v,true);
+  gioiBarHide();
+  toast('✓ Đã ghi giữ 8 giới ngày '+_gfmt(v));
+}
+function gioiExtraAsk(k){
+  gioiBarShow('<span '+_gtxt+'>Xóa ghi giữ giới ngày <b>'+_gfmt(k)+'</b>?</span>'
+    +'<button '+_gbtn+' onclick="gioiExtraDel(\''+k+'\')">🗑 Xóa — xong</button>');
+}
+function gioiExtraDel(k){ gioiSetKept(k,false); gioiBarHide(); toast('Đã xóa ghi giữ giới ngày '+_gfmt(k)); }
 function gioiMonthStats(y,m){ // m: 0-11 (tháng dương)
   var days=new Date(y,m+1,0).getDate(),p=0,kk=0;
   for(var d=1;d<=days;d++){
@@ -1875,16 +1922,24 @@ function renderCalendar(){
   var _gp=document.getElementById('gioi-pairs-month');
   if(_gp)_gp.innerHTML=_gioiPairsHTML(true);
   (function(){
-    const g=gioiMonthStats(calYear,calMonth);
+    const bk=gioiMonthBreakdown(calYear,calMonth);
     const t=document.getElementById('mo-gioi-txt'),bar=document.getElementById('mo-gioi-bar'),note=document.getElementById('mo-gioi-note');
     if(!t)return;
-    t.textContent=g.kept+'/'+g.planned+' ngày';
-    const pct=g.planned>0?Math.min(100,Math.round(g.kept/g.planned*100)):0;
-    if(bar){bar.style.width=pct+'%';bar.style.background=(g.planned>0&&g.kept>=g.planned)?'#0a7a4f':(g.kept>0?'#b8860b':'#c0392b');}
+    t.textContent=bk.total+' ngày';
+    const pct=bk.planTotal>0?Math.min(100,Math.round(bk.planKept/bk.planTotal*100)):0;
+    if(bar){bar.style.width=pct+'%';bar.style.background=(bk.planTotal>0&&bk.planKept>=bk.planTotal)?'#0a7a4f':(bk.planKept>0?'#b8860b':'#c0392b');}
     if(note){
-      if(g.planned===0)note.textContent='Tháng này không có ngày kế hoạch giữ giới.';
-      else if(g.kept>=g.planned){note.textContent='✓ ĐỦ — đã thọ trì trọn các ngày kế hoạch';note.style.color='#0a7a4f';t.style.color='#0a7a4f';}
-      else{const miss=g.planned-g.kept;note.textContent='✗ THIẾU '+miss+' ngày so với kế hoạch';note.style.color='#c0392b';t.style.color='#c0392b';}
+      const ok=bk.planTotal>0&&bk.planKept>=bk.planTotal;
+      note.textContent='Kế hoạch: '+bk.planKept+'/'+bk.planTotal+' · Ngoài kế hoạch: +'+bk.extras.length+' · Tổng tháng: '+bk.total+' ngày';
+      note.style.color=ok?'#0a7a4f':(bk.planKept>0?'#8a6d1a':'#c0392b');
+      t.style.color=ok?'#0a7a4f':'var(--ink)';
+    }
+    const ch=document.getElementById('gioi-extra-chips');
+    if(ch){
+      ch.innerHTML=bk.extras.map(function(k){
+        var d=+k.split('-')[2];
+        return '<span onclick="gioiExtraAsk(\''+k+'\')" style="display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:999px;background:#0a7a4f;color:#fff;font-size:11px;font-weight:800;cursor:pointer">☸ '+d+'</span>';
+      }).join('');
     }
   })();
   const _avg=document.getElementById('mo-avg');
