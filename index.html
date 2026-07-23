@@ -213,6 +213,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       </div>
       <div id="gioi-balls" style="flex:1"></div>
     </div>
+    <div id="gioi-dots" style="display:flex;gap:2px;margin-top:9px;justify-content:space-between;align-items:center"></div>
+    <div id="gioi-dots-cap" style="display:none;font-size:10.5px;font-weight:700;color:#0a7a4f;margin-top:4px;text-align:right"></div>
     <div id="gioi-today" style="display:none;border-radius:10px;padding:8px 12px;text-align:center;font-weight:800;font-size:12.5px;margin-top:8px"></div>
   </div>
   <div style="border-top:3px dashed #b08d3f;margin:10px 2px 10px;opacity:.75"></div>
@@ -683,7 +685,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v73</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v74</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -965,8 +967,29 @@ function gioiActualThisMonth(){
 function renderGioiBalls(){
   var box=document.getElementById('gioi-balls');if(!box)return;
   box.innerHTML=_gioiPairsHTML(false);
+  var now=new Date(), bk=gioiMonthBreakdown(now.getFullYear(), now.getMonth());
   var su=document.getElementById('gioi-sum');
-  if(su) su.innerHTML='Kế hoạch: 4 ngày <span style="opacity:.5">|</span> <span style="color:#0a7a4f">Thực tế: '+gioiActualThisMonth()+' ngày</span>';
+  if(su) su.innerHTML='Kế hoạch: '+bk.planKept+'/'+bk.planTotal+' <span style="opacity:.5">|</span> <span style="color:#0a7a4f">Tổng: '+bk.total+' ngày</span>';
+  // Dải chấm cả tháng: mỗi ngày một chấm — xanh: đã giữ, vàng viền: hôm nay, kem: chưa
+  var dots=document.getElementById('gioi-dots');
+  if(dots){
+    var dim=new Date(now.getFullYear(), now.getMonth()+1, 0).getDate(), td=now.getDate(), h='';
+    for(var d=1;d<=dim;d++){
+      var k=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      var e=getEntry(k), kept=!!(e&&e.gioi);
+      var stl='flex:1;max-width:11px;aspect-ratio:1;border-radius:50%;';
+      if(kept) stl+='background:#0a7a4f;box-shadow:0 1px 2px rgba(10,90,60,.4);';
+      else stl+='background:rgba(255,255,255,.65);border:1px solid #d9b45a55;';
+      if(d===td) stl+='outline:2px solid #c9891a;outline-offset:1px;';
+      h+='<div style="'+stl+'" title="'+d+'"></div>';
+    }
+    dots.innerHTML=h;
+  }
+  var cap=document.getElementById('gioi-dots-cap');
+  if(cap){
+    if(bk.extras.length>0){ cap.style.display='block'; cap.textContent='Ngoài kế hoạch: +'+bk.extras.length+' ngày'; }
+    else cap.style.display='none';
+  }
 }
 function gioiSetKept(k,val){
   var e=getEntry(k);
