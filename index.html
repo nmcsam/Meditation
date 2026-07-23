@@ -270,13 +270,15 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <span id="chart-month-label" style="font-size:11px;font-weight:700;color:var(--ink);min-width:80px;text-align:center">THÁNG NÀY</span>
             <button onclick="nextChartMonth()" style="border:1px solid var(--border2);background:var(--surface2);border-radius:6px;font-size:14px;color:var(--ink);cursor:pointer;padding:2px 8px;line-height:1">›</button>
           </div>
-          <div style="display:flex;gap:6px;align-items:center">
-            <span style="font-size:9px;color:var(--muted)">Đã:<b id="mpva-actual" style="color:var(--ink)">0</b>ph</span>
-            <span style="font-size:9px;color:var(--muted)">KH:<b id="mpva-plan" style="color:var(--ink)">0</b>ph</span>
-            <span style="font-size:9px;color:var(--teal)">✓<b id="mpva-full">0</b></span>
-            <span style="font-size:9px;color:var(--rose)">✗<b id="mpva-miss">0</b></span>
-            <span style="font-size:9px;color:#b8860b">☸<b id="mpva-gioi">0/0</b></span>
-            <span id="month-pva-pct" style="font-size:11px;font-weight:700;color:var(--teal)">0%</span>
+          <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+            <span style="font-size:11px;font-weight:700;color:var(--ink)">Kế hoạch: <b id="mpva-plan">0</b></span>
+            <span style="color:var(--border2)">|</span>
+            <span style="font-size:11px;font-weight:700;color:var(--ink)">Thực tế: <b id="mpva-actual" style="color:var(--teal)">0</b></span>
+            <span style="color:var(--border2)">|</span>
+            <span id="month-pva-pct" style="font-size:11.5px;font-weight:800;color:var(--teal)">0%</span>
+            <span style="color:var(--border2)">|</span>
+            <span id="mpva-verdict" style="font-size:11px;font-weight:800">—</span>
+            <span id="mpva-full" style="display:none">0</span><span id="mpva-miss" style="display:none">0</span><span id="mpva-gioi" style="display:none">0/0</span>
           </div>
         </div>
         <div style="height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-bottom:5px">
@@ -662,7 +664,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v81</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v82</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1885,9 +1887,15 @@ function renderMonthPVA(){
   const pct=planTotal>0?Math.round(actualTotal/planTotal*100):0;
   const color=pct>=100?'#076d5e':pct>=70?'#f0b429':'#7a1c38';
   document.getElementById('month-pva-pct').textContent=pct+'%';
+  (function(){
+    var v=document.getElementById('mpva-verdict'); if(!v)return;
+    var dat=pct>=100;
+    v.textContent=dat?'✓ đạt':'✗ không đạt';
+    v.style.color=dat?'#0a7a4f':'#c0392b';
+  })();
   document.getElementById('month-pva-pct').style.color=color;
-  document.getElementById('mpva-actual').textContent=actualTotal;
-  document.getElementById('mpva-plan').textContent=planTotal;
+  document.getElementById('mpva-actual').textContent=fmtHM(actualTotal);
+  document.getElementById('mpva-plan').textContent=fmtHM(planTotal);
   document.getElementById('mpva-full').textContent=fullDays;
   document.getElementById('mpva-miss').textContent=missDays;
   const _mg=document.getElementById('mpva-gioi');
