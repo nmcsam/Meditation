@@ -206,15 +206,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div style="font-size:13px;font-weight:800;color:#8a6d1a;letter-spacing:.5px">☸ GIỮ GIỚI THÁNG NÀY</div>
       <div id="gioi-sum" style="font-size:11.5px;font-weight:800;color:#7a5410;white-space:nowrap">Kế hoạch: 4 ngày <span style="opacity:.5">|</span> <span style="color:#0a7a4f">Thực tế: 0 ngày</span></div>
     </div>
-    <div style="display:flex;gap:8px;align-items:stretch">
-      <div style="display:flex;flex-direction:column;justify-content:space-around;gap:6px;flex:none">
-        <div class="grow-lbl" style="white-space:nowrap">KẾ HOẠCH</div>
-        <div class="grow-lbl" style="white-space:nowrap">THỰC TẾ</div>
-      </div>
-      <div id="gioi-balls" style="flex:1"></div>
-    </div>
-    <div id="gioi-dots" style="display:flex;gap:2px;margin-top:9px;justify-content:space-between;align-items:center"></div>
-    <div id="gioi-dots-cap" style="display:none;font-size:10.5px;font-weight:700;color:#0a7a4f;margin-top:4px;text-align:right"></div>
+    <div id="gioi-balls"></div>
     <div id="gioi-today" style="display:none;border-radius:10px;padding:8px 12px;text-align:center;font-weight:800;font-size:12.5px;margin-top:8px"></div>
   </div>
   <div style="border-top:3px dashed #b08d3f;margin:10px 2px 10px;opacity:.75"></div>
@@ -465,16 +457,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div style="height:7px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;margin-top:5px"><div id="mo-gioi-bar" style="height:100%;width:0%;background:#b8860b;border-radius:4px"></div></div>
       <div style="font-size:10px;color:var(--muted);margin-top:3px" id="mo-gioi-note"></div>
     </div>
-      <div style="display:flex;gap:8px;align-items:stretch">
-        <div style="display:flex;flex-direction:column;justify-content:space-around;gap:6px;flex:none">
-          <div class="grow-lbl" style="white-space:nowrap">KẾ HOẠCH</div>
-          <div class="grow-lbl" style="white-space:nowrap">THỰC TẾ</div>
-        </div>
-        <div id="gioi-pairs-month" style="flex:1"></div>
-      </div>
-      <div id="gioi-extra-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:9px"></div>
-      <button type="button" onclick="gioiExtraPick()" style="margin-top:8px;padding:6px 12px;font-size:12px;border:1.5px dashed #b8860b;border-radius:9px;background:transparent;color:#7a5410;font-weight:800;cursor:pointer">＋ Ghi thêm ngày giữ giới</button>
-      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → chọn ngày trên lịch → bấm "✓ Cập nhật — xong".</b> Cầu đã ghi (xanh): chạm vào → chọn <b>Thay đổi</b> (chọn lại ngày rồi bấm Cập nhật) hoặc <b>Xóa</b> (bấm Xóa — xong). Kết quả hiện ở đây và ở tab Hôm nay.</div>
+      <div id="gioi-pairs-month"></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px">Kế hoạch là trọn tháng — mỗi chấm một ngày (số dương ghi phía trên, chấm <b>nét đứt</b> là chưa giữ). <b>Chạm vào chấm ngày để ghi giữ 8 giới — chấm chuyển xanh ☸ ngay.</b> Chạm chấm xanh → bấm <b>Xóa — xong</b> nếu ghi nhầm. Kết quả hiện ở đây và ở tab Hôm nay.</div>
   </div>
 </div>
 
@@ -560,16 +544,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     </div>
     <div style="margin-top:12px">
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">☸ Giữ 8 giới — kế hoạch &amp; thực tế tháng này</div>
-      <div style="display:flex;gap:8px;align-items:stretch">
-        <div style="display:flex;flex-direction:column;justify-content:space-around;gap:6px;flex:none">
-          <div class="grow-lbl" style="white-space:nowrap">KẾ HOẠCH</div>
-          <div class="grow-lbl" style="white-space:nowrap">THỰC TẾ</div>
-        </div>
-        <div id="gioi-pairs-month" style="flex:1"></div>
-      </div>
-      <div id="gioi-extra-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:9px"></div>
-      <button type="button" onclick="gioiExtraPick()" style="margin-top:8px;padding:6px 12px;font-size:12px;border:1.5px dashed #b8860b;border-radius:9px;background:transparent;color:#7a5410;font-weight:800;cursor:pointer">＋ Ghi thêm ngày giữ giới</button>
-      <div style="font-size:10px;color:var(--muted);margin-top:7px">Kế hoạch cố định 4 ngày ÂM lịch: <b>8 · 15 · 23 · 30</b> (tháng thiếu dùng 29); ngày dương tự đổi theo tháng. <b>Chạm quả cầu THỰC TẾ → chọn ngày trên lịch → bấm "✓ Cập nhật — xong".</b> Cầu đã ghi (xanh): chạm vào → chọn <b>Thay đổi</b> (chọn lại ngày rồi bấm Cập nhật) hoặc <b>Xóa</b> (bấm Xóa — xong). Kết quả hiện ở đây và ở tab Hôm nay.</div>
+      <div id="gioi-pairs-month"></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px">Kế hoạch là trọn tháng — mỗi chấm một ngày (số dương ghi phía trên, chấm <b>nét đứt</b> là chưa giữ). <b>Chạm vào chấm ngày để ghi giữ 8 giới — chấm chuyển xanh ☸ ngay.</b> Chạm chấm xanh → bấm <b>Xóa — xong</b> nếu ghi nhầm. Kết quả hiện ở đây và ở tab Hôm nay.</div>
     </div>
     <div class="srow">
       <div class="srow-top"><label>Chất lượng</label><span class="sval" id="modal-q-val">Trung bình</span></div>
@@ -685,7 +661,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v74</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v75</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -964,32 +940,48 @@ function gioiActualThisMonth(){
   });
   return c;
 }
+function gioiKeptCount(y,m){
+  var dim=new Date(y,m+1,0).getDate(), c=0;
+  for(var d=1;d<=dim;d++){
+    var k=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var e=getEntry(k); if(e&&e.gioi)c++;
+  }
+  return {kept:c, dim:dim};
+}
+function gioiStripHTML(interactive, y, m){
+  var now=new Date();
+  if(y===undefined){ y=now.getFullYear(); m=now.getMonth(); }
+  var dim=new Date(y,m+1,0).getDate();
+  var isCur=(y===now.getFullYear()&&m===now.getMonth());
+  var td=isCur?now.getDate():-1;
+  var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:7px 4px">';
+  for(var d=1;d<=dim;d++){
+    var k=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var e=getEntry(k), kept=!!(e&&e.gioi);
+    var numColor=(d===td)?'#c9891a':(kept?'#0a7a4f':'var(--muted)');
+    var num='<div style="font-size:9.5px;font-weight:'+((d===td||kept)?'800':'600')+';color:'+numColor+';line-height:1.2;text-align:center">'+d+'</div>';
+    var c='width:27px;height:27px;border-radius:50%;margin:2px auto 0;display:flex;align-items:center;justify-content:center;box-sizing:border-box;';
+    if(kept) c+='background:linear-gradient(180deg,#12996f 0%,#0a6b4f 100%);border:1.5px solid #0a5c47;box-shadow:0 2px 4px rgba(10,90,60,.35);';
+    else c+='background:transparent;border:1.8px dashed #b08d3f;';
+    if(d===td) c+='outline:2.5px solid #c9891a;outline-offset:1.5px;';
+    var inner=kept?'<span style="color:#fff;font-size:12.5px;line-height:1">☸</span>':'';
+    var click=interactive?(' onclick="gioiToggleDay(\''+k+'\')" style="cursor:pointer"'):'';
+    h+='<div'+click+'>'+num+'<div style="'+c+'">'+inner+'</div></div>';
+  }
+  return h+'</div>';
+}
+function gioiToggleDay(k){
+  var e=getEntry(k);
+  if(e&&e.gioi){ gioiExtraAsk(k); return; }   // chạm chấm xanh -> hỏi xóa
+  gioiSetKept(k,true);
+  toast('✓ Đã ghi giữ 8 giới ngày '+_gfmt(k));
+}
 function renderGioiBalls(){
   var box=document.getElementById('gioi-balls');if(!box)return;
-  box.innerHTML=_gioiPairsHTML(false);
-  var now=new Date(), bk=gioiMonthBreakdown(now.getFullYear(), now.getMonth());
+  box.innerHTML=gioiStripHTML(false);
+  var now=new Date(), gc=gioiKeptCount(now.getFullYear(), now.getMonth());
   var su=document.getElementById('gioi-sum');
-  if(su) su.innerHTML='Kế hoạch: '+bk.planKept+'/'+bk.planTotal+' <span style="opacity:.5">|</span> <span style="color:#0a7a4f">Tổng: '+bk.total+' ngày</span>';
-  // Dải chấm cả tháng: mỗi ngày một chấm — xanh: đã giữ, vàng viền: hôm nay, kem: chưa
-  var dots=document.getElementById('gioi-dots');
-  if(dots){
-    var dim=new Date(now.getFullYear(), now.getMonth()+1, 0).getDate(), td=now.getDate(), h='';
-    for(var d=1;d<=dim;d++){
-      var k=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-      var e=getEntry(k), kept=!!(e&&e.gioi);
-      var stl='flex:1;max-width:11px;aspect-ratio:1;border-radius:50%;';
-      if(kept) stl+='background:#0a7a4f;box-shadow:0 1px 2px rgba(10,90,60,.4);';
-      else stl+='background:rgba(255,255,255,.65);border:1px solid #d9b45a55;';
-      if(d===td) stl+='outline:2px solid #c9891a;outline-offset:1px;';
-      h+='<div style="'+stl+'" title="'+d+'"></div>';
-    }
-    dots.innerHTML=h;
-  }
-  var cap=document.getElementById('gioi-dots-cap');
-  if(cap){
-    if(bk.extras.length>0){ cap.style.display='block'; cap.textContent='Ngoài kế hoạch: +'+bk.extras.length+' ngày'; }
-    else cap.style.display='none';
-  }
+  if(su) su.innerHTML='<span style="color:#0a7a4f">Đã giữ: '+gc.kept+'/'+gc.dim+' ngày</span>';
 }
 function gioiSetKept(k,val){
   var e=getEntry(k);
@@ -1943,26 +1935,17 @@ function renderCalendar(){
   document.getElementById('mo-mins').textContent=totalM;
   document.getElementById('mo-streak').textContent=streak;
   var _gp=document.getElementById('gioi-pairs-month');
-  if(_gp)_gp.innerHTML=_gioiPairsHTML(true);
+  if(_gp)_gp.innerHTML=gioiStripHTML(true, calYear, calMonth);
   (function(){
-    const bk=gioiMonthBreakdown(calYear,calMonth);
+    const gc=gioiKeptCount(calYear,calMonth);
     const t=document.getElementById('mo-gioi-txt'),bar=document.getElementById('mo-gioi-bar'),note=document.getElementById('mo-gioi-note');
     if(!t)return;
-    t.textContent=bk.total+' ngày';
-    const pct=bk.planTotal>0?Math.min(100,Math.round(bk.planKept/bk.planTotal*100)):0;
-    if(bar){bar.style.width=pct+'%';bar.style.background=(bk.planTotal>0&&bk.planKept>=bk.planTotal)?'#0a7a4f':(bk.planKept>0?'#b8860b':'#c0392b');}
+    t.textContent=gc.kept+'/'+gc.dim+' ngày';
+    const pct=gc.dim>0?Math.min(100,Math.round(gc.kept/gc.dim*100)):0;
+    if(bar){bar.style.width=pct+'%';bar.style.background=gc.kept>=gc.dim?'#0a7a4f':(gc.kept>0?'#b8860b':'rgba(0,0,0,.15)');}
     if(note){
-      const ok=bk.planTotal>0&&bk.planKept>=bk.planTotal;
-      note.textContent='Kế hoạch: '+bk.planKept+'/'+bk.planTotal+' · Ngoài kế hoạch: +'+bk.extras.length+' · Tổng tháng: '+bk.total+' ngày';
-      note.style.color=ok?'#0a7a4f':(bk.planKept>0?'#8a6d1a':'#c0392b');
-      t.style.color=ok?'#0a7a4f':'var(--ink)';
-    }
-    const ch=document.getElementById('gioi-extra-chips');
-    if(ch){
-      ch.innerHTML=bk.extras.map(function(k){
-        var d=+k.split('-')[2];
-        return '<span onclick="gioiExtraAsk(\''+k+'\')" style="display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:999px;background:#0a7a4f;color:#fff;font-size:11px;font-weight:800;cursor:pointer">☸ '+d+'</span>';
-      }).join('');
+      if(gc.kept>=gc.dim){note.textContent='✓ TRỌN THÁNG — thọ trì 8 giới đủ '+gc.dim+' ngày';note.style.color='#0a7a4f';t.style.color='#0a7a4f';}
+      else{note.textContent='Đã giữ '+gc.kept+' ngày trong tháng ('+gc.dim+' ngày)';note.style.color='var(--muted)';t.style.color=gc.kept>0?'#0a7a4f':'var(--ink)';}
     }
   })();
   const _avg=document.getElementById('mo-avg');
