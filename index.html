@@ -458,7 +458,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div style="font-size:10px;color:var(--muted);margin-top:3px" id="mo-gioi-note"></div>
     </div>
       <div id="gioi-pairs-month"></div>
-      <div style="font-size:10px;color:var(--muted);margin-top:8px">Mỗi chấm một ngày, số dương phía trên. <b>Hàng KẾ HOẠCH</b>: chạm chấm để đánh dấu ngày dự định giữ giới (chấm <b style="color:#c9891a">vàng</b>) — chạm lại để bỏ. <b>Hàng THỰC TẾ</b>: chạm chấm ngày đã giữ (chấm <b style="color:#0a7a4f">xanh</b>); chạm chấm xanh → bấm <b>Xóa — xong</b> nếu nhầm. Kế hoạch và thực tế có thể khác ngày. Kết quả hiện ở đây và ở tab Hôm nay.</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px">Mỗi chấm một ngày, số dương phía trên. <b>Hàng KẾ HOẠCH</b>: chạm chấm để đánh dấu ngày dự định giữ giới (chấm <b style="color:#c9891a">vàng</b>) — chạm lại để bỏ. <b>Hàng THỰC TẾ</b>: chạm chấm ngày đã giữ (chấm <b style="color:#0a7a4f">xanh</b>); chạm chấm xanh → bấm <b>Xóa — xong</b> nếu nhầm. Kế hoạch và thực tế có thể khác ngày. Ngày kế hoạch <b>đã qua</b> mà chưa giữ: chấm thực tế chuyển <b style="color:#c0392b">đỏ</b>. Hôm nay hiện chấm <b style="color:#c9891a">vàng</b> trên hàng kế hoạch. Kết quả hiện ở đây và ở tab Hôm nay.</div>
   </div>
 </div>
 
@@ -545,7 +545,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="margin-top:12px">
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">☸ Giữ 8 giới — kế hoạch &amp; thực tế tháng này</div>
       <div id="gioi-pairs-month"></div>
-      <div style="font-size:10px;color:var(--muted);margin-top:8px">Mỗi chấm một ngày, số dương phía trên. <b>Hàng KẾ HOẠCH</b>: chạm chấm để đánh dấu ngày dự định giữ giới (chấm <b style="color:#c9891a">vàng</b>) — chạm lại để bỏ. <b>Hàng THỰC TẾ</b>: chạm chấm ngày đã giữ (chấm <b style="color:#0a7a4f">xanh</b>); chạm chấm xanh → bấm <b>Xóa — xong</b> nếu nhầm. Kế hoạch và thực tế có thể khác ngày. Kết quả hiện ở đây và ở tab Hôm nay.</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px">Mỗi chấm một ngày, số dương phía trên. <b>Hàng KẾ HOẠCH</b>: chạm chấm để đánh dấu ngày dự định giữ giới (chấm <b style="color:#c9891a">vàng</b>) — chạm lại để bỏ. <b>Hàng THỰC TẾ</b>: chạm chấm ngày đã giữ (chấm <b style="color:#0a7a4f">xanh</b>); chạm chấm xanh → bấm <b>Xóa — xong</b> nếu nhầm. Kế hoạch và thực tế có thể khác ngày. Ngày kế hoạch <b>đã qua</b> mà chưa giữ: chấm thực tế chuyển <b style="color:#c0392b">đỏ</b>. Hôm nay hiện chấm <b style="color:#c9891a">vàng</b> trên hàng kế hoạch. Kết quả hiện ở đây và ở tab Hôm nay.</div>
     </div>
     <div class="srow">
       <div class="srow-top"><label>Chất lượng</label><span class="sval" id="modal-q-val">Trung bình</span></div>
@@ -661,7 +661,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v76</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v77</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -971,6 +971,7 @@ function gioiStrip2HTML(interactive, y, m){
   var isCur=(y===now.getFullYear()&&m===now.getMonth());
   var td=isCur?now.getDate():-1;
   var plan={}; gioiPlanArr(y,m).forEach(function(d){plan[d]=1;});
+  var monthCmp=(y*12+m)-(now.getFullYear()*12+now.getMonth()); // <0: tháng đã qua, 0: tháng này, >0: tương lai
   function key(d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
   // hàng số ngày
   var nums='<div style="display:flex">';
@@ -985,8 +986,16 @@ function gioiStrip2HTML(interactive, y, m){
       if(kind==='plan') on=!!plan[d];
       else { var e=getEntry(k); on=!!(e&&e.gioi); }
       var dot='width:100%;max-width:9px;aspect-ratio:1;border-radius:50%;margin:0 auto;box-sizing:border-box;';
-      if(kind==='plan') dot+=on?'background:#c9891a;border:1px solid #a06a10;':'background:transparent;border:1.2px dashed #b08d3f88;';
-      else dot+=on?'background:#0a7a4f;border:1px solid #085c3c;box-shadow:0 1px 2px rgba(10,90,60,.35);':'background:transparent;border:1.2px dashed #b08d3f88;';
+      if(kind==='plan'){
+        if(on) dot+='background:#c9891a;border:1px solid #a06a10;';
+        else if(d===td) dot+='background:#e8bb52;border:1px solid #c9891a;'; // hôm nay: vàng trên hàng kế hoạch
+        else dot+='background:transparent;border:1.2px dashed #b08d3f88;';
+      }else{
+        var missed=plan[d]&&!on&&(monthCmp<0||(monthCmp===0&&d<td)); // KH đã qua mà chưa giữ
+        if(on) dot+='background:#0a7a4f;border:1px solid #085c3c;box-shadow:0 1px 2px rgba(10,90,60,.35);';
+        else if(missed) dot+='background:#c0392b;border:1px solid #a93226;';
+        else dot+='background:transparent;border:1.2px dashed #b08d3f88;';
+      }
       var cell='flex:1;min-width:0'+(interactive?';cursor:pointer':'');
       var click=interactive?(' onclick="'+(kind==='plan'?'gioiTogglePlan':'gioiToggleDay')+'(\''+k+'\')"'):'';
       h+='<div style="'+cell+'"'+click+'><div style="height:15px;display:flex;align-items:center;justify-content:center"><div style="'+dot+'"></div></div></div>';
