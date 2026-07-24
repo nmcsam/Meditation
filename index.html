@@ -659,7 +659,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v92</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v93</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -995,10 +995,13 @@ function gioiStrip2HTML(interactive, y, m){
   gioiPlanArr(y,m).forEach(function(d){plan[d]=1;});
   var monthCmp=(y*12+m)-(now.getFullYear()*12+now.getMonth()); // <0: tháng đã qua, 0: tháng này, >0: tương lai
   function key(d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+  // Kích cỡ: tab Tháng (tương tác) chấm to dễ chạm + trượt ngang; tab Hôm nay giữ nhỏ gọn vừa màn
+  var CELL=interactive?27:0, DOT=interactive?20:9, NUMF=interactive?10:6, RH=interactive?26:15, BR=interactive?1.6:1.2;
+  var cellCss=interactive?('flex:none;width:'+CELL+'px'):'flex:1;min-width:0';
   // hàng số ngày
   var nums='<div style="display:flex">';
   for(var d=1;d<=dim;d++){
-    nums+='<div style="flex:1;text-align:center;font-size:6px;font-weight:'+(d===td?'800':'600')+';color:'+(d===td?'#c9891a':'var(--muted)')+';line-height:1.3">'+d+'</div>';
+    nums+='<div style="'+cellCss+';text-align:center;font-size:'+NUMF+'px;font-weight:'+(d===td?'800':'600')+';color:'+(d===td?'#c9891a':'var(--muted)')+';line-height:1.3">'+d+'</div>';
   }
   nums+='</div>';
   function dotRow(kind){
@@ -1007,28 +1010,31 @@ function gioiStrip2HTML(interactive, y, m){
       var k=key(d), on;
       if(kind==='plan') on=!!plan[d];
       else { var e=getEntry(k); on=!!(e&&e.gioi); }
-      var dot='width:100%;max-width:9px;aspect-ratio:1;border-radius:50%;margin:0 auto;box-sizing:border-box;';
+      var dot='width:'+(interactive?(DOT+'px'):'100%')+';max-width:'+DOT+'px;aspect-ratio:1;border-radius:50%;margin:0 auto;box-sizing:border-box;';
       if(kind==='plan'){
         if(on) dot+='background:#c9891a;border:1px solid #a06a10;';
         else if(d===td) dot+='background:#e8bb52;border:1px solid #c9891a;'; // hôm nay: vàng trên hàng kế hoạch
-        else dot+='background:transparent;border:1.2px dashed #b08d3f88;';
+        else dot+='background:transparent;border:'+BR+'px dashed #b08d3f88;';
       }else{
         var missed=plan[d]&&!on&&(monthCmp<0||(monthCmp===0&&d<td)); // KH đã qua mà chưa giữ
         if(on) dot+='background:#0a7a4f;border:1px solid #085c3c;box-shadow:0 1px 2px rgba(10,90,60,.35);';
         else if(missed) dot+='background:#c0392b;border:1px solid #a93226;';
-        else dot+='background:transparent;border:1.2px dashed #b08d3f88;';
+        else dot+='background:transparent;border:'+BR+'px dashed #b08d3f88;';
       }
-      var cell='flex:1;min-width:0'+(interactive?';cursor:pointer':'');
+      var cell=cellCss+(interactive?';cursor:pointer':'');
       var click=interactive?(' onclick="'+(kind==='plan'?'gioiTogglePlan':'gioiToggleDay')+'(\''+k+'\')"'):'';
-      h+='<div style="'+cell+'"'+click+'><div style="height:15px;display:flex;align-items:center;justify-content:center"><div style="'+dot+'"></div></div></div>';
+      h+='<div style="'+cell+'"'+click+'><div style="height:'+RH+'px;display:flex;align-items:center;justify-content:center"><div style="'+dot+'"></div></div></div>';
     }
     return h+'</div>';
   }
-  return '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 6px;align-items:center">'
-    +'<div></div><div>'+nums+'</div>'
-    +'<div class="grow-lbl" style="white-space:nowrap;font-size:8px">KẾ HOẠCH</div><div>'+dotRow('plan')+'</div>'
-    +'<div class="grow-lbl" style="white-space:nowrap;font-size:8px">THỰC TẾ</div><div>'+dotRow('actual')+'</div>'
+  var lblSticky=interactive?';position:sticky;left:0;background:#f8e9bd;z-index:2;padding-right:6px':'';
+  var grid='<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 6px;align-items:center'+(interactive?';width:max-content':'')+'">'
+    +'<div style="'+(interactive?'position:sticky;left:0;background:#f8e9bd;z-index:2':'')+'"></div><div>'+nums+'</div>'
+    +'<div class="grow-lbl" style="white-space:nowrap;font-size:'+(interactive?9:8)+'px'+lblSticky+'">KẾ HOẠCH</div><div>'+dotRow('plan')+'</div>'
+    +'<div class="grow-lbl" style="white-space:nowrap;font-size:'+(interactive?9:8)+'px'+lblSticky+'">THỰC TẾ</div><div>'+dotRow('actual')+'</div>'
     +'</div>';
+  if(interactive) return '<div style="overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch">'+grid+'</div>';
+  return grid;
 }
 function gioiStripHTML(interactive, y, m){
   var now=new Date();
