@@ -582,8 +582,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:11.5px;font-weight:800;color:#7a5410;margin-bottom:6px">🌅 Buổi sáng</div>
           <div class="trow">
             <span class="tbadge">T1</span>
-            <input type="time" id="dd-start1" oninput="calcMins(1)" class="tin" title="Bắt đầu">
-            <input type="time" id="dd-end1" oninput="calcMins(1)" class="tin" title="Kết thúc">
+            <input type="text" id="dd-start1" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(1)" onblur="tnorm(this);calcMins(1)" class="tin" title="Bắt đầu — gõ số, vd 450 = 4:50">
+            <input type="text" id="dd-end1" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(1)" onblur="tnorm(this);calcMins(1)" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">
             <input type="text" id="dd-min1a" readonly tabindex="-1" class="tmin" title="Tổng phút"><input type="hidden" id="dd-mins1">
             <span class="vsep"></span>
             <button id="rating-s-tot" onclick="setDayRating('s','tot')" class="rbtn">Tốt</button>
@@ -597,8 +597,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div id="dd-row1b" style="display:none;border-top:1.5px dashed #d8b258;margin-top:9px;padding-top:9px">
           <div class="trow">
             <span class="tbadge">T2</span>
-            <input type="time" id="dd-start1b" oninput="calcMins(1)" class="tin" title="Bắt đầu">
-            <input type="time" id="dd-end1b" oninput="calcMins(1)" class="tin" title="Kết thúc">
+            <input type="text" id="dd-start1b" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(1)" onblur="tnorm(this);calcMins(1)" class="tin" title="Bắt đầu — gõ số, vd 450 = 4:50">
+            <input type="text" id="dd-end1b" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(1)" onblur="tnorm(this);calcMins(1)" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">
             <input type="text" id="dd-min1bt" readonly tabindex="-1" class="tmin" title="Tổng phút">
             <span class="vsep"></span>
             <button id="rating-1b-tot" onclick="setDayRating('1b','tot')" class="rbtn">Tốt</button>
@@ -619,8 +619,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:11.5px;font-weight:800;color:#2c3e6b;margin-bottom:6px">🌙 Buổi tối</div>
           <div class="trow">
             <span class="tbadge">T1</span>
-            <input type="time" id="dd-start2" oninput="calcMins(2)" class="tin" title="Bắt đầu">
-            <input type="time" id="dd-end2" oninput="calcMins(2)" class="tin" title="Kết thúc">
+            <input type="text" id="dd-start2" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(2)" onblur="tnorm(this);calcMins(2)" class="tin" title="Bắt đầu — gõ số, vd 450 = 4:50">
+            <input type="text" id="dd-end2" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(2)" onblur="tnorm(this);calcMins(2)" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">
             <input type="text" id="dd-min2a" readonly tabindex="-1" class="tmin" title="Tổng phút"><input type="hidden" id="dd-mins2">
             <span class="vsep"></span>
             <button id="rating-t-tot" onclick="setDayRating('t','tot')" class="rbtn">Tốt</button>
@@ -634,8 +634,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div id="dd-row2b" style="display:none;border-top:1.5px dashed #9fb0d8;margin-top:9px;padding-top:9px">
           <div class="trow">
             <span class="tbadge">T2</span>
-            <input type="time" id="dd-start2b" oninput="calcMins(2)" class="tin" title="Bắt đầu">
-            <input type="time" id="dd-end2b" oninput="calcMins(2)" class="tin" title="Kết thúc">
+            <input type="text" id="dd-start2b" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(2)" onblur="tnorm(this);calcMins(2)" class="tin" title="Bắt đầu — gõ số, vd 450 = 4:50">
+            <input type="text" id="dd-end2b" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(2)" onblur="tnorm(this);calcMins(2)" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">
             <input type="text" id="dd-min2bt" readonly tabindex="-1" class="tmin" title="Tổng phút">
             <span class="vsep"></span>
             <button id="rating-2b-tot" onclick="setDayRating('2b','tot')" class="rbtn">Tốt</button>
@@ -659,7 +659,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v89</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v90</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2236,6 +2236,19 @@ function fmtHM(m){
   if(m<60) return m+'ph';
   var h=Math.floor(m/60), mm=m%60;
   return h+'h'+(mm>0?String(mm).padStart(2,'0')+'ph':'');
+}
+function tfmt(el){
+  var v=el.value.replace(/[^0-9]/g,'').slice(0,4);
+  el.value = v.length>=3 ? (v.slice(0,v.length-2)+':'+v.slice(-2)) : v;
+}
+function tnorm(el){
+  var v=el.value.replace(/[^0-9]/g,'');
+  if(!v){ el.value=''; return; }
+  var h,m;
+  if(v.length<=2){ h=+v; m=0; }
+  else { h=+v.slice(0,v.length-2); m=+v.slice(-2); }
+  if(h>23)h=23; if(m>59)m=59;
+  el.value=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
 }
 function _pairMins(s,e){
   if(!s||!e)return 0;
