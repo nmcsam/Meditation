@@ -123,7 +123,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 .cal-hdr{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:4px}
 .cal-hdr-cell{font-size:10px;font-weight:600;color:var(--muted);padding:3px 0}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;color:#666;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;background-image:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 55%);box-shadow:0 2px 4px rgba(70,50,15,.16),0 1px 0 rgba(255,255,255,.6) inset,0 -1px 3px rgba(90,65,25,.14) inset;transition:transform .08s}
+.cal-cell{padding:4px 0 3px;min-height:33px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;color:#666;font-size:9px;font-weight:500;color:var(--muted);cursor:pointer;background-image:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 55%);box-shadow:0 2px 4px rgba(70,50,15,.16),0 1px 0 rgba(255,255,255,.6) inset,0 -1px 3px rgba(90,65,25,.14) inset;transition:transform .08s}
 .cal-cell:active{transform:scale(.94)}
 .cal-cell.full{background:#2ECC40;color:#fff;font-weight:700}
 .cal-cell.partial{background:#FFDC00;color:#1a1a1a;font-weight:700}
@@ -389,30 +389,23 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="lg-item"><div class="lg-dot" style="background:#7a1c38"></div>Tối</div>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px">
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:5px">
     <div class="mcell"><div class="mcell-label">Ngày thiền</div><div class="mcell-val" id="mo-days">0</div></div>
     <div class="mcell"><div class="mcell-label">Tổng phút</div><div class="mcell-val" id="mo-mins">0</div></div>
     <div class="mcell"><div class="mcell-label">TB ngày</div><div class="mcell-val" id="mo-avg">0<span class="mcell-unit"> ph</span></div></div>
     <div class="mcell"><div class="mcell-label">Chuỗi dài</div><div class="mcell-val" id="mo-streak">0</div></div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:6px">
-    <div class="mcell" style="grid-column:1/-1">
-      <div class="mcell-label">⏱ Dài nhất</div>
-      <div style="display:flex;align-items:baseline;gap:7px"><span class="mcell-val" id="mo-max">—</span><span style="font-size:10px;color:var(--muted)" id="mo-max-date"></span></div>
+    <div class="mcell"><div class="mcell-label">⏱ Dài nhất</div>
+      <div style="display:flex;align-items:baseline;gap:4px;flex-wrap:wrap"><span class="mcell-val" id="mo-max" style="font-size:15px">—</span><span style="font-size:8.5px;color:var(--muted);white-space:nowrap" id="mo-max-date"></span></div>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px">
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-bottom:6px">
     <div class="mcell" style="border-left:3px solid #2ecc71">
       <div class="mcell-label" style="color:#2ecc71">○ Tốt</div>
       <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-tot">0</span><span style="font-size:10px;color:var(--muted)">lần</span></div>
     </div>
     <div class="mcell" style="border-left:3px solid #c8a000">
-      <div class="mcell-label" style="color:#c8a000">△ Trung bình</div>
-      <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-can">0</span><span style="font-size:10px;color:var(--muted)">lần</span></div>
-    </div>
-    <div class="mcell" style="border-left:3px solid #e74c3c">
-      <div class="mcell-label" style="color:#e74c3c">✕ Kém</div>
-      <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-kem">0</span><span style="font-size:10px;color:var(--muted)">lần</span></div>
+      <div class="mcell-label"><span style="color:#c8a000">△ Trung bình</span> · <span style="color:#e74c3c">✕ Kém</span></div>
+      <div style="display:flex;align-items:baseline;gap:4px"><span class="mcell-val" id="mo-can" style="color:#c8a000">0</span><span style="font-size:9px;color:var(--muted)">lần</span><span style="color:var(--border2);font-weight:700">·</span><span class="mcell-val" id="mo-kem" style="color:#e74c3c">0</span><span style="font-size:9px;color:var(--muted)">lần</span></div>
     </div>
   </div>
 <div class="card">
@@ -666,7 +659,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v99</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v100</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2100,7 +2093,13 @@ function renderCalendar(){
     const gioiP=gioiPlannedKey(k);
     const gioiMark=gioiP?'<span style="position:absolute;top:0;right:2px;font-size:8px;color:'+((e&&e.gioi)?'#0a7a4f':'#b8860b')+'">☸</span>':((e&&e.gioi)?'<span style="position:absolute;top:0;right:2px;font-size:8px;color:#0a7a4f">☸</span>':'');
     const wdc=WDC[new Date(calYear,calMonth,d).getDay()];
-    html+='<div class="'+cls+'" style="position:relative" onclick="showDayDetail(\''+k+'\')"><div style="line-height:1.05">'+d+'</div><div style="font-size:6.5px;line-height:1;opacity:.8;font-weight:600">'+wdc+'</div>'+gioiMark+'</div>';
+    const _ld=lunarOfKey(k)[0];
+    const _neutral=!/full|partial|missed/.test(cls);
+    const _sol=_neutral?'color:#0a7a4f;':'';
+    const _lun=_neutral?'color:#c0392b;':'opacity:.8;';
+    html+='<div class="'+cls+'" style="position:relative" onclick="showDayDetail(\''+k+'\')">'
+      +'<div style="line-height:1.1;white-space:nowrap"><span style="font-size:9px;font-weight:800;'+_sol+'">'+d+'</span><span style="font-size:6.5px;opacity:.7">/</span><span style="font-size:7.5px;font-weight:700;'+_lun+'">'+_ld+'</span></div>'
+      +'<div style="font-size:6px;line-height:1;opacity:.8;font-weight:600">'+wdc+'</div>'+gioiMark+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
   document.getElementById('mo-days').textContent=totalD;
