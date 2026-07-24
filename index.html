@@ -398,14 +398,18 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div style="display:flex;align-items:baseline;gap:4px;flex-wrap:wrap"><span class="mcell-val" id="mo-max" style="font-size:15px">—</span><span style="font-size:8.5px;color:var(--muted);white-space:nowrap" id="mo-max-date"></span></div>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-bottom:6px">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:6px">
     <div class="mcell" style="border-left:3px solid #2ecc71">
       <div class="mcell-label" style="color:#2ecc71">○ Tốt</div>
       <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-tot">0</span><span style="font-size:10px;color:var(--muted)">lần</span></div>
     </div>
     <div class="mcell" style="border-left:3px solid #c8a000">
-      <div class="mcell-label"><span style="color:#c8a000">△ Trung bình</span> · <span style="color:#e74c3c">✕ Kém</span></div>
-      <div style="display:flex;align-items:baseline;gap:4px"><span class="mcell-val" id="mo-can" style="color:#c8a000">0</span><span style="font-size:9px;color:var(--muted)">lần</span><span style="color:var(--border2);font-weight:700">·</span><span class="mcell-val" id="mo-kem" style="color:#e74c3c">0</span><span style="font-size:9px;color:var(--muted)">lần</span></div>
+      <div class="mcell-label" style="color:#c8a000">△ Trung bình</div>
+      <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-can">0</span><span style="font-size:10px;color:var(--muted)">lần</span></div>
+    </div>
+    <div class="mcell" style="border-left:3px solid #e74c3c">
+      <div class="mcell-label" style="color:#e74c3c">✕ Kém</div>
+      <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-kem">0</span><span style="font-size:10px;color:var(--muted)">lần</span></div>
     </div>
   </div>
 <div class="card">
@@ -659,7 +663,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v100</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v101</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
