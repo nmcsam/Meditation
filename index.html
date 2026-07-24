@@ -95,9 +95,9 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .sess-lbl{font-size:11px;color:var(--muted);margin-bottom:2px}
 .sess-mins{font-size:20px;font-weight:800;color:var(--ink);line-height:1.2}
 .mrow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
-.mcell{background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 40%),linear-gradient(180deg,#fbf8f1 0%,#efe8d6 100%);border-radius:var(--r);padding:10px 12px;border:1px solid #d8cdb2;min-height:70px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 3px 7px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.95) inset,0 -2px 4px rgba(150,125,75,.12) inset}
-.mcell-label{font-size:11px;color:var(--muted);margin-bottom:4px}
-.mcell-val{font-size:22px;font-weight:700;color:var(--ink);line-height:1}
+.mcell{background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 40%),linear-gradient(180deg,#fbf8f1 0%,#efe8d6 100%);border-radius:var(--r);padding:6px 10px;border:1px solid #d8cdb2;min-height:46px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 3px 7px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.95) inset,0 -2px 4px rgba(150,125,75,.12) inset}
+.mcell-label{font-size:10.5px;color:var(--muted);margin-bottom:2px}
+.mcell-val{font-size:17px;font-weight:700;color:var(--ink);line-height:1}
 .mcell-unit{font-size:11px;font-weight:400;color:var(--muted)}
 .tbtn{border:1px solid var(--border2);background:transparent;border-radius:var(--r);padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
 .tbtn.start{background:var(--teal);border-color:var(--teal);color:#fff}
@@ -396,32 +396,23 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div class="mcell"><div class="mcell-label">Chuỗi dài</div><div class="mcell-val" id="mo-streak">0</div></div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:6px">
-    <div class="mcell">
+    <div class="mcell" style="grid-column:1/-1">
       <div class="mcell-label">⏱ Dài nhất</div>
-      <div class="mcell-val" id="mo-max">—</div>
-      <div style="font-size:9px;color:var(--muted)" id="mo-max-date"></div>
-    </div>
-    <div class="mcell">
-      <div class="mcell-label">⏱ Ngắn nhất</div>
-      <div class="mcell-val" id="mo-min">—</div>
-      <div style="font-size:9px;color:var(--muted)" id="mo-min-date"></div>
+      <div style="display:flex;align-items:baseline;gap:7px"><span class="mcell-val" id="mo-max">—</span><span style="font-size:10px;color:var(--muted)" id="mo-max-date"></span></div>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px">
     <div class="mcell" style="border-left:3px solid #2ecc71">
       <div class="mcell-label" style="color:#2ecc71">○ Tốt</div>
-      <div class="mcell-val" id="mo-tot">0</div>
-      <div style="font-size:9px;color:var(--muted)">lần</div>
+      <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-tot">0</span><span style="font-size:10px;color:var(--muted)">lần</span></div>
     </div>
     <div class="mcell" style="border-left:3px solid #c8a000">
       <div class="mcell-label" style="color:#c8a000">△ Trung bình</div>
-      <div class="mcell-val" id="mo-can">0</div>
-      <div style="font-size:9px;color:var(--muted)">lần</div>
+      <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-can">0</span><span style="font-size:10px;color:var(--muted)">lần</span></div>
     </div>
     <div class="mcell" style="border-left:3px solid #e74c3c">
       <div class="mcell-label" style="color:#e74c3c">✕ Kém</div>
-      <div class="mcell-val" id="mo-kem">0</div>
-      <div style="font-size:9px;color:var(--muted)">lần</div>
+      <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-kem">0</span><span style="font-size:10px;color:var(--muted)">lần</span></div>
     </div>
   </div>
 <div class="card">
@@ -675,7 +666,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v98</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v99</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2159,8 +2150,6 @@ function renderCalendar(){
   const fmt=m=>m>=60?Math.round(m/60*10)/10+'h':m+'ph';
   document.getElementById('mo-max').textContent=maxMins>0?fmt(maxMins):'—';
   document.getElementById('mo-max-date').textContent=maxMins>0?maxDate:'';
-  document.getElementById('mo-min').textContent=minMins<Infinity?fmt(minMins):'—';
-  document.getElementById('mo-min-date').textContent=minMins<Infinity?minDate:'';
   document.getElementById('mo-tot').textContent=totCount;
   document.getElementById('mo-can').textContent=canCount;
   document.getElementById('mo-kem').textContent=kemCount;
