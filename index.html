@@ -96,9 +96,14 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .sess-mins{font-size:20px;font-weight:800;color:var(--ink);line-height:1.2}
 .mrow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
 .mcell{background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 40%),linear-gradient(180deg,#fbf8f1 0%,#efe8d6 100%);border-radius:var(--r);padding:6px 10px;border:1px solid #d8cdb2;min-height:46px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 3px 7px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.95) inset,0 -2px 4px rgba(150,125,75,.12) inset}
-.mcell-label{font-size:10.5px;color:var(--muted);margin-bottom:2px}
+.mcell-label{font-size:9.5px;color:var(--muted);margin-bottom:2px}
 .mcell-val{font-size:17px;font-weight:700;color:var(--ink);line-height:1}
 .mcell-unit{font-size:11px;font-weight:400;color:var(--muted)}
+.mcell-label{line-height:1.2;word-break:break-word}
+.rcell{background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:8px;padding:6px 6px 6px 7px;box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset;min-height:52px;display:flex;flex-direction:column;justify-content:center}
+.rcell-lbl{font-size:7px;color:var(--muted);font-weight:700;line-height:1.15;margin-bottom:3px;letter-spacing:.2px}
+.rcell-val{font-size:13.5px;font-weight:800;line-height:1.05;white-space:nowrap}
+.rcell-sub{font-size:7px;color:var(--muted);margin-top:2px;white-space:nowrap}
 .tbtn{border:1px solid var(--border2);background:transparent;border-radius:var(--r);padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
 .tbtn.start{background:var(--teal);border-color:var(--teal);color:#fff}
 .tbtn.stop{background:var(--rose);border-color:var(--rose);color:#fff}
@@ -191,7 +196,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   
   <button class="nav-btn" onclick="nav('month')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="12" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/></svg>Tháng</button>
   <button class="nav-btn" onclick="nav('year')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M9 4v5M15 4v5"/><path d="M7 14h2v4H7zm4 0h2v4h-2zm4-2h2v6h-2z"/></svg>Năm</button>
-  <button class="nav-btn" onclick="nav('chart')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Biểu đồ</button>
   <button class="nav-btn" onclick="nav('rec')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Xu hướng</button>
 </div>
 <div class="scroll">
@@ -314,32 +318,29 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <!-- CARD 6: Tổng kết toàn thời gian -->
   <div class="card" style="padding:10px 12px">
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">🏆 KỶ LỤC CÁ NHÂN</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset;grid-column:1/-1">
-        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI HIỆN TẠI</div>
-        <div style="font-size:20px;font-weight:700;color:var(--teal)" id="streak-today-val">0 ngày</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px">
+      <div class="rcell" style="border-left:3px solid var(--teal)">
+        <div class="rcell-lbl">🔥 CHUỖI HIỆN TẠI</div>
+        <div class="rcell-val" style="color:var(--teal)" id="streak-today-val">0 ngày</div>
       </div>
-      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid #0a7a4f;box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
-        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🧘 CHUỖI NGÀY CÓ THIỀN DÀI NHẤT</div>
-        <div style="font-size:16px;font-weight:700;color:#0a7a4f" id="alltime-anystreak">0 ngày</div>
-        <div style="font-size:9px;color:var(--muted);margin-top:2px">liên tiếp ≥1 thời</div>
+      <div class="rcell" style="border-left:3px solid #0a7a4f">
+        <div class="rcell-lbl">🧘 CHUỖI ≥1 THỜI DÀI NHẤT</div>
+        <div class="rcell-val" style="color:#0a7a4f" id="alltime-anystreak">0 ngày</div>
       </div>
-      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--gold);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
-        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">🔥 CHUỖI ĐỦ 2 THỜI DÀI NHẤT</div>
-        <div style="font-size:20px;font-weight:700;color:var(--gold)" id="alltime-streak">0 ngày</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">ngày liên tiếp đủ 2 thời</div>
+      <div class="rcell" style="border-left:3px solid var(--gold)">
+        <div class="rcell-lbl">🔥 CHUỖI ĐỦ 2 THỜI DÀI NHẤT</div>
+        <div class="rcell-val" style="color:var(--gold)" id="alltime-streak">0 ngày</div>
       </div>
-      <div style="background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 45%),linear-gradient(180deg,#f7f3e9 0%,#eae0c9 100%);border-radius:10px;padding:10px 12px;border-left:3px solid var(--teal);box-shadow:0 3px 6px rgba(70,50,15,.14),0 1px 0 rgba(255,255,255,.9) inset,0 -2px 4px rgba(150,125,75,.12) inset">
-        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">⏱ PHIÊN DÀI NHẤT</div>
-        <div style="font-size:20px;font-weight:700;color:var(--teal)" id="alltime-max-sess">—</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px" id="alltime-max-sess-date"></div>
+      <div class="rcell" style="border-left:3px solid var(--teal)">
+        <div class="rcell-lbl">⏱ PHIÊN DÀI NHẤT</div>
+        <div class="rcell-val" style="color:var(--teal)" id="alltime-max-sess">—</div>
+        <div class="rcell-sub" id="alltime-max-sess-date"></div>
       </div>
-      <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;border-left:3px solid #8e44ad">
-        <div style="font-size:9px;color:var(--muted);font-weight:600;margin-bottom:4px">📅 NGÀY NHIỀU NHẤT</div>
-        <div style="font-size:20px;font-weight:700;color:#8e44ad" id="alltime-max-day">—</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px" id="alltime-max-day-date"></div>
+      <div class="rcell" style="border-left:3px solid #8e44ad">
+        <div class="rcell-lbl">📅 NGÀY NHIỀU NHẤT</div>
+        <div class="rcell-val" style="color:#8e44ad" id="alltime-max-day">—</div>
+        <div class="rcell-sub" id="alltime-max-day-date"></div>
       </div>
-
     </div>
   </div>
 
@@ -393,8 +394,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div class="mcell"><div class="mcell-label">Ngày thiền</div><div class="mcell-val" id="mo-days">0</div></div>
     <div class="mcell"><div class="mcell-label">Tổng phút</div><div class="mcell-val" id="mo-mins">0</div></div>
     <div class="mcell"><div class="mcell-label">TB ngày</div><div class="mcell-val" id="mo-avg">0<span class="mcell-unit"> ph</span></div></div>
-    <div class="mcell"><div class="mcell-label">Chuỗi dài</div><div class="mcell-val" id="mo-streak">0</div></div>
-    <div class="mcell"><div class="mcell-label">⏱ Dài nhất</div>
+    <div class="mcell"><div class="mcell-label">Chuỗi dài nhất</div><div class="mcell-val" id="mo-streak">0</div></div>
+    <div class="mcell"><div class="mcell-label">⏱ Phiên dài nhất</div>
       <div style="display:flex;align-items:baseline;gap:4px;flex-wrap:wrap"><span class="mcell-val" id="mo-max" style="font-size:15px">—</span><span style="font-size:8.5px;color:var(--muted);white-space:nowrap" id="mo-max-date"></span></div>
     </div>
   </div>
@@ -471,30 +472,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="lg-item"><div class="lg-dot" style="background:#FF4136"></div>Bỏ</div>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:8px">
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px">
     <div class="mcell"><div class="mcell-label">Ngày thiền</div><div class="mcell-val" id="yr-days">0</div></div>
     <div class="mcell"><div class="mcell-label">Tổng phút</div><div class="mcell-val" id="yr-mins">0</div></div>
     <div class="mcell"><div class="mcell-label">Đủ 2 thời</div><div class="mcell-val" id="yr-full">0</div></div>
     <div class="mcell"><div class="mcell-label">Chuỗi dài nhất</div><div class="mcell-val" id="yr-streak">0</div></div>
-  </div>
-</div>
-
-<!-- BIỂU ĐỒ -->
-<div class="page" id="pg-chart">
-  <div class="card">
-    <div class="lg">
-      <div class="lg-item"><div class="lg-dot" style="background:#076d5e"></div>Sáng</div>
-      <div class="lg-item"><div class="lg-dot" style="background:#7a1c38"></div>Tối</div>
-    </div>
-    <div style="position:relative;height:180px"><canvas id="chart-14"></canvas></div>
-  </div>
-  <div class="card">
-    <div class="card-hd">Tổng phút — 30 ngày</div>
-    <div style="position:relative;height:150px"><canvas id="chart-30"></canvas></div>
-  </div>
-  <div class="card">
-    <div class="card-hd">Chất lượng — 14 ngày</div>
-    <div style="position:relative;height:140px"><canvas id="chart-quality"></canvas></div>
   </div>
 </div>
 
@@ -663,7 +645,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v102</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v103</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1432,16 +1414,17 @@ function getDK(off=0){
 function getEntry(k){return ST.data.find(d=>d.date===k)||null;}
 function getLast(n){return Array.from({length:n},(_,i)=>getDK(n-1-i));}
 function qLabel(v){return['','Khó','Hơi phân tán','Trung bình','Tốt','Xuất sắc'][+v];}
+// định dạng số có dấu phẩy hàng nghìn: 6027 -> 6,027
+function nf(n){if(n===null||n===undefined||n==='')return n;const x=Number(n);if(isNaN(x))return n;return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function toast(msg){const t=document.getElementById('toast-el');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
 function syncErr(msg){const st=document.getElementById('sync-status');if(st){st.textContent=msg;st.style.color='#b3261e';}toast(msg);}
 
 function nav(id){
   try{ localStorage.setItem('thien_last_tab', id); }catch(e){}
-  const ids=['today','month','year','chart','rec'];
+  const ids=['today','month','year','rec'];
   document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('on',ids[i]===id));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.getElementById('pg-'+id).classList.add('on');
-  if(id==='chart')setTimeout(renderCharts,60);
   if(id==='today')setTimeout(()=>{renderCharts();},100);
   if(id==='month')renderCalendar();
   if(id==='year')renderYear();
@@ -1581,10 +1564,10 @@ function renderYear(){
     </div>`;
   }
   document.getElementById('year-grid').innerHTML=html;
-  document.getElementById('yr-days').textContent=totalDays;
-  document.getElementById('yr-mins').textContent=totalMins;
-  document.getElementById('yr-full').textContent=fullDays;
-  document.getElementById('yr-streak').textContent=maxStreak;
+  document.getElementById('yr-days').textContent=nf(totalDays);
+  document.getElementById('yr-mins').textContent=nf(totalMins);
+  document.getElementById('yr-full').textContent=nf(fullDays);
+  document.getElementById('yr-streak').textContent=nf(maxStreak);
 }
 
 // ── TỰ RESET KẾ HOẠCH KHI SANG THÁNG MỚI ──
@@ -2005,9 +1988,9 @@ function renderPlanPage(){
   const nonZ=actuals.filter(function(x){return x>0;});
   const avg=nonZ.length?Math.round(total/nonZ.length):0;
   const fd=days.filter(function(k){const e=getEntry(k);return e&&e.mins1>=ST.goal1&&e.mins2>=ST.goal2;}).length;
-  document.getElementById('week-total').innerHTML=total+'<span class="mcell-unit"> ph</span>';
+  document.getElementById('week-total').innerHTML=nf(total)+'<span class="mcell-unit"> ph</span>';
   document.getElementById('week-pct').innerHTML=pct+'<span class="mcell-unit">%</span>';
-  document.getElementById('week-avg').innerHTML=avg+'<span class="mcell-unit"> ph</span>';
+  document.getElementById('week-avg').innerHTML=nf(avg)+'<span class="mcell-unit"> ph</span>';
   document.getElementById('week-days').innerHTML=fd+'<span class="mcell-unit">/7</span>';
 }
 
@@ -2059,7 +2042,7 @@ function renderAlltimeStats(){
     } else curStreak=0;
   });
 
-  const fmt=m=>m>=60?Math.round(m/60*10)/10+'h':m+'ph';
+  const fmt=m=>m>=60?nf(Math.round(m/60*10)/10)+'h':nf(m)+'ph';
   const fmtD=d=>d?d.split('-').reverse().join('/'):'';
 
   elSess.textContent=maxSess>0?fmt(maxSess):'—';
@@ -2106,9 +2089,9 @@ function renderCalendar(){
       +'<div style="font-size:6px;line-height:1;opacity:.8;font-weight:600">'+wdc+'</div>'+gioiMark+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
-  document.getElementById('mo-days').textContent=totalD;
-  document.getElementById('mo-mins').textContent=totalM;
-  document.getElementById('mo-streak').textContent=streak;
+  document.getElementById('mo-days').textContent=nf(totalD);
+  document.getElementById('mo-mins').textContent=nf(totalM);
+  document.getElementById('mo-streak').textContent=nf(streak);
   var _gp=document.getElementById('gioi-pairs-month');
   if(_gp){
     var _sc0=(_gp.querySelector?_gp.querySelector('div'):null);
@@ -2132,7 +2115,7 @@ function renderCalendar(){
     }
   })();
   const _avg=document.getElementById('mo-avg');
-  if(_avg){ const _d=+document.getElementById('mo-days').textContent||0; const _m=+document.getElementById('mo-mins').textContent||0; _avg.innerHTML=(_d? Math.round(_m/_d):0)+'<span class="mcell-unit"> ph</span>'; }
+  if(_avg){ const _d=totalD||0; const _m=totalM||0; _avg.innerHTML=nf(_d? Math.round(_m/_d):0)+'<span class="mcell-unit"> ph</span>'; }
 
   // Tính thêm: max, min, đánh giá
   let maxMins=0,minMins=Infinity,maxDate='',minDate='';
@@ -2150,7 +2133,7 @@ function renderCalendar(){
     if(e.ratingS==='tot')totCount++;else if(e.ratingS==='can')canCount++;else if(e.ratingS==='kem')kemCount++;
     if(e.ratingT==='tot')totCount++;else if(e.ratingT==='can')canCount++;else if(e.ratingT==='kem')kemCount++;
   }
-  const fmt=m=>m>=60?Math.round(m/60*10)/10+'h':m+'ph';
+  const fmt=m=>m>=60?nf(Math.round(m/60*10)/10)+'h':nf(m)+'ph';
   document.getElementById('mo-max').textContent=maxMins>0?fmt(maxMins):'—';
   document.getElementById('mo-max-date').textContent=maxMins>0?maxDate:'';
   document.getElementById('mo-tot').textContent=totCount;
@@ -2313,9 +2296,9 @@ function noteClear(id){
 }
 function fmtHM(m){
   m=+m||0;
-  if(m<60) return m+'ph';
+  if(m<60) return nf(m)+'ph';
   var h=Math.floor(m/60), mm=m%60;
-  return h+'h'+(mm>0?String(mm).padStart(2,'0')+'ph':'');
+  return nf(h)+'h'+(mm>0?String(mm).padStart(2,'0')+'ph':'');
 }
 function tfmt(el){
   var v=el.value.replace(/[^0-9]/g,'').slice(0,4);
@@ -2487,18 +2470,6 @@ function renderCharts(){
     options:Object.assign({},base,{layout:{padding:{top:16}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'h'}}}}),
     plugins:[monthlyPlugin]
   });
-  const days14=getLast(14);const lbl14=days14.map(function(k){const d=new Date(k);return DAYS7[d.getDay()];});
-  const m1s=days14.map(function(k){const e=getEntry(k);return e?e.mins1||0:0;});
-  const m2s=days14.map(function(k){const e=getEntry(k);return e?e.mins2||0:0;});
-  if(charts.d14)charts.d14.destroy();
-  charts.d14=new Chart(document.getElementById('chart-14'),{type:'bar',data:{labels:lbl14,datasets:[{label:'Sáng',data:m1s,backgroundColor:'rgba(7,109,94,.7)',borderRadius:3,borderSkipped:false},{label:'Tối',data:m2s,backgroundColor:'rgba(122,28,56,.7)',borderRadius:3,borderSkipped:false}]},options:Object.assign({},base,{plugins:{legend:{display:true,labels:{font:{size:10},color:tc}}}})});
-  const days30=getLast(30);const lbl30=days30.map(function(k){const d=new Date(k);return d.getDate()+'/'+(d.getMonth()+1);});
-  const tot30=days30.map(function(k){const e=getEntry(k);return e?(e.mins1||0)+(e.mins2||0):0;});
-  if(charts.d30)charts.d30.destroy();
-  charts.d30=new Chart(document.getElementById('chart-30'),{type:'line',data:{labels:lbl30,datasets:[{data:tot30,borderColor:'#076d5e',backgroundColor:'rgba(7,109,94,.08)',fill:true,pointRadius:2,tension:.35}]},options:Object.assign({},base,{scales:Object.assign({},base.scales,{x:Object.assign({},base.scales.x,{ticks:Object.assign({},base.scales.x.ticks,{maxTicksLimit:8})})})})});
-  const q14=days14.map(function(k){const e=getEntry(k);return e?((e.q1||0)+(e.q2||0))/2||null:null;});
-  if(charts.qual)charts.qual.destroy();
-  charts.qual=new Chart(document.getElementById('chart-quality'),{type:'line',data:{labels:lbl14,datasets:[{data:q14,borderColor:'#1a4d8f',backgroundColor:'rgba(26,77,143,.08)',fill:true,pointRadius:4,pointBackgroundColor:'#1a4d8f',tension:.35,spanGaps:true}]},options:Object.assign({},base,{scales:Object.assign({},base.scales,{y:{min:0,max:5,ticks:{stepSize:1,color:tc,font:{size:10},callback:function(v){return qLabel(v)||'';}}},x:base.scales.x})})});
 }
 
 // RECOMMENDATIONS
@@ -2588,8 +2559,8 @@ function renderRec(){
     }
     const hrs=Math.floor(totalMins/60);
     const badge=(em,t,v)=>'<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--surface3)"><span style="font-size:18px">'+em+'</span><div style="flex:1;font-size:12px;color:var(--ink)">'+t+'</div><div style="font-size:14px;font-weight:700;color:var(--teal)">'+v+'</div></div>';
-    ach.innerHTML = badge('⏳','Tổng thời gian hành thiền', hrs+' giờ')
-      + badge('📅','Tổng số ngày có hành thiền', totalDays+' ngày')
+    ach.innerHTML = badge('⏳','Tổng thời gian hành thiền', nf(hrs)+' giờ')
+      + badge('📅','Tổng số ngày có hành thiền', nf(totalDays)+' ngày')
       + badge('🔥','Chuỗi đủ 2 thời dài nhất', best+' ngày');
   }
 }
@@ -2729,7 +2700,7 @@ try{
   if(sessionStorage.getItem('thien_entered')==='1'){
     const h=document.getElementById('home-screen'); if(h) h.style.display='none';
     const lt=localStorage.getItem('thien_last_tab');
-    if(lt && lt!=='today' && ['month','year','chart','rec'].includes(lt)) nav(lt);
+    if(lt && lt!=='today' && ['month','year','rec'].includes(lt)) nav(lt);
   }
 }catch(e){}
 updateNotifBtn();
