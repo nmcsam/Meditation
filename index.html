@@ -659,7 +659,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v93</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v94</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1061,6 +1061,7 @@ function gioiStripHTML(interactive, y, m){
 function gioiToggleDay(k){
   var e=getEntry(k);
   if(e&&e.gioi){ gioiExtraAsk(k); return; }   // chạm chấm xanh -> hỏi xóa
+  if(k>getDK()){ toast('Ngày '+_gfmt(k)+' chưa tới — không thể ghi thực tế'); return; }
   gioiSetKept(k,true);
   toast('✓ Đã ghi giữ 8 giới ngày '+_gfmt(k));
 }
