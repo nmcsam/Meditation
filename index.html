@@ -659,7 +659,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v96</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v97</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -946,6 +946,15 @@ function gioiKeptCount(y,m){
   }
   return {kept:c, dim:dim};
 }
+var _gioiPend=null; // chấm đang chờ xác nhận (chạm lần 1)
+function _gioiRefreshStrip(){
+  var gp=document.getElementById('gioi-pairs-month'); if(!gp) return;
+  var sc0=(gp.querySelector?gp.querySelector('div'):null);
+  var sl=sc0?sc0.scrollLeft:0;
+  gp.innerHTML=gioiStrip2HTML(true, calYear, calMonth);
+  var sc1=(gp.querySelector?gp.querySelector('div'):null);
+  if(sc1)sc1.scrollLeft=sl;
+}
 // 8 ngày bát quan trai (ÂL): 1, 8, 14, 15, 18, 23 + (tháng đủ: 29, 30 | tháng thiếu: 28, 29)
 function gioiFixedPlanMap(y,m){
   var dim=new Date(y,m+1,0).getDate(), map={};
@@ -976,6 +985,13 @@ function gioiPlanArr(y,m){
 function gioiTogglePlan(k){
   var p=k.split('-'), y=+p[0], m=+p[1]-1, d=+p[2];
   if(gioiFixedPlanMap(y,m)[d]){ toast('☸ Ngày bát quan trai cố định — luôn thuộc kế hoạch'); return; }
+  if(!(_gioiPend&&_gioiPend.kind==='plan'&&_gioiPend.k===k)){
+    _gioiPend={kind:'plan',k:k};
+    _gioiRefreshStrip();
+    toast('Chạm lần nữa vào chấm ngày '+_gfmt(k)+' để xác nhận');
+    return;
+  }
+  _gioiPend=null;
   if(!ST.gioiPlan) ST.gioiPlan={};
   var ym=p[0]+'-'+p[1];
   var arr=(ST.gioiPlan[ym]||[]).slice(), i=arr.indexOf(d);
@@ -1030,6 +1046,9 @@ function gioiStrip2HTML(interactive, y, m){
         else if(missed) dot+='background:#c0392b;border:1px solid #a93226;';
         else dot+='background:transparent;border:'+BR+'px dashed #b08d3f88;';
       }
+      if(interactive&&_gioiPend&&_gioiPend.kind===kind&&_gioiPend.k===k){
+        dot+='outline:3px solid #2680ff;outline-offset:2px;transform:scale(1.15);';
+      }
       var cell=cellCss+(interactive?';cursor:pointer':'');
       var click=interactive?(' onclick="'+(kind==='plan'?'gioiTogglePlan':'gioiToggleDay')+'(\''+k+'\')"'):'';
       h+='<div style="'+cell+'"'+click+'><div style="height:'+RH+'px;display:flex;align-items:center;justify-content:center"><div style="'+dot+'"></div></div></div>';
@@ -1069,8 +1088,15 @@ function gioiStripHTML(interactive, y, m){
 }
 function gioiToggleDay(k){
   var e=getEntry(k);
-  if(e&&e.gioi){ gioiExtraAsk(k); return; }   // chạm chấm xanh -> hỏi xóa
+  if(e&&e.gioi){ _gioiPend=null; gioiExtraAsk(k); return; }   // chạm chấm xanh -> hỏi xóa (bar xác nhận sẵn)
   if(k>getDK()){ toast('Ngày '+_gfmt(k)+' chưa tới — không thể ghi thực tế'); return; }
+  if(!(_gioiPend&&_gioiPend.kind==='actual'&&_gioiPend.k===k)){
+    _gioiPend={kind:'actual',k:k};
+    _gioiRefreshStrip();
+    toast('Chạm lần nữa vào chấm ngày '+_gfmt(k)+' để xác nhận');
+    return;
+  }
+  _gioiPend=null;
   gioiSetKept(k,true);
   toast('✓ Đã ghi giữ 8 giới ngày '+_gfmt(k));
 }
@@ -1106,7 +1132,10 @@ function renderGioiBalls(){
 function gioiSetKept(k,val){
   var e=getEntry(k);
   if(!e){e={date:k,mins1:0,mins2:0,types1:[],types2:[],notes1:'',notes2:''};ST.data.push(e);ST.data.sort(function(a,b){return a.date<b.date?-1:1;});}
-  e.gioi=val;save();renderAll();
+  e.gioi=val;save();
+  var _sy=0; try{_sy=window.scrollY||0;}catch(err){}
+  renderAll();
+  try{window.scrollTo(0,_sy);}catch(err){}
 }
 function _gfmt(k){return k.split('-').reverse().join('/');}
 function gioiBarShow(html){
@@ -2071,7 +2100,13 @@ function renderCalendar(){
   document.getElementById('mo-mins').textContent=totalM;
   document.getElementById('mo-streak').textContent=streak;
   var _gp=document.getElementById('gioi-pairs-month');
-  if(_gp)_gp.innerHTML=gioiStrip2HTML(true, calYear, calMonth);
+  if(_gp){
+    var _sc0=(_gp.querySelector?_gp.querySelector('div'):null);
+    var _sl=_sc0?_sc0.scrollLeft:0;
+    _gp.innerHTML=gioiStrip2HTML(true, calYear, calMonth);
+    var _sc1=(_gp.querySelector?_gp.querySelector('div'):null);
+    if(_sc1)_sc1.scrollLeft=_sl;
+  }
   (function(){
     const gc=gioiKeptCount(calYear,calMonth);
     const P=gioiPlanCount(calYear,calMonth);
