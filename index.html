@@ -466,7 +466,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <span class="cal-month" id="year-label"></span>
       <button onclick="nextYear()">&#8250;</button>
     </div>
-    <div id="year-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
+    <div id="year-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"></div>
     <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
       <div class="lg-item"><div class="lg-dot" style="background:#2ECC40"></div>Đủ 2 thời</div>
       <div class="lg-item"><div class="lg-dot" style="background:#FFDC00;border:1px solid #ccc"></div>1 thời</div>
@@ -646,7 +646,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v104</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v106</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1558,10 +1558,10 @@ function renderYear(){
     const pct=mDays>0?Math.round(mFull/daysInMonth*100):0;
     const color=mFull>0?'var(--teal)':mDays>0?'#f0b429':'var(--surface3)';
     const textColor=mFull>0||mDays>0?'#fff':'var(--muted)';
-    html+=`<div onclick="calYear=${viewYear};calMonth=${mo};nav('month')" style="background:${color};border-radius:8px;padding:8px 6px;text-align:center;cursor:pointer">
-      <div style="font-size:12px;font-weight:700;color:${textColor}">${MONTHS[mo]}</div>
-      <div style="font-size:10px;color:${textColor};opacity:.85">${mDays}ng</div>
-      <div style="font-size:10px;color:${textColor};opacity:.85">${Math.round(mMins/60*10)/10}h</div>
+    html+=`<div onclick="calYear=${viewYear};calMonth=${mo};nav('month')" style="background:${color};border-radius:8px;padding:7px 3px;text-align:center;cursor:pointer">
+      <div style="font-size:11.5px;font-weight:700;color:${textColor}">${MONTHS[mo]}</div>
+      <div style="font-size:9px;color:${textColor};opacity:.85">${mDays}ng</div>
+      <div style="font-size:9px;color:${textColor};opacity:.85">${nf(Math.round(mMins/60*10)/10)}h</div>
     </div>`;
   }
   document.getElementById('year-grid').innerHTML=html;
@@ -1933,18 +1933,19 @@ function renderMonthPVA(){
 
   // Stats
   const planTotal=(ST.goal1+ST.goal2)*daysInMonth;
-  const pct=planTotal>0?Math.round(actualTotal/planTotal*100):0;
+  // Kế hoạch LŨY KẾ tới hôm nay: tháng đang diễn ra = KH ngày × số ngày đã qua (tính cả hôm nay);
+  // tháng đã qua = trọn tháng; tháng tương lai = 0.
+  const _cmpM=(y*12+mo)-(now.getFullYear()*12+now.getMonth());
+  const elapsedD=_cmpM<0?daysInMonth:(_cmpM>0?0:now.getDate());
+  const planToDate=(ST.goal1+ST.goal2)*elapsedD;
+  const pct=planToDate>0?Math.round(actualTotal/planToDate*100):0;
   const color=pct>=100?'#076d5e':pct>=70?'#f0b429':'#7a1c38';
   document.getElementById('month-pva-pct').textContent=pct+'%';
   (function(){
     var v=document.getElementById('mpva-verdict'); if(!v)return;
     // Đạt/không đạt so với KẾ HOẠCH TÍNH TỚI THỜI ĐIỂM HIỆN TẠI:
     // tháng này: KH ngày x số ngày đã trôi qua (tới hôm nay); tháng cũ: trọn tháng; tháng tương lai: chưa xét.
-    var _now=new Date();
-    var _cmp=(y*12+mo)-(_now.getFullYear()*12+_now.getMonth());
-    var elapsed=_cmp<0?daysInMonth:(_cmp>0?0:_now.getDate());
-    var planToDate=(ST.goal1+ST.goal2)*elapsed;
-    if(elapsed<=0){ v.textContent='—'; v.style.color='var(--muted)'; return; }
+    if(elapsedD<=0){ v.textContent='—'; v.style.color='var(--muted)'; return; }
     var dat=actualTotal>=planToDate;
     v.textContent=dat?'✓ đạt':'✗ không đạt';
     v.title='So với kế hoạch tới nay: '+fmtHM(planToDate);
@@ -1952,7 +1953,9 @@ function renderMonthPVA(){
   })();
   document.getElementById('month-pva-pct').style.color=color;
   document.getElementById('mpva-actual').textContent=fmtHM(actualTotal);
-  document.getElementById('mpva-plan').textContent=fmtHM(planTotal);
+  const _pl=document.getElementById('mpva-plan');
+  _pl.textContent=fmtHM(planToDate);
+  if(_pl.parentElement)_pl.parentElement.title='Kế hoạch lũy kế tới ngày '+(elapsedD||0)+' · Cả tháng: '+fmtHM(planTotal);
   document.getElementById('mpva-full').textContent=fullDays;
   document.getElementById('mpva-miss').textContent=missDays;
   const _mg=document.getElementById('mpva-gioi');
