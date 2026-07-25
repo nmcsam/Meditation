@@ -197,7 +197,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   
   <button class="nav-btn" onclick="nav('month')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="12" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/></svg>Tháng</button>
   <button class="nav-btn" onclick="nav('year')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M9 4v5M15 4v5"/><path d="M7 14h2v4H7zm4 0h2v4h-2zm4-2h2v6h-2z"/></svg>Năm</button>
-  <button class="nav-btn" onclick="nav('rec')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Xu hướng</button>
 </div>
 <div class="scroll">
 
@@ -341,7 +340,23 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     </div>
   </div>
 
+  <div class="card">
+    <div class="card-hd">📈 Xu hướng 30 ngày (so với 30 ngày trước)</div>
+    <div id="rec-list"><div style="color:var(--muted);font-size:13px;padding:8px 0">Ghi lại buổi thiền để xem xu hướng.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Thành tích</div>
+    <div id="achievements"></div>
+  </div>
+  <div class="card" style="background:var(--teal-light);border-color:rgba(7,109,94,.3)">
+    <div style="font-size:13px;color:var(--teal);line-height:1.8"><strong>Gợi ý Pa-Auk:</strong> Ānāpānasati buổi sáng + Mettā buổi tối tạo nền tảng vững cho tuệ quán.</div>
+  </div>
+  <div class="card" style="background:var(--surface2)">
+    <div style="font-size:12px;color:var(--muted)">Xuất / Nhập dữ liệu, sao lưu định kỳ và xóa dữ liệu nằm trong <b>⚙ Cài đặt</b> (góc trên bên phải).</div>
+  </div>
 </div><!-- end pg-today -->
+
+</div>
 
 <!-- Hidden timer elements for JS -->
 <div style="display:none">
@@ -478,24 +493,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 </div>
 
 <!-- KHUYẾN CÁO -->
-<div class="page" id="pg-rec">
-  <div class="card">
-    <div class="card-hd">📈 Xu hướng 30 ngày (so với 30 ngày trước)</div>
-    <div id="rec-list"><div style="color:var(--muted);font-size:13px;padding:8px 0">Ghi lại buổi thiền để xem xu hướng.</div></div>
-  </div>
-  <div class="card">
-    <div class="card-hd">Thành tích</div>
-    <div id="achievements"></div>
-  </div>
-  <div class="card" style="background:var(--teal-light);border-color:rgba(7,109,94,.3)">
-    <div style="font-size:13px;color:var(--teal);line-height:1.8"><strong>Gợi ý Pa-Auk:</strong> Ānāpānasati buổi sáng + Mettā buổi tối tạo nền tảng vững cho tuệ quán.</div>
-  </div>
-  <div class="card" style="background:var(--surface2)">
-    <div style="font-size:12px;color:var(--muted)">Xuất / Nhập dữ liệu, sao lưu định kỳ và xóa dữ liệu nằm trong <b>⚙ Cài đặt</b> (góc trên bên phải).</div>
-  </div>
-</div>
 
-</div>
 
 <!-- LOG MODAL -->
 <div class="detail-overlay" id="log-modal">
@@ -642,7 +640,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v110</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v111</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1418,14 +1416,13 @@ function syncErr(msg){const st=document.getElementById('sync-status');if(st){st.
 
 function nav(id){
   try{ localStorage.setItem('thien_last_tab', id); }catch(e){}
-  const ids=['today','month','year','rec'];
+  const ids=['today','month','year'];
   document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('on',ids[i]===id));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.getElementById('pg-'+id).classList.add('on');
-  if(id==='today')setTimeout(()=>{renderCharts();},100);
+  if(id==='today')setTimeout(()=>{renderCharts();renderRec();},100);
   if(id==='month')renderCalendar();
   if(id==='year')renderYear();
-  if(id==='rec')renderRec();
 }
 
 function updateGoal(n,v){
@@ -2486,7 +2483,7 @@ function renderRec(){
       if(e&&(e.mins2||0)>=ST.goal2) tOk++;
       if(e) mins+=(e.mins1||0)+(e.mins2||0)+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
       if(gioiPlannedKey(getDK(kk))){ gp++; if(e&&e.gioi) gk++; } else if(e&&e.gioi){ gk++; gp++; }
-      for(const r of [e&&e.rate_s, e&&e.rate_t]){
+      for(const r of [e&&e.ratingS, e&&e.ratingT, e&&e.rating1b, e&&e.rating2b]){
         if(r){ rated++; if(r==='tot')tot++; else if(r==='can')can++; else if(r==='kem')kem++; }
       }
     }
@@ -2494,53 +2491,92 @@ function renderRec(){
   }
   const A=winStats(0), B=winStats(30);
   const pc=(x)=>Math.round(x/30*100);
-  const arrow=(a,b)=>{ const d=a-b; if(Math.abs(d)<2) return '<span style="color:var(--muted)">→ giữ nguyên</span>';
-    return d>0? '<span style="color:var(--teal)">▲ +'+d+'</span>' : '<span style="color:var(--rose)">▼ '+d+'</span>'; };
-  function bar(pct,color){ return '<div style="height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;margin-top:3px"><div style="height:100%;width:'+Math.min(100,pct)+'%;background:'+color+';border-radius:3px"></div></div>'; }
-  function row(icon,label,valHtml,barHtml,sub){
-    return '<div style="padding:8px 0;border-bottom:1px solid var(--surface3)">'
-      +'<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">'
-      +'<span style="font-size:12px;font-weight:600;color:var(--ink)">'+icon+' '+label+'</span>'
-      +'<span style="font-size:13px;font-weight:700">'+valHtml+'</span></div>'
-      +(barHtml||'')
-      +(sub?'<div style="font-size:10px;color:var(--muted);margin-top:3px">'+sub+'</div>':'')
-      +'</div>';
-  }
+  const ratedPct = (x)=> A.rated? Math.round(x/A.rated*100) : 0;
   // Chuỗi hiện tại đủ 2 thời
   let cur=0; for(let k=0;;k++){ const e=getEntry(getDK(k)); if(e&&e.mins1>0&&e.mins2>0) cur++; else { if(k===0){continue;} break; } if(k>3660)break; }
-  const ratedPct = (x)=> A.rated? Math.round(x/A.rated*100) : 0;
-  let html='';
-  html+=row('🧘','Đủ 2 thời/ngày', pc(A.full)+'% <span style="font-size:11px;font-weight:500">('+A.full+'/30 ngày)</span> '+arrow(pc(A.full),pc(B.full)), bar(pc(A.full),'var(--teal)'), '30 ngày trước: '+pc(B.full)+'%');
-  html+=row('🌅','Đạt KH sáng (≥'+ST.goal1+' ph)', pc(A.sOk)+'% '+arrow(pc(A.sOk),pc(B.sOk)), bar(pc(A.sOk),'#076d5e'), '30 ngày trước: '+pc(B.sOk)+'%');
-  html+=row('🌙','Đạt KH tối (≥'+ST.goal2+' ph)', pc(A.tOk)+'% '+arrow(pc(A.tOk),pc(B.tOk)), bar(pc(A.tOk),'#7a1c38'), '30 ngày trước: '+pc(B.tOk)+'%');
-  html+=row('⏱','Trung bình phút/ngày', A.avg+' ph '+arrow(A.avg,B.avg), bar(Math.round(A.avg/((ST.goal1+ST.goal2)||1)*100),'var(--gold)'), '30 ngày trước: '+B.avg+' ph · mục tiêu '+(ST.goal1+ST.goal2)+' ph/ngày');
-  html+=row('📅','Ngày có hành thiền', pc(A.entD)+'% ('+A.entD+'/30) '+arrow(pc(A.entD),pc(B.entD)), bar(pc(A.entD),'#8e44ad'), '');
-  html+=row('🔥','Chuỗi đủ 2 thời hiện tại', cur+' ngày', '', '');
-  if(A.gp>0||B.gp>0){
-    html+=row('☸','Giữ 8 giới (ngày KH theo ÂL)', A.gk+'/'+A.gp+' ngày '+arrow(A.gp?Math.round(A.gk/A.gp*100):0, B.gp?Math.round(B.gk/B.gp*100):0), bar(A.gp?Math.round(A.gk/A.gp*100):0,'#b8860b'), '30 ngày trước: '+B.gk+'/'+B.gp);
+
+  // ── Các nút chỉ số: 4 cột × 2 hàng ──
+  function delta(a,b){
+    const d=a-b;
+    if(Math.abs(d)<2) return '<span style="color:var(--muted);font-size:8px">→ giữ nguyên</span>';
+    return d>0 ? '<span style="color:#0a7a4f;font-size:8px;font-weight:700">▲ +'+d+'</span>'
+               : '<span style="color:#c0392b;font-size:8px;font-weight:700">▼ '+d+'</span>';
   }
-  // Phân bố đánh giá
-  if(A.rated>0){
-    html+='<div style="padding:8px 0;border-bottom:1px solid var(--surface3)">'
-      +'<div style="font-size:12px;font-weight:600;margin-bottom:4px">📊 Chất lượng các thời (tự đánh giá, 30 ngày — '+A.rated+' lượt)</div>'
-      +'<div style="display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--surface3)">'
-      +'<div style="width:'+ratedPct(A.tot)+'%;background:#2ecc71"></div>'
-      +'<div style="width:'+ratedPct(A.can)+'%;background:#c8a000"></div>'
-      +'<div style="width:'+ratedPct(A.kem)+'%;background:#e74c3c"></div></div>'
-      +'<div style="display:flex;gap:10px;font-size:10px;color:var(--muted);margin-top:4px">'
-      +'<span>○ Tốt '+ratedPct(A.tot)+'% ('+A.tot+')</span><span>△ Trung bình '+ratedPct(A.can)+'% ('+A.can+')</span><span>✕ Kém '+ratedPct(A.kem)+'% ('+A.kem+')</span></div></div>';
+  function cell(icon,label,val,unit,sub,color){
+    return '<div style="background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:6px 5px;display:flex;flex-direction:column;justify-content:center;min-height:54px">'
+      +'<div style="font-size:7.5px;color:var(--muted);font-weight:700;line-height:1.15;margin-bottom:2px">'+icon+' '+label+'</div>'
+      +'<div style="font-size:14px;font-weight:800;color:'+(color||'var(--ink)')+';line-height:1">'+val+(unit?'<span style="font-size:8.5px;font-weight:600;color:var(--muted)"> '+unit+'</span>':'')+'</div>'
+      +'<div style="margin-top:2px;line-height:1">'+(sub||'')+'</div></div>';
   }
-  // Lời khuyên theo điểm yếu nhất
-  const adv=[];
-  if(pc(A.full)<50) adv.push('Tỷ lệ đủ 2 thời còn dưới 50% — nên ưu tiên <b>đều đặn</b> trước, dù mỗi thời ngắn hơn: có mặt đủ sáng và tối mỗi ngày rồi mới tăng dần thời lượng.');
-  if(pc(A.tOk) < pc(A.sOk)-15) adv.push('Buổi <b>tối</b> đang yếu hơn buổi sáng rõ rệt ('+pc(A.tOk)+'% so với '+pc(A.sOk)+'%) — thử cố định một giờ ngồi tối và đặt chuông nhắc trước 15 phút.');
-  if(pc(A.sOk) < pc(A.tOk)-15) adv.push('Buổi <b>sáng</b> đang yếu hơn buổi tối ('+pc(A.sOk)+'% so với '+pc(A.tOk)+'%) — thử ngủ sớm hơn và ngồi ngay sau khi thức dậy, trước khi làm việc khác.');
-  if(A.rated>0 && ratedPct(A.kem)>25) adv.push('Tỷ lệ thời "Kém" trên 25% — khi tâm nhiều tán loạn, nên quay về niệm hơi thở tại điểm xúc chạm, giữ thời lượng vừa sức thay vì cố kéo dài.');
-  if(A.avg < B.avg-10) adv.push('Tổng thời lượng đang <b>giảm</b> so với tháng trước ('+A.avg+' so với '+B.avg+' ph/ngày) — xem lại lịch sinh hoạt gần đây để giữ nền nếp.');
-  if(A.avg >= (ST.goal1+ST.goal2) && pc(A.full)>=80) adv.push('Anh đang duy trì rất tốt (đủ 2 thời '+pc(A.full)+'%, trung bình '+A.avg+' ph/ngày) — có thể giữ ổn định hoặc tăng nhẹ 5–10 phút mỗi thời khi thấy thuận duyên.');
-  if(!adv.length) adv.push('Duy trì đều đặn hai thời mỗi ngày; khi nền nếp vững, tăng dần thời lượng theo sức của mình.');
-  html+='<div style="padding-top:8px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">💡 Lời khuyên</div>'
-    + adv.map(x=>'<div style="font-size:12px;color:var(--ink);line-height:1.6;padding:4px 0">• '+x+'</div>').join('') + '</div>';
+  const cGood='#0a7a4f', cWarn='#b8860b', cBad='#c0392b';
+  const tone=v=>v>=80?cGood:v>=50?cWarn:cBad;
+  let html='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">';
+  html+=cell('🧘','ĐỦ 2 THỜI', pc(A.full)+'%','', delta(pc(A.full),pc(B.full)), tone(pc(A.full)));
+  html+=cell('🌅','ĐẠT KH SÁNG', pc(A.sOk)+'%','', delta(pc(A.sOk),pc(B.sOk)), tone(pc(A.sOk)));
+  html+=cell('🌙','ĐẠT KH TỐI', pc(A.tOk)+'%','', delta(pc(A.tOk),pc(B.tOk)), tone(pc(A.tOk)));
+  html+=cell('⏱','TB MỖI NGÀY', nf(A.avg),'ph', delta(A.avg,B.avg), A.avg>=(ST.goal1+ST.goal2)?cGood:cWarn);
+  html+=cell('📅','NGÀY CÓ THIỀN', pc(A.entD)+'%','', delta(pc(A.entD),pc(B.entD)), tone(pc(A.entD)));
+  html+=cell('🔥','CHUỖI 2 THỜI', cur,'ngày','', cur>0?cGood:cBad);
+  html+=cell('☸','GIỮ 8 GIỚI', A.gp>0?(A.gk+'/'+A.gp):'—','', A.gp>0?delta(Math.round(A.gk/A.gp*100), B.gp?Math.round(B.gk/B.gp*100):0):'', (A.gp>0&&A.gk>=A.gp)?cGood:cWarn);
+  html+=cell('○','THỜI "TỐT"', A.rated>0?(ratedPct(A.tot)+'%'):'—','', A.rated>0?'<span style="color:var(--muted);font-size:8px">'+A.rated+' lượt đánh giá</span>':'', A.rated>0?tone(ratedPct(A.tot)):'var(--muted)');
+  html+='</div>';
+  html+='<div style="font-size:8.5px;color:var(--muted);margin-top:5px">30 ngày qua · mũi tên so với 30 ngày trước đó</div>';
+
+  // ── Lời khuyên ──
+  const goalDay=(ST.goal1+ST.goal2)||1;
+  // 1) Nhận định chung
+  let score=0;
+  score += (pc(A.full)-pc(B.full));
+  score += (A.avg-B.avg)/2;
+  let vTxt,vCol,vSub;
+  if(score>=5){ vTxt='ĐANG TIẾN BỘ'; vCol=cGood; vSub='30 ngày qua tốt hơn 30 ngày trước đó — giữ đà này.'; }
+  else if(score<=-5){ vTxt='ĐANG ĐI XUỐNG'; vCol=cBad; vSub='30 ngày qua kém hơn 30 ngày trước đó — cần chỉnh lại nền nếp.'; }
+  else { vTxt='ĐI NGANG'; vCol=cWarn; vSub='Mức duy trì gần như không đổi so với 30 ngày trước đó.'; }
+  html+='<div style="margin-top:10px;padding:8px 10px;border-radius:9px;background:var(--surface2);border-left:4px solid '+vCol+'">'
+    +'<div style="font-size:12.5px;font-weight:800;color:'+vCol+'">'+vTxt+'</div>'
+    +'<div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.45">'+vSub+'</div></div>';
+
+  // 2) Điểm mạnh
+  const good=[];
+  if(pc(A.full)>=80) good.push('Đủ 2 thời <b>'+pc(A.full)+'%</b> số ngày — nền nếp rất vững.');
+  if(A.avg>=goalDay) good.push('Trung bình <b>'+nf(A.avg)+' ph/ngày</b>, đạt hoặc vượt kế hoạch <b>'+nf(goalDay)+' ph</b>.');
+  if(cur>=7) good.push('Đang giữ chuỗi <b>'+cur+' ngày</b> liên tiếp đủ 2 thời.');
+  if(pc(A.entD)>=90) good.push('Có hành thiền <b>'+pc(A.entD)+'%</b> số ngày — gần như không bỏ ngày nào.');
+  if(A.gp>0&&A.gk>=A.gp) good.push('Giữ 8 giới <b>đủ '+A.gk+'/'+A.gp+'</b> ngày kế hoạch.');
+  if(A.rated>0&&ratedPct(A.tot)>=60) good.push('<b>'+ratedPct(A.tot)+'%</b> số thời tự đánh giá là "Tốt".');
+  if(good.length){
+    html+='<div style="margin-top:8px"><div style="font-size:11px;font-weight:800;color:'+cGood+';margin-bottom:3px">✅ ĐIỂM MẠNH</div>'
+      + good.slice(0,3).map(x=>'<div style="font-size:11.5px;line-height:1.55;padding:1px 0">• '+x+'</div>').join('')+'</div>';
+  }
+
+  // 3) Điểm yếu — kèm việc làm cụ thể, xếp theo mức ưu tiên
+  const weak=[]; // {t: mô tả, a: hành động}
+  if(pc(A.entD)<70) weak.push({p:1,t:'Bỏ ngày nhiều: chỉ hành thiền <b>'+pc(A.entD)+'%</b> ('+A.entD+'/30 ngày).',
+    a:'Đặt mức tối thiểu <b>10 phút/ngày</b> không được bỏ — ngày bận vẫn ngồi 10 phút để không đứt chuỗi.'});
+  if(pc(A.full)<50) weak.push({p:2,t:'Đủ 2 thời mới <b>'+pc(A.full)+'%</b> — phần lớn ngày chỉ ngồi một thời.',
+    a:'Tuần này ưu tiên <b>có mặt đủ 2 thời</b>, chấp nhận rút mỗi thời còn '+Math.max(10,Math.round(ST.goal1/2))+'–'+ST.goal1+' phút; khi đã đều rồi mới tăng lại.'});
+  if(pc(A.tOk)<pc(A.sOk)-15) weak.push({p:3,t:'Buổi <b>tối</b> yếu hơn sáng rõ rệt ('+pc(A.tOk)+'% so với '+pc(A.sOk)+'%).',
+    a:'Chốt một giờ ngồi tối cố định, đặt chuông nhắc trước 15 phút, và ngồi <b>trước</b> khi xem điện thoại/tin tức.'});
+  if(pc(A.sOk)<pc(A.tOk)-15) weak.push({p:3,t:'Buổi <b>sáng</b> yếu hơn tối rõ rệt ('+pc(A.sOk)+'% so với '+pc(A.tOk)+'%).',
+    a:'Ngủ sớm hơn 30 phút và ngồi ngay sau khi thức dậy, trước khi làm bất cứ việc gì khác.'});
+  if(A.avg<B.avg-10) weak.push({p:4,t:'Thời lượng giảm: <b>'+nf(A.avg)+' ph/ngày</b> so với <b>'+nf(B.avg)+' ph</b> của 30 ngày trước.',
+    a:'Xem lại lịch sinh hoạt tháng qua, chọn lại khung giờ ít bị cắt ngang nhất và giữ cố định trong 2 tuần.'});
+  if(A.avg<goalDay && A.avg>=B.avg-10) weak.push({p:5,t:'Trung bình <b>'+nf(A.avg)+' ph/ngày</b>, còn thiếu <b>'+nf(Math.max(0,goalDay-A.avg))+' ph</b> so với kế hoạch '+nf(goalDay)+' ph.',
+    a:'Tăng <b>5 phút mỗi thời</b> mỗi tuần cho tới khi chạm kế hoạch — tăng chậm để giữ được lâu.'});
+  if(A.rated>0&&ratedPct(A.kem)>25) weak.push({p:6,t:'Có <b>'+ratedPct(A.kem)+'%</b> số thời tự đánh giá "Kém" — tâm còn nhiều tán loạn.',
+    a:'Quay về niệm hơi thở tại điểm xúc chạm, giữ thời lượng vừa sức; thà ngồi ngắn mà tỉnh còn hơn kéo dài trong hôn trầm.'});
+  if(A.gp>0&&A.gk<A.gp) weak.push({p:7,t:'Giữ 8 giới <b>'+A.gk+'/'+A.gp+'</b> ngày kế hoạch trong 30 ngày qua.',
+    a:'Đánh dấu trước các ngày bát quan trai của tháng vào lịch và sắp xếp công việc quanh những ngày đó.'});
+  weak.sort((x,y)=>x.p-y.p);
+  if(weak.length){
+    html+='<div style="margin-top:8px"><div style="font-size:11px;font-weight:800;color:'+cBad+';margin-bottom:3px">⚠️ CẦN CẢI THIỆN — THEO THỨ TỰ ƯU TIÊN</div>'
+      + weak.slice(0,3).map((x,i)=>'<div style="padding:5px 0;border-bottom:1px dashed var(--surface3)">'
+          +'<div style="font-size:11.5px;line-height:1.5"><b style="color:'+cBad+'">'+(i+1)+'.</b> '+x.t+'</div>'
+          +'<div style="font-size:11.5px;line-height:1.5;color:var(--teal);margin-top:2px">👉 '+x.a+'</div></div>').join('')+'</div>';
+  }else{
+    html+='<div style="margin-top:8px;font-size:11.5px;line-height:1.55">✅ Không có điểm yếu rõ rệt. Việc nên làm: giữ nguyên nền nếp hiện tại, '
+      +'chỉ tăng nhẹ 5–10 phút mỗi thời khi thấy thuận duyên, không tăng đột ngột.</div>';
+  }
   box.innerHTML=html;
   const ach=document.getElementById('achievements');
   if(ach){
@@ -2595,6 +2631,7 @@ function renderAll(){
   renderToday();renderStreak();renderPlanPage();renderMonthPVA();renderTimerInfo();renderTodayPlanUI();renderExtraSessions();renderAlltimeStats();
   try{renderCalendar();}catch(e){}  // vẽ lại cả tab Tháng (lịch + cầu 8 giới) để thao tác nào cũng thấy ngay
   try{renderPieChart();}catch(e){}
+  try{renderRec();}catch(e){}
   setTimeout(renderCharts,200);
 }
 
@@ -2700,7 +2737,7 @@ try{
   if(sessionStorage.getItem('thien_entered')==='1'){
     const h=document.getElementById('home-screen'); if(h) h.style.display='none';
     const lt=localStorage.getItem('thien_last_tab');
-    if(lt && lt!=='today' && ['month','year','rec'].includes(lt)) nav(lt);
+    if(lt && lt!=='today' && ['month','year'].includes(lt)) nav(lt);
   }
 }catch(e){}
 updateNotifBtn();
