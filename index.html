@@ -100,11 +100,11 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .mcell-val{font-size:17px;font-weight:700;color:var(--ink);line-height:1}
 .mcell-unit{font-size:11px;font-weight:400;color:var(--muted)}
 .mcell-label{line-height:1.2;word-break:break-word}
-.rcell{background:none;border:none;box-shadow:none;border-right:1.5px dashed var(--teal);padding:2px 3px;min-height:46px;display:flex;flex-direction:column;justify-content:center}
+.rcell{background:none;border:none;box-shadow:none;border-right:1.5px dashed var(--teal);padding:2px 6px;min-height:48px;display:flex;flex-direction:column;justify-content:center}
 .rcell:last-child{border-right:none}
-.rcell-lbl{font-size:6.2px;color:var(--muted);font-weight:700;line-height:1.15;margin-bottom:3px;letter-spacing:.2px}
-.rcell-val{font-size:11px;font-weight:800;line-height:1.05;white-space:nowrap}
-.rcell-sub{font-size:6px;color:var(--muted);margin-top:2px;white-space:nowrap}
+.rcell-lbl{font-size:7.5px;color:var(--muted);font-weight:700;line-height:1.15;margin-bottom:3px;letter-spacing:.2px}
+.rcell-val{font-size:13px;font-weight:800;line-height:1.05;white-space:nowrap}
+.rcell-sub{font-size:7px;color:var(--muted);margin-top:2px;white-space:nowrap}
 .tbtn{border:1px solid var(--border2);background:transparent;border-radius:var(--r);padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
 .tbtn.start{background:var(--teal);border-color:var(--teal);color:#fff}
 .tbtn.stop{background:var(--rose);border-color:var(--rose);color:#fff}
@@ -314,7 +314,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <!-- CARD 6: Tổng kết toàn thời gian -->
   <div class="card" style="padding:10px 12px">
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">🏆 KỶ LỤC CÁ NHÂN</div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:5px">
+    <div style="display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));gap:4px">
       <div class="rcell">
         <div class="rcell-lbl">🔥 CHUỖI HIỆN TẠI</div>
         <div class="rcell-val" style="color:var(--teal)" id="streak-today-val">0 ngày</div>
@@ -345,6 +346,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div class="rcell-lbl">📆 TỔNG NGÀY THIỀN</div>
         <div class="rcell-val" style="color:#8a6d1a" id="alltime-tot-days">0 ngày</div>
       </div>
+    </div>
     </div>
   </div>
 
@@ -635,7 +637,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v114</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v115</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
