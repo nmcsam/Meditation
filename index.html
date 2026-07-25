@@ -100,11 +100,11 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .mcell-val{font-size:17px;font-weight:700;color:var(--ink);line-height:1}
 .mcell-unit{font-size:11px;font-weight:400;color:var(--muted)}
 .mcell-label{line-height:1.2;word-break:break-word}
-.rcell{background:none;border:none;box-shadow:none;border-right:1.5px dashed var(--teal);padding:2px 5px;min-height:48px;display:flex;flex-direction:column;justify-content:center}
+.rcell{background:none;border:none;box-shadow:none;border-right:1.5px dashed var(--teal);padding:2px 3px;min-height:46px;display:flex;flex-direction:column;justify-content:center}
 .rcell:last-child{border-right:none}
-.rcell-lbl{font-size:7px;color:var(--muted);font-weight:700;line-height:1.15;margin-bottom:3px;letter-spacing:.2px}
-.rcell-val{font-size:13.5px;font-weight:800;line-height:1.05;white-space:nowrap}
-.rcell-sub{font-size:7px;color:var(--muted);margin-top:2px;white-space:nowrap}
+.rcell-lbl{font-size:6.2px;color:var(--muted);font-weight:700;line-height:1.15;margin-bottom:3px;letter-spacing:.2px}
+.rcell-val{font-size:11px;font-weight:800;line-height:1.05;white-space:nowrap}
+.rcell-sub{font-size:6px;color:var(--muted);margin-top:2px;white-space:nowrap}
 .tbtn{border:1px solid var(--border2);background:transparent;border-radius:var(--r);padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
 .tbtn.start{background:var(--teal);border-color:var(--teal);color:#fff}
 .tbtn.stop{background:var(--rose);border-color:var(--rose);color:#fff}
@@ -314,17 +314,17 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <!-- CARD 6: Tổng kết toàn thời gian -->
   <div class="card" style="padding:10px 12px">
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">🏆 KỶ LỤC CÁ NHÂN</div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px">
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">
       <div class="rcell">
         <div class="rcell-lbl">🔥 CHUỖI HIỆN TẠI</div>
         <div class="rcell-val" style="color:var(--teal)" id="streak-today-val">0 ngày</div>
       </div>
       <div class="rcell">
-        <div class="rcell-lbl">🧘 CHUỖI ≥1 THỜI DÀI NHẤT</div>
+        <div class="rcell-lbl">🧘 CHUỖI ≥1 THỜI</div>
         <div class="rcell-val" style="color:#0a7a4f" id="alltime-anystreak">0 ngày</div>
       </div>
       <div class="rcell">
-        <div class="rcell-lbl">🔥 CHUỖI ĐỦ 2 THỜI DÀI NHẤT</div>
+        <div class="rcell-lbl">🔥 CHUỖI ĐỦ 2 THỜI</div>
         <div class="rcell-val" style="color:var(--gold)" id="alltime-streak">0 ngày</div>
       </div>
       <div class="rcell">
@@ -337,16 +337,20 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div class="rcell-val" style="color:#8e44ad" id="alltime-max-day">—</div>
         <div class="rcell-sub" id="alltime-max-day-date"></div>
       </div>
+      <div class="rcell">
+        <div class="rcell-lbl">⏳ TỔNG GIỜ THIỀN</div>
+        <div class="rcell-val" style="color:#8a6d1a" id="alltime-tot-hours">0 giờ</div>
+      </div>
+      <div class="rcell">
+        <div class="rcell-lbl">📆 TỔNG NGÀY THIỀN</div>
+        <div class="rcell-val" style="color:#8a6d1a" id="alltime-tot-days">0 ngày</div>
+      </div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-hd">📈 Xu hướng 30 ngày (so với 30 ngày trước)</div>
     <div id="rec-list"><div style="color:var(--muted);font-size:13px;padding:8px 0">Ghi lại buổi thiền để xem xu hướng.</div></div>
-  </div>
-  <div class="card">
-    <div class="card-hd">Thành tích</div>
-    <div id="achievements"></div>
   </div>
 </div><!-- end pg-today -->
 
@@ -631,7 +635,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v113</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v114</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1993,6 +1997,7 @@ function renderAlltimeStats(){
 
   let maxSess=0,maxSessDate=''; // phiên đơn dài nhất (sáng hoặc tối)
   let maxDay=0,maxDayDate='';   // tổng ngày nhiều nhất
+  let totMins=0,totDays=0;      // tổng cộng dồn (gồm cả các thời bổ sung)
   let bestStreak=0,curStreak=0;
   let bestAny=0,curAny=0,prevAnyDate=null;
 
@@ -2008,6 +2013,11 @@ function renderAlltimeStats(){
 
     // Ngày nhiều nhất
     if(total>maxDay){maxDay=total;maxDayDate=e.date;}
+
+    // Tổng cộng dồn
+    const totWithExtra=total+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
+    totMins+=totWithExtra;
+    if(totWithExtra>0) totDays++;
 
     // Chuỗi ngày CÓ thiền (>=1 thời)
     if(total>0){
@@ -2042,6 +2052,10 @@ function renderAlltimeStats(){
   if(el2)el2.textContent=bestStreak+' ngày';
   const elAny=document.getElementById('alltime-anystreak');
   if(elAny)elAny.textContent=bestAny+' ngày';
+  const elTH=document.getElementById('alltime-tot-hours');
+  if(elTH)elTH.textContent=nf(Math.floor(totMins/60))+' giờ';
+  const elTD=document.getElementById('alltime-tot-days');
+  if(elTD)elTD.textContent=nf(totDays)+' ngày';
 }
 
 function renderCalendar(){
@@ -2569,27 +2583,6 @@ function renderRec(){
       +'chỉ tăng nhẹ 5–10 phút mỗi thời khi thấy thuận duyên, không tăng đột ngột.</div>';
   }
   box.innerHTML=html;
-  const ach=document.getElementById('achievements');
-  if(ach){
-    let totalMins=0,totalDays=0,best=0,run=0;
-    const ds=[...ST.data].sort((x,y)=>x.date<y.date?-1:1);
-    let prev=null;
-    for(const e of ds){
-      const m=(e.mins1||0)+(e.mins2||0)+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
-      if(m>0) totalDays++;
-      totalMins+=m;
-      if(e.mins1>0&&e.mins2>0){
-        if(prev){ const d1=new Date(prev),d2=new Date(e.date); run=((d2-d1)===86400000)? run+1 : 1; }
-        else run=1;
-        prev=e.date; if(run>best)best=run;
-      } else { prev=null; run=0; }
-    }
-    const hrs=Math.floor(totalMins/60);
-    const badge=(em,t,v)=>'<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--surface3)"><span style="font-size:18px">'+em+'</span><div style="flex:1;font-size:12px;color:var(--ink)">'+t+'</div><div style="font-size:14px;font-weight:700;color:var(--teal)">'+v+'</div></div>';
-    ach.innerHTML = badge('⏳','Tổng thời gian hành thiền', nf(hrs)+' giờ')
-      + badge('📅','Tổng số ngày có hành thiền', nf(totalDays)+' ngày')
-      + badge('🔥','Chuỗi đủ 2 thời dài nhất', best+' ngày');
-  }
 }
 function exportData(){
   const payload=JSON.stringify(ST,null,2);
