@@ -1812,11 +1812,11 @@ function renderStreak(){
 // MONTHLY CHART — single coordinate system
 let pvYear=new Date().getFullYear(),pvMonth=new Date().getMonth();
 
-function prevChartMonth(){pvMonth--;if(pvMonth<0){pvMonth=11;pvYear--;}renderMonthPVA();}
+function prevChartMonth(){pvMonth--;if(pvMonth<0){pvMonth=11;pvYear--;}renderMonthPVA();renderPieChart();}
 function nextChartMonth(){
   const now=new Date();
   if(pvYear>now.getFullYear()||(pvYear===now.getFullYear()&&pvMonth>=now.getMonth()))return;
-  pvMonth++;if(pvMonth>11){pvMonth=0;pvYear++;}renderMonthPVA();
+  pvMonth++;if(pvMonth>11){pvMonth=0;pvYear++;}renderMonthPVA();renderPieChart();
 }
 
 function renderMonthPVA(){
@@ -2378,11 +2378,10 @@ function saveDayDetail(){
 
 function renderPieChart(){
   if(typeof Chart==='undefined')return;
-  const now=new Date();
-  const thisMonth=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  const thisMonth=pvYear+'-'+String(pvMonth+1).padStart(2,'0'); // theo tháng đang xem trên biểu đồ
   const counts={tot:0,can:0,kem:0};
   ST.data.forEach(e=>{
-    if(!e.date||!e.date.startsWith(thisMonth))return; // chỉ tháng hiện tại
+    if(!e.date||!e.date.startsWith(thisMonth))return; // chỉ tháng đang xem
     if(e.ratingS&&counts[e.ratingS]!==undefined)counts[e.ratingS]++;
     if(e.ratingT&&counts[e.ratingT]!==undefined)counts[e.ratingT]++;
   });
