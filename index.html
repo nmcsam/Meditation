@@ -989,9 +989,9 @@ function gioiStrip2HTML(interactive, y, m){
   gioiPlanArr(y,m).forEach(function(d){plan[d]=1;});
   var monthCmp=(y*12+m)-(now.getFullYear()*12+now.getMonth()); // <0: tháng đã qua, 0: tháng này, >0: tương lai
   function key(d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
-  // Kích cỡ: tab Tháng (tương tác) chấm to dễ chạm + trượt ngang; tab Hôm nay giữ nhỏ gọn vừa màn
-  var CELL=interactive?27:0, DOT=interactive?20:9, NUMF=interactive?10:6, RH=interactive?26:15, BR=interactive?1.6:1.2;
-  var cellCss=interactive?('flex:none;width:'+CELL+'px'):'flex:1;min-width:0';
+  // Kích cỡ: cả tab Tháng lẫn tab Hôm nay đều dùng chấm to + ô cố định, trượt ngang được
+  var CELL=27, DOT=20, NUMF=10, RH=26, BR=1.6;
+  var cellCss='flex:none;width:'+CELL+'px';
   // hàng số ngày: tab Tháng hiện kèm ngày âm (dương xanh / âm đỏ), tab Hôm nay chỉ số dương cho gọn
   var nums='<div style="display:flex">';
   for(var d=1;d<=dim;d++){
@@ -1013,7 +1013,7 @@ function gioiStrip2HTML(interactive, y, m){
       var k=key(d), on;
       if(kind==='plan') on=!!plan[d];
       else { var e=getEntry(k); on=!!(e&&e.gioi); }
-      var dot='width:'+(interactive?(DOT+'px'):'100%')+';max-width:'+DOT+'px;aspect-ratio:1;border-radius:50%;margin:0 auto;box-sizing:border-box;';
+      var dot='width:'+DOT+'px;max-width:'+DOT+'px;aspect-ratio:1;border-radius:50%;margin:0 auto;box-sizing:border-box;';
       if(kind==='plan'){
         if(d===td) dot+='background:#ffd400;border:2px solid #c9891a;box-shadow:0 0 0 2px #ffd40055,0 0 8px #ffd400aa;'; // hôm nay: vàng rực
         else if(on) dot+='background:#c9891a;border:1px solid #a06a10;';
@@ -1033,14 +1033,13 @@ function gioiStrip2HTML(interactive, y, m){
     }
     return h+'</div>';
   }
-  var lblSticky=interactive?';position:sticky;left:0;background:#f8e9bd;z-index:2;padding-right:6px':'';
-  var grid='<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 6px;align-items:center'+(interactive?';width:max-content':'')+'">'
-    +'<div style="'+(interactive?'position:sticky;left:0;background:#f8e9bd;z-index:2':'')+'"></div><div>'+nums+'</div>'
-    +'<div class="grow-lbl" style="white-space:nowrap;font-size:'+(interactive?9:8)+'px'+lblSticky+'">KẾ HOẠCH</div><div>'+dotRow('plan')+'</div>'
-    +'<div class="grow-lbl" style="white-space:nowrap;font-size:'+(interactive?9:8)+'px'+lblSticky+'">THỰC TẾ</div><div>'+dotRow('actual')+'</div>'
+  var lblSticky=';position:sticky;left:0;background:#f8e9bd;z-index:2;padding-right:6px';
+  var grid='<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 6px;align-items:center;width:max-content">'
+    +'<div style="position:sticky;left:0;background:#f8e9bd;z-index:2"></div><div>'+nums+'</div>'
+    +'<div class="grow-lbl" style="white-space:nowrap;font-size:9px'+lblSticky+'">KẾ HOẠCH</div><div>'+dotRow('plan')+'</div>'
+    +'<div class="grow-lbl" style="white-space:nowrap;font-size:9px'+lblSticky+'">THỰC TẾ</div><div>'+dotRow('actual')+'</div>'
     +'</div>';
-  if(interactive) return '<div style="overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch">'+grid+'</div>';
-  return grid;
+  return '<div style="overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch">'+grid+'</div>';
 }
 function gioiStripHTML(interactive, y, m){
   var now=new Date();
