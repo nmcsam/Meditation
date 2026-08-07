@@ -402,7 +402,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   </div>
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:5px">
     <div class="mcell"><div class="mcell-label">Ngày thiền</div><div class="mcell-val" id="mo-days">0</div></div>
-    <div class="mcell"><div class="mcell-label">Tổng phút</div><div class="mcell-val" id="mo-mins">0</div></div>
+    <div class="mcell"><div class="mcell-label">Tổng giờ</div><div class="mcell-val" id="mo-mins">0</div></div>
     <div class="mcell"><div class="mcell-label">TB ngày</div><div class="mcell-val" id="mo-avg">0<span class="mcell-unit"> ph</span></div></div>
     <div class="mcell"><div class="mcell-label">Chuỗi dài nhất</div><div class="mcell-val" id="mo-streak">0</div></div>
     <div class="mcell"><div class="mcell-label">⏱ Thời dài nhất</div>
@@ -484,7 +484,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   </div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px">
     <div class="mcell"><div class="mcell-label">Ngày thiền</div><div class="mcell-val" id="yr-days">0</div></div>
-    <div class="mcell"><div class="mcell-label">Tổng phút</div><div class="mcell-val" id="yr-mins">0</div></div>
+    <div class="mcell"><div class="mcell-label">Tổng giờ</div><div class="mcell-val" id="yr-mins">0</div></div>
     <div class="mcell"><div class="mcell-label">Đủ 2 thời</div><div class="mcell-val" id="yr-full">0</div></div>
     <div class="mcell"><div class="mcell-label">Chuỗi dài nhất</div><div class="mcell-val" id="yr-streak">0</div></div>
   </div>
@@ -1524,7 +1524,7 @@ function renderYear(){
   }
   document.getElementById('year-grid').innerHTML=html;
   document.getElementById('yr-days').textContent=nf(totalDays);
-  document.getElementById('yr-mins').textContent=nf(totalMins);
+  document.getElementById('yr-mins').textContent=fmtHM(totalMins);
   document.getElementById('yr-full').textContent=nf(fullDays);
   document.getElementById('yr-streak').textContent=nf(maxStreak);
 }
@@ -2063,7 +2063,7 @@ function renderCalendar(){
   }
   document.getElementById('cal-grid').innerHTML=html;
   document.getElementById('mo-days').textContent=nf(totalD);
-  document.getElementById('mo-mins').textContent=nf(totalM);
+  document.getElementById('mo-mins').textContent=fmtHM(totalM);
   document.getElementById('mo-streak').textContent=nf(streak);
   var _gp=document.getElementById('gioi-pairs-month');
   if(_gp){
