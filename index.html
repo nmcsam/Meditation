@@ -2581,10 +2581,46 @@ function renderRec(){
   box.innerHTML=html;
 }
 function exportData(){
-  const payload=JSON.stringify(ST,null,2);
-  const blob=new Blob([payload],{type:'application/json'});
-  const date=new Date().toISOString().slice(0,10);
-  saveFileAs('thien-data-'+date+'.json', blob);
+  try{
+    const payload=JSON.stringify(ST,null,2);
+    const blob=new Blob([payload],{type:'application/json'});
+    const date=new Date().toISOString().slice(0,10);
+    saveFileAs('thien-data-'+date+'.json', blob, payload);
+  }catch(e){ toast('Lỗi xuất: '+(e&&e.message||e)); }
+}
+
+// Lưu file bền cho mọi môi trường: APK (TWA) / PWA / trình duyệt máy tính
+function saveFileAs(name, blob, payloadText){
+  // 1) Android/APK: mở hộp Chia sẻ của hệ thống (lưu vào Tệp, gửi Zalo/Drive...)
+  try{
+    const f=new File([blob], name, {type:blob.type||'application/json'});
+    if(navigator.canShare && navigator.canShare({files:[f]})){
+      navigator.share({files:[f], title:name}).catch(function(err){
+        if(err && err.name==='AbortError') return; // người dùng tự đóng hộp chia sẻ
+        saveFileAsDownload(name, blob, payloadText);
+      });
+      return;
+    }
+  }catch(e){ /* rơi xuống cách 2 */ }
+  saveFileAsDownload(name, blob, payloadText);
+}
+function saveFileAsDownload(name, blob, payloadText){
+  // 2) Tải file cổ điển
+  try{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download=name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 800);
+    toast('✓ Đã xuất: '+name);
+    return;
+  }catch(e){ /* rơi xuống cách 3 */ }
+  // 3) Đường cùng: chép nội dung vào bộ nhớ tạm
+  try{
+    navigator.clipboard.writeText(payloadText||'').then(function(){
+      toast('Không tải được file — đã CHÉP dữ liệu vào bộ nhớ tạm, hãy dán vào ghi chú để lưu.');
+    });
+  }catch(e){ toast('Không xuất được trên thiết bị này'); }
 }
 
 function importData(input){
