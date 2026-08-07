@@ -2143,7 +2143,11 @@ function showDayDetail(k){
     let body='<b>🌅 AM:</b> '+fmtHM(e.mins1||0)+((e.types1&&e.types1.length)?' · '+e.types1.join(', '):'')+
       ' &nbsp;·&nbsp; <b>🌙 PM:</b> '+fmtHM(e.mins2||0)+((e.types2&&e.types2.length)?' · '+e.types2.join(', '):'')+
       ' &nbsp;·&nbsp; <b>Σ:</b> '+fmtHM((e.mins1||0)+(e.mins2||0));
-    e.th.forEach(function(t,i){
+    e.th.slice().sort(function(a,b){
+      const ga=(thAMPMof(a)==='AM')?0:1, gb=(thAMPMof(b)==='AM')?0:1;
+      if(ga!==gb) return ga-gb;
+      return (a.s||'99:99').localeCompare(b.s||'99:99');
+    }).forEach(function(t,i){
       const ap=thAMPMof(t), col=ap==='AM'?'#7a5410':'#2c3e6b';
       body+='<br><i style="color:'+col+';font-size:11px"><b>'+(ap==='AM'?'🌅':'🌙')+' Thời '+(i+1)+' ('+ap+'):</b> '+
         (t.s||'--:--')+(t.e?'–'+t.e:'')+' · '+fmtHM(t.m||0)+
@@ -2154,6 +2158,11 @@ function showDayDetail(k){
 
   // Danh sách thời để sửa
   ddSess=(e&&e.th)?e.th.map(function(t){return {s:t.s||'',e:t.e||'',m:+t.m||0,r:t.r||null,n:t.n||'',ap:(t.ap==='AM'||t.ap==='PM')?t.ap:null};}):[];
+  ddSess.sort(function(a,b){
+    const ga=(thAMPMof(a)==='AM')?0:1, gb=(thAMPMof(b)==='AM')?0:1;
+    if(ga!==gb) return ga-gb;
+    return (a.s||'99:99').localeCompare(b.s||'99:99');
+  });
   if(!ddSess.length) ddSess.push({s:'',e:'',m:0,r:null,n:''});
   ddRenderSessions();
   document.getElementById('dd-edit-section').style.display='block';
@@ -2334,7 +2343,11 @@ function saveDayDetail(){
   const th=ddSess.filter(function(t){ return (t.m>0)||t.r||(t.n&&t.n.trim())||t.s; })
     .map(function(t){ const o={s:t.s||'', e:t.e||'', m:+t.m||0, r:t.r||null, n:(t.n||'').trim()}; if(t.ap==='AM'||t.ap==='PM')o.ap=t.ap; return o; })
     .slice(0,10)
-    .sort(function(a,b){ return (a.s||'99:99').localeCompare(b.s||'99:99'); });
+    .sort(function(a,b){
+      const ga=(thAMPMof(a)==='AM')?0:1, gb=(thAMPMof(b)==='AM')?0:1;
+      if(ga!==gb) return ga-gb; // AM trước, PM sau
+      return (a.s||'99:99').localeCompare(b.s||'99:99');
+    });
   let e=getEntry(k);
   if(!e){e={date:k,mins1:0,mins2:0,q1:3,q2:3,types1:[],types2:[]};ST.data.push(e);}
   e.th=th; thRecalc(e);
