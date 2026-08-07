@@ -2144,7 +2144,7 @@ function showDayDetail(k){
       ' &nbsp;·&nbsp; <b>🌙 PM:</b> '+fmtHM(e.mins2||0)+((e.types2&&e.types2.length)?' · '+e.types2.join(', '):'')+
       ' &nbsp;·&nbsp; <b>Σ:</b> '+fmtHM((e.mins1||0)+(e.mins2||0));
     e.th.forEach(function(t,i){
-      const ap=thAMPM(t.s), col=ap==='AM'?'#7a5410':'#2c3e6b';
+      const ap=thAMPMof(t), col=ap==='AM'?'#7a5410':'#2c3e6b';
       body+='<br><i style="color:'+col+';font-size:11px"><b>'+(ap==='AM'?'🌅':'🌙')+' Thời '+(i+1)+' ('+ap+'):</b> '+
         (t.s||'--:--')+(t.e?'–'+t.e:'')+' · '+fmtHM(t.m||0)+
         (t.r?' · '+_rl[t.r]:'')+(t.n?' — '+_esc(t.n):'')+'</i>';
@@ -2153,7 +2153,7 @@ function showDayDetail(k){
   }
 
   // Danh sách thời để sửa
-  ddSess=(e&&e.th)?e.th.map(function(t){return {s:t.s||'',e:t.e||'',m:+t.m||0,r:t.r||null,n:t.n||''};}):[];
+  ddSess=(e&&e.th)?e.th.map(function(t){return {s:t.s||'',e:t.e||'',m:+t.m||0,r:t.r||null,n:t.n||'',ap:(t.ap==='AM'||t.ap==='PM')?t.ap:null};}):[];
   if(!ddSess.length) ddSess.push({s:'',e:'',m:0,r:null,n:''});
   ddRenderSessions();
   document.getElementById('dd-edit-section').style.display='block';
@@ -2167,7 +2167,7 @@ function ddRenderSessions(){
   const box=document.getElementById('dd-sess-list'); if(!box)return;
   const colors={'tot':'#2ecc71','can':'#FFFF00','kem':'#e74c3c'};
   box.innerHTML = ddSess.map(function(t,i){
-    const ap=thAMPM(t.s), am=(ap==='AM');
+    const ap=thAMPMof(t), am=(ap==='AM');
     const bg=am?'#fff6df':'#edf1fa', bd=am?'#e0be66':'#a9b9dd', fg=am?'#7a5410':'#2c3e6b';
     function rb(r,lbl,cls){
       const on=t.r===r;
@@ -2175,7 +2175,11 @@ function ddRenderSessions(){
     }
     return '<div style="background:'+bg+';border:1px solid '+bd+';border-radius:var(--r);padding:9px 10px;margin-bottom:8px">'
       +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
-      +'<div style="font-size:11.5px;font-weight:800;color:'+fg+'">'+(am?'🌅':'🌙')+' Thời '+(i+1)+' · <span id="dd-ap-'+i+'">'+ap+'</span></div>'
+      +'<div style="font-size:11.5px;font-weight:800;color:'+fg+'">'+(am?'🌅':'🌙')+' Thời '+(i+1)+' · '
+      +'<select id="dd-ap-'+i+'" onchange="ddSetAP('+i+',this.value)" title="Chọn cộng vào AM hay PM" style="font-size:11px;font-weight:800;color:'+fg+';background:var(--surface);border:1px solid '+bd+';border-radius:6px;padding:1px 3px">'
+      +'<option value="AM"'+(ap==='AM'?' selected':'')+'>AM</option>'
+      +'<option value="PM"'+(ap==='PM'?' selected':'')+'>PM</option>'
+      +'</select></div>'
       +'<button type="button" onclick="ddDelSess('+i+')" style="border:none;background:transparent;color:#c0392b;font-weight:800;cursor:pointer;font-size:12px">✕ Xóa thời</button></div>'
       +'<div class="trow">'
       +'<span class="tbadge">T'+(i+1)+'</span>'
@@ -2208,15 +2212,20 @@ function ddCalc(i){
   ddSess[i].s=s?s.value:''; ddSess[i].e=e2?e2.value:'';
   ddSess[i].m=_pairMins(ddSess[i].s, ddSess[i].e);
   const m=document.getElementById('dd-m-'+i); if(m)m.value=fmtHM(ddSess[i].m);
-  const ap=document.getElementById('dd-ap-'+i); if(ap)ap.textContent=thAMPM(ddSess[i].s);
+  const ap=document.getElementById('dd-ap-'+i); if(ap && !ddSess[i].ap) ap.value=thAMPM(ddSess[i].s);
   ddSums();
 }
 function ddSums(){
   let am=0,pm=0;
-  ddSess.forEach(function(t){ if(thAMPM(t.s)==='AM')am+=(+t.m||0); else pm+=(+t.m||0); });
+  ddSess.forEach(function(t){ if(thAMPMof(t)==='AM')am+=(+t.m||0); else pm+=(+t.m||0); });
   const ss=document.getElementById('dd-sum-s'); if(ss)ss.textContent=fmtHM(am);
   const st=document.getElementById('dd-sum-t'); if(st)st.textContent=fmtHM(pm);
   const sa=document.getElementById('dd-sum-all'); if(sa)sa.textContent=fmtHM(am+pm);
+}
+function ddSetAP(i,v){
+  ddCapture();
+  if(ddSess[i]) ddSess[i].ap=(v==='AM'||v==='PM')?v:null;
+  ddRenderSessions();
 }
 function ddSetRating(i,r){ ddCapture(); if(ddSess[i]) ddSess[i].r = (ddSess[i].r===r?null:r); ddRenderSessions(); }
 function ddDelSess(i){
@@ -2283,10 +2292,11 @@ function _pairMins(s,e){
 // Quy tắc: thời bắt đầu 00:00–11:59 cộng vào AM (e.mins1), còn lại cộng vào PM (e.mins2).
 function _esc(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function thAMPM(s){ if(!s) return 'AM'; const h=+String(s).split(':')[0]; return (h<12)?'AM':'PM'; }
+function thAMPMof(t){ return (t&&(t.ap==='AM'||t.ap==='PM')) ? t.ap : thAMPM(t&&t.s); }
 function thRecalc(e){
   if(!e||!e.th) return;
   let am=0, pm=0;
-  e.th.forEach(function(t){ if(thAMPM(t.s)==='AM') am+=(+t.m||0); else pm+=(+t.m||0); });
+  e.th.forEach(function(t){ if(thAMPMof(t)==='AM') am+=(+t.m||0); else pm+=(+t.m||0); });
   e.mins1=am; e.mins2=pm;
 }
 function thNowHM(offMin){
@@ -2322,15 +2332,15 @@ function saveDayDetail(){
   const k=currentDayKey;if(!k)return;
   ddCapture();
   const th=ddSess.filter(function(t){ return (t.m>0)||t.r||(t.n&&t.n.trim())||t.s; })
-    .map(function(t){ return {s:t.s||'', e:t.e||'', m:+t.m||0, r:t.r||null, n:(t.n||'').trim()}; })
+    .map(function(t){ const o={s:t.s||'', e:t.e||'', m:+t.m||0, r:t.r||null, n:(t.n||'').trim()}; if(t.ap==='AM'||t.ap==='PM')o.ap=t.ap; return o; })
     .slice(0,10)
     .sort(function(a,b){ return (a.s||'99:99').localeCompare(b.s||'99:99'); });
   let e=getEntry(k);
   if(!e){e={date:k,mins1:0,mins2:0,q1:3,q2:3,types1:[],types2:[]};ST.data.push(e);}
   e.th=th; thRecalc(e);
   // đồng bộ trường cũ (tương thích): đánh giá & ghi chú của thời AM đầu và PM đầu
-  const fa=th.find(function(t){return thAMPM(t.s)==='AM';});
-  const fp=th.find(function(t){return thAMPM(t.s)==='PM';});
+  const fa=th.find(function(t){return thAMPMof(t)==='AM';});
+  const fp=th.find(function(t){return thAMPMof(t)==='PM';});
   e.ratingS=fa?fa.r:null; e.noteS=fa?(fa.n||''):'';
   e.ratingT=fp?fp.r:null; e.noteT=fp?(fp.n||''):'';
   e.rating1b=null; e.note1b=''; e.rating2b=null; e.note2b='';
