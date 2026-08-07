@@ -67,6 +67,7 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .grow-lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.4px}
 .trow{display:flex;align-items:center;gap:1px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
 .trow::-webkit-scrollbar{display:none}
+@media (pointer:fine){ .trow{cursor:grab} .trow:active{cursor:grabbing} }
 .tbadge{flex:none;font-size:8.5px;font-weight:800;color:#fff;background:#8a8a8a;border-radius:5px;padding:3px 4px}
 .tin{flex:1 0 37px;min-width:37px;width:37px;padding:5px 1px;font-size:10.5px;text-align:center;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink)}
 .tmin{flex:1 0 40px;min-width:40px;width:40px;padding:5px 1px;font-size:10.5px;font-weight:800;border:1px solid var(--teal);border-radius:8px;background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none}
@@ -570,7 +571,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v116</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v117</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2804,6 +2805,49 @@ registerSW();
 requestPersist();
 initSync();
 setTimeout(bkCheckAuto, 4000);
+
+// ===== MÁY TÍNH: kéo chuột hoặc lăn chuột để trượt các vùng tràn ngang =====
+(function(){
+  function scrollableX(el){
+    while(el && el.nodeType===1 && el!==document.body){
+      if(el.scrollWidth > el.clientWidth+1){
+        const o=getComputedStyle(el).overflowX;
+        if(o==='auto'||o==='scroll') return el;
+      }
+      el=el.parentElement;
+    }
+    return null;
+  }
+  let tgt=null,sx=0,sl=0,moved=false;
+  document.addEventListener('mousedown',function(ev){
+    if(ev.button!==0)return;
+    if(/^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName))return; // không phá việc chọn chữ trong ô nhập
+    const s=scrollableX(ev.target);
+    if(!s)return;
+    tgt=s;sx=ev.clientX;sl=s.scrollLeft;moved=false;
+  });
+  document.addEventListener('mousemove',function(ev){
+    if(!tgt)return;
+    const dx=ev.clientX-sx;
+    if(Math.abs(dx)>3)moved=true;
+    if(moved){ tgt.scrollLeft=sl-dx; ev.preventDefault(); }
+  });
+  document.addEventListener('mouseup',function(){
+    if(tgt&&moved){
+      const stop=function(e){e.stopPropagation();e.preventDefault();};
+      document.addEventListener('click',stop,true);
+      setTimeout(function(){document.removeEventListener('click',stop,true);},50);
+    }
+    tgt=null;moved=false;
+  });
+  document.addEventListener('wheel',function(ev){
+    if(ev.deltaX!==0)return; // trackpad đã trượt ngang sẵn
+    const s=scrollableX(ev.target);
+    if(!s)return;
+    s.scrollLeft+=ev.deltaY;
+    ev.preventDefault();
+  },{passive:false});
+})();
 </script>
 </body>
 </html>
