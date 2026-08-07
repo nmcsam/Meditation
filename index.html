@@ -310,12 +310,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="position:relative;height:140px"><canvas id="chart-monthly"></canvas></div>
   </div>
 
-  <!-- CARD: So sánh số giờ giữa các năm -->
-  <div class="card" style="padding:10px 12px">
-    <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">SỐ GIỜ THIỀN THEO NĂM</div>
-    <div style="position:relative;height:140px"><canvas id="chart-yearly"></canvas></div>
-  </div>
-
 
   <!-- CARD 6: Tổng kết toàn thời gian -->
   <div class="card" style="padding:10px 12px">
@@ -493,6 +487,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div class="mcell"><div class="mcell-label">Tổng phút</div><div class="mcell-val" id="yr-mins">0</div></div>
     <div class="mcell"><div class="mcell-label">Đủ 2 thời</div><div class="mcell-val" id="yr-full">0</div></div>
     <div class="mcell"><div class="mcell-label">Chuỗi dài nhất</div><div class="mcell-val" id="yr-streak">0</div></div>
+  </div>
+  <!-- So sánh số giờ giữa các năm (2026–2040) -->
+  <div class="card" style="padding:10px 12px">
+    <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">SỐ GIỜ THIỀN THEO NĂM (2026–2040)</div>
+    <div style="position:relative;height:150px"><canvas id="chart-yearly"></canvas></div>
   </div>
 </div><!-- end pg-year -->
 
@@ -1348,7 +1347,7 @@ function nav(id){
   document.getElementById('pg-'+id).classList.add('on');
   if(id==='today')setTimeout(()=>{renderCharts();renderRec();},100);
   if(id==='month')renderCalendar();
-  if(id==='year')renderYear();
+  if(id==='year'){renderYear();renderYearHoursChart();}
 }
 
 function updateGoal(n,v){
@@ -1458,6 +1457,39 @@ function renderExtraSessions(){
 
 // ── NĂM ──
 let viewYear=new Date().getFullYear();
+// ==== SỐ GIỜ THIỀN THEO NĂM: 15 năm cố định 2026–2040 ====
+function renderYearHoursChart(){
+  const yEl=document.getElementById('chart-yearly');
+  if(!yEl||typeof Chart==='undefined')return;
+  const perYear={};
+  (ST.data||[]).forEach(function(e){
+    if(!e.date)return;
+    const y=e.date.slice(0,4);
+    const m=(e.mins1||0)+(e.mins2||0)+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
+    if(m>0) perYear[y]=(perYear[y]||0)+m;
+  });
+  const years=[]; for(let y=2026;y<=2040;y++) years.push(String(y));
+  const yData=years.map(function(y){return Math.round((perYear[y]||0)/60*10)/10;});
+  if(charts.yearly){charts.yearly.destroy();charts.yearly=null;}
+  const yearlyPlugin={id:'yearlyLabels',afterDatasetDraw(chart){
+    const {ctx,data}=chart;
+    chart.getDatasetMeta(0).data.forEach((bar,i)=>{
+      const v=data.datasets[0].data[i];if(!v)return;
+      ctx.save();ctx.fillStyle='#1a1a1a';ctx.font='bold 9px -apple-system,sans-serif';
+      ctx.textAlign='center';ctx.textBaseline='bottom';
+      ctx.fillText(v+'h',bar.x,bar.y-2);ctx.restore();
+    });
+  }};
+  charts.yearly=new Chart(yEl,{
+    type:'bar',
+    data:{labels:years,datasets:[{data:yData,backgroundColor:'rgba(184,134,11,.75)',borderRadius:3,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:16}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+' giờ'}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:8},maxRotation:60,minRotation:45}},
+              y:{beginAtZero:true,ticks:{font:{size:9}}}}},
+    plugins:[yearlyPlugin]
+  });
+}
 function prevYear(){viewYear--;renderYear();}
 function nextYear(){viewYear++;renderYear();}
 
@@ -2466,37 +2498,6 @@ function renderCharts(){
     plugins:[monthlyPlugin]
   });
 
-  // ==== SỐ GIỜ THIỀN THEO NĂM (cột đứng, mỗi năm một cột) ====
-  const yEl=document.getElementById('chart-yearly');
-  if(yEl){
-    const perYear={};
-    (ST.data||[]).forEach(function(e){
-      if(!e.date)return;
-      const y=e.date.slice(0,4);
-      const m=(e.mins1||0)+(e.mins2||0)+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
-      if(m>0) perYear[y]=(perYear[y]||0)+m;
-    });
-    const years=Object.keys(perYear).sort();
-    const yData=years.map(function(y){return Math.round(perYear[y]/60*10)/10;});
-    if(charts.yearly){charts.yearly.destroy();charts.yearly=null;}
-    if(years.length){
-      const yearlyPlugin={id:'yearlyLabels',afterDatasetDraw(chart){
-        const {ctx,data}=chart;
-        chart.getDatasetMeta(0).data.forEach((bar,i)=>{
-          const v=data.datasets[0].data[i];if(!v)return;
-          ctx.save();ctx.fillStyle='#1a1a1a';ctx.font='bold 10px -apple-system,sans-serif';
-          ctx.textAlign='center';ctx.textBaseline='bottom';
-          ctx.fillText(v+'h',bar.x,bar.y-2);ctx.restore();
-        });
-      }};
-      charts.yearly=new Chart(yEl,{
-        type:'bar',
-        data:{labels:years,datasets:[{data:yData,backgroundColor:'rgba(184,134,11,.75)',borderRadius:4,borderSkipped:false}]},
-        options:Object.assign({},base,{layout:{padding:{top:16}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+' giờ'}}}}),
-        plugins:[yearlyPlugin]
-      });
-    }
-  }
 }
 
 // RECOMMENDATIONS
