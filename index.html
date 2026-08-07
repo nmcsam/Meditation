@@ -571,7 +571,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v117</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v118</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2179,16 +2179,14 @@ function showDayDetail(k){
   if(!e||!e.th||!e.th.length){
     document.getElementById('dd-body').innerHTML='<span style="color:var(--muted)">Không có dữ liệu thiền.</span>';
   } else {
-    let body='<b>🌅 AM:</b> '+fmtHM(e.mins1||0)+((e.types1&&e.types1.length)?' · '+e.types1.join(', '):'')+
-      ' &nbsp;·&nbsp; <b>🌙 PM:</b> '+fmtHM(e.mins2||0)+((e.types2&&e.types2.length)?' · '+e.types2.join(', '):'')+
-      ' &nbsp;·&nbsp; <b>Σ:</b> '+fmtHM((e.mins1||0)+(e.mins2||0));
+    let body='';
     e.th.slice().sort(function(a,b){
       const ga=(thAMPMof(a)==='AM')?0:1, gb=(thAMPMof(b)==='AM')?0:1;
       if(ga!==gb) return ga-gb;
       return (a.s||'99:99').localeCompare(b.s||'99:99');
     }).forEach(function(t,i){
       const ap=thAMPMof(t), col=ap==='AM'?'#7a5410':'#2c3e6b';
-      body+='<br><i style="color:'+col+';font-size:11px"><b>'+(ap==='AM'?'🌅':'🌙')+' Thời '+(i+1)+' ('+ap+'):</b> '+
+      body+=(body?'<br>':'')+'<i style="color:'+col+';font-size:11px"><b>'+(ap==='AM'?'🌅':'🌙')+' Thời '+(i+1)+' ('+ap+'):</b> '+
         (t.s||'--:--')+(t.e?'–'+t.e:'')+' · '+fmtHM(t.m||0)+
         (t.r?' · '+_rl[t.r]:'')+(t.n?' — '+_esc(t.n):'')+'</i>';
     });
