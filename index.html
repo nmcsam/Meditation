@@ -310,6 +310,12 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="position:relative;height:140px"><canvas id="chart-monthly"></canvas></div>
   </div>
 
+  <!-- CARD: So sánh số giờ giữa các năm -->
+  <div class="card" style="padding:10px 12px">
+    <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">SỐ GIỜ THIỀN THEO NĂM</div>
+    <div style="position:relative;height:140px"><canvas id="chart-yearly"></canvas></div>
+  </div>
+
 
   <!-- CARD 6: Tổng kết toàn thời gian -->
   <div class="card" style="padding:10px 12px">
@@ -2459,6 +2465,38 @@ function renderCharts(){
     options:Object.assign({},base,{layout:{padding:{top:16}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'h'}}}}),
     plugins:[monthlyPlugin]
   });
+
+  // ==== SỐ GIỜ THIỀN THEO NĂM (cột đứng, mỗi năm một cột) ====
+  const yEl=document.getElementById('chart-yearly');
+  if(yEl){
+    const perYear={};
+    (ST.data||[]).forEach(function(e){
+      if(!e.date)return;
+      const y=e.date.slice(0,4);
+      const m=(e.mins1||0)+(e.mins2||0)+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
+      if(m>0) perYear[y]=(perYear[y]||0)+m;
+    });
+    const years=Object.keys(perYear).sort();
+    const yData=years.map(function(y){return Math.round(perYear[y]/60*10)/10;});
+    if(charts.yearly){charts.yearly.destroy();charts.yearly=null;}
+    if(years.length){
+      const yearlyPlugin={id:'yearlyLabels',afterDatasetDraw(chart){
+        const {ctx,data}=chart;
+        chart.getDatasetMeta(0).data.forEach((bar,i)=>{
+          const v=data.datasets[0].data[i];if(!v)return;
+          ctx.save();ctx.fillStyle='#1a1a1a';ctx.font='bold 10px -apple-system,sans-serif';
+          ctx.textAlign='center';ctx.textBaseline='bottom';
+          ctx.fillText(v+'h',bar.x,bar.y-2);ctx.restore();
+        });
+      }};
+      charts.yearly=new Chart(yEl,{
+        type:'bar',
+        data:{labels:years,datasets:[{data:yData,backgroundColor:'rgba(184,134,11,.75)',borderRadius:4,borderSkipped:false}]},
+        options:Object.assign({},base,{layout:{padding:{top:16}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+' giờ'}}}}),
+        plugins:[yearlyPlugin]
+      });
+    }
+  }
 }
 
 // RECOMMENDATIONS
