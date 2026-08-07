@@ -65,13 +65,13 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .gmk{font-size:12px;font-weight:800;color:#fff}
 .gmk-empty{font-size:11px;color:#9a8b64}
 .grow-lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.4px}
-.trow{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.trow{display:flex;align-items:center;gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
 .trow::-webkit-scrollbar{display:none}
 .tbadge{flex:none;font-size:9.5px;font-weight:800;color:#fff;background:#8a8a8a;border-radius:6px;padding:3px 5px}
-.tin{flex:3 1 0;min-width:66px;padding:5px 2px;font-size:12px;text-align:center;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink)}
-.tmin{flex:2 1 0;min-width:48px;padding:5px 2px;font-size:12px;font-weight:800;border:1px solid var(--teal);border-radius:8px;background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none}
+.tin{flex:3 1 0;min-width:63px;padding:5px 2px;font-size:12px;text-align:center;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink)}
+.tmin{flex:2 1 0;min-width:46px;padding:5px 2px;font-size:12px;font-weight:800;border:1px solid var(--teal);border-radius:8px;background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none}
 .rbtn{flex:2 1 0;min-width:0;padding:5px 1px;border-radius:8px;border:1.5px solid var(--border2);background:transparent;font-size:9.5px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--ink);text-align:center;overflow:hidden}
-.rbtn.rcan{flex:3 1 0;min-width:60px}
+.rbtn.rcan{flex:3 1 0;min-width:54px}
 .nbtn{flex:2 1 0;min-width:0;padding:5px 2px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);font-size:9.5px;font-weight:700;cursor:pointer;color:var(--ink);white-space:nowrap;text-align:center}
 .vsep{flex:none;width:0;height:24px;border-left:2px dashed rgba(90,60,10,.4);margin:0 1px}
 .tnote{width:100%;margin-top:6px;padding:8px 10px;font-size:13.5px;min-height:96px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink);resize:none;font-family:inherit}
@@ -2234,10 +2234,10 @@ function ddRenderSessions(){
       +'<input type="text" id="dd-e-'+i+'" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" value="'+_esc(t.e)+'" oninput="tfmt(this);ddCalc('+i+')" onblur="tnorm(this);ddCalc('+i+')" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">'
       +'<input type="text" id="dd-m-'+i+'" readonly tabindex="-1" class="tmin" value="'+fmtHM(t.m||0)+'" title="Tổng phút">'
       +'<span class="vsep"></span>'
-      +rb('tot','Tốt','')+rb('can','Trung bình',' rcan')+rb('kem','Kém','')
+      +rb('tot','Tốt','')+rb('can','Tr. bình',' rcan')+rb('kem','Kém','')
       +'<span class="vsep"></span>'
-      +'<button type="button" onclick="noteCopy(\'dd-n-'+i+'\')" class="nbtn" title="Copy ghi chú">📋 Copy</button>'
-      +'<button type="button" onclick="notePaste(\'dd-n-'+i+'\')" class="nbtn" title="Dán vào ghi chú">📥 Dán</button>'
+      +'<button type="button" onclick="noteCopy(\'dd-n-'+i+'\')" class="nbtn" title="Copy ghi chú">Copy</button>'
+      +'<button type="button" onclick="notePaste(\'dd-n-'+i+'\')" class="nbtn" title="Dán vào ghi chú">Dán</button>'
       +'</div>'
       +'<textarea id="dd-n-'+i+'" rows="3" placeholder="Ghi chú thời '+(i+1)+'..." class="tnote">'+_esc(t.n)+'</textarea>'
       +'</div>';
