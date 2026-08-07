@@ -65,15 +65,15 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto}
 .gmk{font-size:12px;font-weight:800;color:#fff}
 .gmk-empty{font-size:11px;color:#9a8b64}
 .grow-lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.4px}
-.trow{display:flex;align-items:center;gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.trow{display:flex;align-items:center;gap:1px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
 .trow::-webkit-scrollbar{display:none}
-.tbadge{flex:none;font-size:9.5px;font-weight:800;color:#fff;background:#8a8a8a;border-radius:6px;padding:3px 5px}
-.tin{flex:1 0 63px;padding:5px 2px;font-size:12px;text-align:center;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink)}
-.tmin{flex:1 0 46px;padding:5px 2px;font-size:12px;font-weight:800;border:1px solid var(--teal);border-radius:8px;background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none}
-.rbtn{flex:1 0 auto;padding:5px 8px;border-radius:8px;border:1.5px solid var(--border2);background:transparent;font-size:9.5px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--ink);text-align:center}
+.tbadge{flex:none;font-size:8.5px;font-weight:800;color:#fff;background:#8a8a8a;border-radius:5px;padding:3px 4px}
+.tin{flex:1 0 37px;min-width:37px;width:37px;padding:5px 1px;font-size:10.5px;text-align:center;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink)}
+.tmin{flex:1 0 40px;min-width:40px;width:40px;padding:5px 1px;font-size:10.5px;font-weight:800;border:1px solid var(--teal);border-radius:8px;background:var(--surface2);color:var(--teal);text-align:center;pointer-events:none}
+.rbtn{flex:1 0 auto;padding:5px 4px;border-radius:7px;border:1.5px solid var(--border2);background:transparent;font-size:9px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--ink);text-align:center}
 .rbtn.rcan{flex:1 0 auto}
-.nbtn{flex:1 0 auto;padding:5px 8px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);font-size:9.5px;font-weight:700;cursor:pointer;color:var(--ink);white-space:nowrap;text-align:center}
-.vsep{flex:none;width:0;height:24px;border-left:2px dashed rgba(90,60,10,.4);margin:0 1px}
+.nbtn{flex:1 0 auto;padding:5px 4px;border-radius:7px;border:1px solid var(--border2);background:var(--surface);font-size:9px;font-weight:700;cursor:pointer;color:var(--ink);white-space:nowrap;text-align:center}
+.vsep{flex:none;width:0;height:22px;border-left:2px dashed rgba(90,60,10,.4);margin:0}
 .tnote{width:100%;margin-top:6px;padding:8px 10px;font-size:13.5px;min-height:96px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--ink);resize:none;font-family:inherit}
 .ttot{margin-top:5px;font-size:11.5px;font-weight:800;color:var(--teal);text-align:right}
 @media (min-width:700px){
@@ -570,7 +570,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v115</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v116</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
