@@ -220,7 +220,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
       <div class="sess-block" id="sess1-card">
-        <div class="sess-lbl" id="sess1-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px">🌅 Sáng</div>
+        <div class="sess-lbl" id="sess1-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px">🌅 AM</div>
         <div style="display:flex;align-items:stretch;margin:3px 0 1px">
           <div style="flex:1;min-width:0">
             <div id="sess1-khlbl" style="font-size:9.5px;color:var(--muted)">Kế hoạch</div>
@@ -236,7 +236,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:9px" id="sess1-status"></div>
       </div>
       <div class="sess-block" id="sess2-card">
-        <div class="sess-lbl" id="sess2-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px">🌙 Chiều</div>
+        <div class="sess-lbl" id="sess2-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px">🌙 PM</div>
         <div style="display:flex;align-items:stretch;margin:3px 0 1px">
           <div style="flex:1;min-width:0">
             <div id="sess2-khlbl" style="font-size:9.5px;color:var(--muted)">Kế hoạch</div>
@@ -286,8 +286,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <!-- Biểu đồ tháng chiếm phần lớn -->
       <div style="flex:1;min-width:0">
         <div style="display:flex;gap:10px;margin-bottom:3px">
-          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#076d5e"></div>🌅 Sáng</div>
-          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#7a1c38"></div>🌙 Tối</div>
+          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#076d5e"></div>🌅 AM</div>
+          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#7a1c38"></div>🌙 PM</div>
         </div>
         <div id="month-chart" style="position:relative;width:100%;height:144px"></div>
       </div>
@@ -396,8 +396,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px">BIỂU ĐỒ TỪNG NGÀY</div>
     <div style="position:relative;height:140px"><canvas id="cal-day-chart"></canvas></div>
     <div style="display:flex;gap:12px;margin-top:6px">
-      <div class="lg-item"><div class="lg-dot" style="background:#076d5e"></div>Sáng</div>
-      <div class="lg-item"><div class="lg-dot" style="background:#7a1c38"></div>Tối</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#076d5e"></div>AM</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#7a1c38"></div>PM</div>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:5px">
@@ -426,11 +426,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 <div class="card">
     <div class="card-hd">⚙ Cài đặt kế hoạch (áp dụng hằng ngày)</div>
     <div class="frow">
-      <label>🌅 Buổi sáng (phút)</label>
+      <label>🌅 AM (phút)</label>
       <input class="finput" type="number" id="goal1-input" min="5" max="1200" value="30" oninput="updateGoal(1,this.value)">
     </div>
     <div class="frow">
-      <label>🌙 Buổi tối (phút)</label>
+      <label>🌙 PM (phút)</label>
       <input class="finput" type="number" id="goal2-input" min="5" max="1200" value="30" oninput="updateGoal(2,this.value)">
     </div>
     <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Loại thiền yêu thích</div>
@@ -547,87 +547,15 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
     <!-- Tổng trên cùng -->
     <div style="margin-bottom:12px;background:var(--surface2);border-radius:var(--r);padding:10px 12px">
-      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px"><span>🌅 Tổng buổi sáng:</span><span id="dd-sum-s" style="color:var(--teal)">0 ph</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px"><span>🌙 Tổng buổi tối:</span><span id="dd-sum-t" style="color:var(--teal)">0 ph</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px"><span>🌅 Tổng AM:</span><span id="dd-sum-s" style="color:var(--teal)">0 ph</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px"><span>🌙 Tổng PM:</span><span id="dd-sum-t" style="color:var(--teal)">0 ph</span></div>
       <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;border-top:1px dashed var(--border2);padding-top:5px"><span>Σ Tổng ngày:</span><span id="dd-sum-all" style="color:var(--gold)">0 ph</span></div>
     </div>
     <!-- Sửa dữ liệu ngày đã qua -->
     <div id="dd-edit-section" style="margin-bottom:14px">
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Sửa dữ liệu</div>
-
-      <!-- Buổi sáng -->
-      <div style="background:#fff6df;border:1px solid #e0be66;border-radius:var(--r);padding:9px 10px;margin-bottom:8px">
-        <div style="font-size:11.5px;font-weight:800;color:#7a5410;margin-bottom:6px">🌅 Buổi sáng</div>
-          <div class="trow">
-            <span class="tbadge">T1</span>
-            <input type="text" id="dd-start1" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(1)" onblur="tnorm(this);calcMins(1)" class="tin" title="Bắt đầu — gõ số, vd 450 = 4:50">
-            <input type="text" id="dd-end1" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(1)" onblur="tnorm(this);calcMins(1)" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">
-            <input type="text" id="dd-min1a" readonly tabindex="-1" class="tmin" title="Tổng phút"><input type="hidden" id="dd-mins1">
-            <span class="vsep"></span>
-            <button id="rating-s-tot" onclick="setDayRating('s','tot')" class="rbtn">Tốt</button>
-            <button id="rating-s-can" onclick="setDayRating('s','can')" class="rbtn rcan">Trung bình</button>
-            <button id="rating-s-kem" onclick="setDayRating('s','kem')" class="rbtn">Kém</button>
-            <span class="vsep"></span>
-            <button type="button" onclick="noteCopy('dd-note-s')" class="nbtn" title="Copy ghi chú">📋 Copy</button>
-            <button type="button" onclick="notePaste('dd-note-s')" class="nbtn" title="Dán vào ghi chú">📥 Dán</button>
-          </div>
-          <textarea id="dd-note-s" rows="4" placeholder="Ghi chú thời 1..." class="tnote"></textarea>
-        <div id="dd-row1b" style="display:none;border-top:1.5px dashed #d8b258;margin-top:9px;padding-top:9px">
-          <div class="trow">
-            <span class="tbadge">T2</span>
-            <input type="text" id="dd-start1b" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(1)" onblur="tnorm(this);calcMins(1)" class="tin" title="Bắt đầu — gõ số, vd 450 = 4:50">
-            <input type="text" id="dd-end1b" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(1)" onblur="tnorm(this);calcMins(1)" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">
-            <input type="text" id="dd-min1bt" readonly tabindex="-1" class="tmin" title="Tổng phút">
-            <span class="vsep"></span>
-            <button id="rating-1b-tot" onclick="setDayRating('1b','tot')" class="rbtn">Tốt</button>
-            <button id="rating-1b-can" onclick="setDayRating('1b','can')" class="rbtn rcan">Trung bình</button>
-            <button id="rating-1b-kem" onclick="setDayRating('1b','kem')" class="rbtn">Kém</button>
-            <span class="vsep"></span>
-            <button type="button" onclick="noteCopy('dd-note-1b')" class="nbtn" title="Copy ghi chú">📋 Copy</button>
-            <button type="button" onclick="notePaste('dd-note-1b')" class="nbtn" title="Dán vào ghi chú">📥 Dán</button>
-          </div>
-          <textarea id="dd-note-1b" rows="4" placeholder="Ghi chú thời 2..." class="tnote"></textarea>
-          <div id="dd-tot1" class="ttot"></div>
-        </div>
-        <button type="button" id="dd-add1b" class="qbtn2" onclick="ddToggleRow(1)" style="margin-top:7px;padding:4px 10px;font-size:11px;border:1px dashed #e0be66;border-radius:8px;background:transparent;color:#7a5410;font-weight:700;cursor:pointer">＋ Thêm thời 2 (sáng)</button>
-      </div>
-
-      <!-- Buổi tối -->
-      <div style="background:#edf1fa;border:1px solid #a9b9dd;border-radius:var(--r);padding:9px 10px;margin-bottom:8px">
-        <div style="font-size:11.5px;font-weight:800;color:#2c3e6b;margin-bottom:6px">🌙 Buổi tối</div>
-          <div class="trow">
-            <span class="tbadge">T1</span>
-            <input type="text" id="dd-start2" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(2)" onblur="tnorm(this);calcMins(2)" class="tin" title="Bắt đầu — gõ số, vd 450 = 4:50">
-            <input type="text" id="dd-end2" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(2)" onblur="tnorm(this);calcMins(2)" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">
-            <input type="text" id="dd-min2a" readonly tabindex="-1" class="tmin" title="Tổng phút"><input type="hidden" id="dd-mins2">
-            <span class="vsep"></span>
-            <button id="rating-t-tot" onclick="setDayRating('t','tot')" class="rbtn">Tốt</button>
-            <button id="rating-t-can" onclick="setDayRating('t','can')" class="rbtn rcan">Trung bình</button>
-            <button id="rating-t-kem" onclick="setDayRating('t','kem')" class="rbtn">Kém</button>
-            <span class="vsep"></span>
-            <button type="button" onclick="noteCopy('dd-note-t')" class="nbtn" title="Copy ghi chú">📋 Copy</button>
-            <button type="button" onclick="notePaste('dd-note-t')" class="nbtn" title="Dán vào ghi chú">📥 Dán</button>
-          </div>
-          <textarea id="dd-note-t" rows="4" placeholder="Ghi chú thời 1..." class="tnote"></textarea>
-        <div id="dd-row2b" style="display:none;border-top:1.5px dashed #9fb0d8;margin-top:9px;padding-top:9px">
-          <div class="trow">
-            <span class="tbadge">T2</span>
-            <input type="text" id="dd-start2b" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(2)" onblur="tnorm(this);calcMins(2)" class="tin" title="Bắt đầu — gõ số, vd 450 = 4:50">
-            <input type="text" id="dd-end2b" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" oninput="tfmt(this);calcMins(2)" onblur="tnorm(this);calcMins(2)" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">
-            <input type="text" id="dd-min2bt" readonly tabindex="-1" class="tmin" title="Tổng phút">
-            <span class="vsep"></span>
-            <button id="rating-2b-tot" onclick="setDayRating('2b','tot')" class="rbtn">Tốt</button>
-            <button id="rating-2b-can" onclick="setDayRating('2b','can')" class="rbtn rcan">Trung bình</button>
-            <button id="rating-2b-kem" onclick="setDayRating('2b','kem')" class="rbtn">Kém</button>
-            <span class="vsep"></span>
-            <button type="button" onclick="noteCopy('dd-note-2b')" class="nbtn" title="Copy ghi chú">📋 Copy</button>
-            <button type="button" onclick="notePaste('dd-note-2b')" class="nbtn" title="Dán vào ghi chú">📥 Dán</button>
-          </div>
-          <textarea id="dd-note-2b" rows="4" placeholder="Ghi chú thời 2..." class="tnote"></textarea>
-          <div id="dd-tot2" class="ttot"></div>
-        </div>
-        <button type="button" id="dd-add2b" class="qbtn2" onclick="ddToggleRow(2)" style="margin-top:7px;padding:4px 10px;font-size:11px;border:1px dashed #a9b9dd;border-radius:8px;background:transparent;color:#2c3e6b;font-weight:700;cursor:pointer">＋ Thêm thời 2 (chiều/tối)</button>
-      </div>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Sửa dữ liệu · tối đa 10 thời/ngày — bắt đầu 00:00–11:59 tính vào AM, còn lại tính vào PM</div>
+      <div id="dd-sess-list"></div>
+      <button type="button" id="dd-add-sess" onclick="ddAddSess()" style="margin-top:2px;padding:6px 14px;font-size:12px;border:1.5px dashed var(--border2);border-radius:10px;background:transparent;color:var(--ink);font-weight:800;cursor:pointer">＋ Thêm thời</button>
     </div>
 
     <button class="btn btn-p" onclick="saveDayDetail()">&#10003; Lưu</button>
@@ -1456,7 +1384,7 @@ function renderTodayPlanUI(){
 
 function openLogModal(sessNum){
   logSessNum=sessNum;
-  document.getElementById('log-modal-title').textContent=sessNum===1?'Ghi buổi sáng':'Ghi buổi tối';
+  document.getElementById('log-modal-title').textContent=sessNum===1?'Ghi thời AM':'Ghi thời PM';
   const k=getDK();const e=getEntry(k);
   const mins=e?((sessNum===1?e.mins1:e.mins2)||30):30;
   const q=e?((sessNum===1?e.q1:e.q2)||3):3;
@@ -1489,8 +1417,15 @@ function saveLog(){
     const idx=+logSessNum.split('_')[1];
     if(!e.extra)e.extra=[];
     if(e.extra[idx])e.extra[idx]={mins,types,q};
-  }else if(logSessNum===1){e.mins1=mins;e.q1=q;e.types1=types;}
-  else{e.mins2=mins;e.q2=q;e.types2=types;}
+  }else{
+    thMigrate(e); if(!e.th)e.th=[];
+    const half=(logSessNum===1)?'AM':'PM';
+    e.th=e.th.filter(function(t){return thAMPM(t.s)!==half;});
+    if(mins>0) e.th.push({s:(half==='AM')?'05:00':'17:00', e:'', m:mins, r:null, n:''});
+    e.th=e.th.slice(0,10).sort(function(a,b){return (a.s||'99:99').localeCompare(b.s||'99:99');});
+    thRecalc(e);
+    if(logSessNum===1){e.q1=q;e.types1=types;} else {e.q2=q;e.types2=types;}
+  }
   save();closeLogModal();renderAll();renderExtraSessions();toast('Đã lưu');
 }
 
@@ -1684,15 +1619,16 @@ function timerStartStop(){
         document.getElementById('timer-state-lbl').textContent='Hoàn thành 🙏';
         if(document.getElementById('bell-end')&&document.getElementById('bell-end').checked){ringBell(bellType,0.6);setTimeout(function(){ringBell(bellType,0.45);},1200);}
         const sess=getActiveSession();
-        sendNotif('🔔 Hết giờ!','Hoàn thành '+timerMins+'ph '+(sess===1?'buổi sáng':'buổi tối')+'. Sadhu!');
+        sendNotif('🔔 Hết giờ!','Hoàn thành '+timerMins+'ph '+(sess===1?'thời AM':'thời PM')+'. Sadhu!');
         const k=getDK();let e=getEntry(k);
         if(!e){e={date:k,mins1:0,mins2:0,q1:3,q2:3,types1:[],types2:[]};ST.data.push(e);}
-        // Cộng dồn vào thực tế (không ghi đè)
-        if(sess===1){e.mins1=(e.mins1||0)+timerMins;if(!e.types1||!e.types1.length)e.types1=['Ānāpāna'];}
-        else{e.mins2=(e.mins2||0)+timerMins;if(!e.types2||!e.types2.length)e.types2=['Ānāpāna'];}
+        // Ghi thành một thời theo giờ thực (tự phân AM/PM)
+        thAppend(e, timerMins);
+        if(thAMPM(thNowHM(timerMins))==='AM'){ if(!e.types1||!e.types1.length)e.types1=['Ānāpāna']; }
+        else { if(!e.types2||!e.types2.length)e.types2=['Ānāpāna']; }
         save();renderAll();toast('🔔 Hết giờ! Đã ghi '+timerMins+'ph');
         const s=getActiveSession();
-        document.getElementById('timer-start-btn').innerHTML='▶ '+(s===1?'🌅 Sáng':'🌙 Tối');
+        document.getElementById('timer-start-btn').innerHTML='▶ '+(s===1?'🌅 AM':'🌙 PM');
       }
     },1000);
   }else{
@@ -1702,9 +1638,9 @@ function timerStartStop(){
     if(elapsed>=1){
       const k=getDK();let e=getEntry(k);
       if(!e){e={date:k,mins1:0,mins2:0,q1:3,q2:3,types1:[],types2:[]};ST.data.push(e);}
-      const s2=getActiveSession();
-      if(s2===1){e.mins1=(e.mins1||0)+elapsed;if(!e.types1||!e.types1.length)e.types1=['Ānāpāna'];}
-      else{e.mins2=(e.mins2||0)+elapsed;if(!e.types2||!e.types2.length)e.types2=['Ānāpāna'];}
+      thAppend(e, elapsed);
+      if(thAMPM(thNowHM(elapsed))==='AM'){ if(!e.types1||!e.types1.length)e.types1=['Ānāpāna']; }
+      else { if(!e.types2||!e.types2.length)e.types2=['Ānāpāna']; }
       save();renderAll();toast('Đã ghi '+elapsed+'ph (dừng giữa chừng)');
     }
     const s=getActiveSession();
@@ -1722,7 +1658,7 @@ function timerReset(){
   timerMins=sess===1?p.p1:p.p2;
   timerRemaining=timerMins*60;timerTotal=timerMins*60;
   document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
-  document.getElementById('timer-start-btn').innerHTML='▶ '+(sess===1?'🌅 Sáng':'🌙 Tối')+' — '+timerMins+'ph';
+  document.getElementById('timer-start-btn').innerHTML='▶ '+(sess===1?'🌅 AM':'🌙 PM')+' — '+timerMins+'ph';
   document.getElementById('timer-start-btn').className='tbtn start';
   document.getElementById('timer-state-lbl').textContent='Sẵn sàng';
   updateRing(1,1);
@@ -1851,12 +1787,12 @@ function renderMonthPVA(){
 
   // Đường KH sáng
   html+='<div style="position:absolute;left:0;right:0;bottom:'+g1b+'px;height:2px;background:#b8860b;z-index:5">';
-  html+='<span style="position:absolute;right:2px;bottom:3px;font-size:7px;color:#b8860b;background:var(--surface);padding:0 2px;white-space:nowrap">S:'+ST.goal1+'ph</span>';
+  html+='<span style="position:absolute;right:2px;bottom:3px;font-size:7px;color:#b8860b;background:var(--surface);padding:0 2px;white-space:nowrap">AM:'+ST.goal1+'ph</span>';
   html+='</div>';
 
   // Đường KH tối
   html+='<div style="position:absolute;left:0;right:0;bottom:'+g2b+'px;height:0;border-top:1.5px dashed #8b3a52;z-index:5">';
-  html+='<span style="position:absolute;left:2px;bottom:3px;font-size:7px;color:#8b3a52;background:var(--surface);padding:0 2px;white-space:nowrap">T:'+ST.goal2+'ph</span>';
+  html+='<span style="position:absolute;left:2px;bottom:3px;font-size:7px;color:#8b3a52;background:var(--surface);padding:0 2px;white-space:nowrap">PM:'+ST.goal2+'ph</span>';
   html+='</div>';
 
   // Các cột (flex row, align flex-end)
@@ -2129,8 +2065,7 @@ function renderCalendar(){
       if(t>maxMins){maxMins=t;maxDate='Ngày '+d;}
       if(t<minMins){minMins=t;minDate='Ngày '+d;}
     }
-    if(e.ratingS==='tot')totCount++;else if(e.ratingS==='can')canCount++;else if(e.ratingS==='kem')kemCount++;
-    if(e.ratingT==='tot')totCount++;else if(e.ratingT==='can')canCount++;else if(e.ratingT==='kem')kemCount++;
+    thRatings(e).forEach(function(r){ if(r==='tot')totCount++;else if(r==='can')canCount++;else if(r==='kem')kemCount++; });
   }
   const fmt=m=>m>=60?nf(Math.round(m/60*10)/10)+'h':nf(m)+'ph';
   document.getElementById('mo-max').textContent=maxMins>0?fmt(maxMins):'—';
@@ -2158,8 +2093,8 @@ function renderCalDayChart(){
   charts.calDay=new Chart(document.getElementById('cal-day-chart'),{
     type:'bar',
     data:{labels,datasets:[
-      {label:'Sáng',data:d1,backgroundColor:'rgba(7,109,94,.75)',borderRadius:2,borderSkipped:false},
-      {label:'Tối',data:d2,backgroundColor:'rgba(122,28,56,.75)',borderRadius:2,borderSkipped:false}
+      {label:'AM',data:d1,backgroundColor:'rgba(7,109,94,.75)',borderRadius:2,borderSkipped:false},
+      {label:'PM',data:d2,backgroundColor:'rgba(122,28,56,.75)',borderRadius:2,borderSkipped:false}
     ]},
     options:{
       responsive:true,maintainAspectRatio:false,
@@ -2191,18 +2126,9 @@ function ddZoom(dir){
 function showDayDetail(k){
   currentDayKey=k;
   ddApplyZoom();
-  const e=getEntry(k);const d=new Date(k);
-  const isPast=k<getDK();const isToday=k===getDK();
+  let e=getEntry(k);const d=new Date(k);
+  if(e) thMigrate(e);
   document.getElementById('dd-title').textContent=DAYS7[d.getDay()]+', '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' · '+lunarLabelKey(k);
-  ['1','2'].forEach(function(n){
-    const sb=document.getElementById('dd-start'+n+'b'), eb=document.getElementById('dd-end'+n+'b');
-    if(sb)sb.value=(e&&e['start'+n+'b'])||'';
-    if(eb)eb.value=(e&&e['end'+n+'b'])||'';
-    const has=!!(e&&(e['start'+n+'b']||e['end'+n+'b']||e['note'+n+'b']||e['rating'+n+'b']));
-    const r=document.getElementById('dd-row'+n+'b'), btn=document.getElementById('dd-add'+n+'b');
-    if(r)r.style.display=has?'block':'none';
-    if(btn){ btn.textContent='＋ Thêm thời 2 '+(n==='1'?'(sáng)':'(chiều/tối)'); btn.style.display=has?'none':'inline-block'; }
-  });
   const _gc=document.getElementById('dd-gioi');
   if(_gc){ _gc.checked=!!(e&&e.gioi);
     const _gh=document.getElementById('dd-gioi-hint');
@@ -2210,68 +2136,100 @@ function showDayDetail(k){
   }
 
   // Thông tin thiền
-  if(!e||(!e.mins1&&!e.mins2)){
+  const _rl={tot:'○ Tốt',can:'△ Trung bình',kem:'✕ Kém'};
+  if(!e||!e.th||!e.th.length){
     document.getElementById('dd-body').innerHTML='<span style="color:var(--muted)">Không có dữ liệu thiền.</span>';
   } else {
-    let body='<b>🌅 Sáng:</b> '+fmtHM(e.mins1||0)+' · '+((e.types1||[]).join(', ')||'—')+'<br>'+
-      '<b>🌙 Tối:</b> '+fmtHM(e.mins2||0)+' · '+((e.types2||[]).join(', ')||'—')+'<br>'+
-      '<b>Tổng:</b> '+fmtHM((e.mins1||0)+(e.mins2||0));
-    const _rl={tot:'○ Tốt',can:'△ Trung bình',kem:'✕ Kém'};
-    const _tl=function(icon,tag,color,rating,note){
-      if(!rating&&!note) return '';
-      return '<br><i style="color:'+color+';font-size:11px"><b>'+icon+' '+tag+':</b> '+(rating?_rl[rating]:'')+(rating&&note?' — ':'')+(note||'')+'</i>';
-    };
-    body+=_tl('🌅','Sáng — Thời 1','#7a5410',e.ratingS,e.noteS);
-    body+=_tl('🌅','Sáng — Thời 2','#7a5410',e.rating1b,e.note1b);
-    body+=_tl('🌙','Chiều — Thời 1','#2c3e6b',e.ratingT,e.noteT);
-    body+=_tl('🌙','Chiều — Thời 2','#2c3e6b',e.rating2b,e.note2b);
+    let body='<b>🌅 AM:</b> '+fmtHM(e.mins1||0)+((e.types1&&e.types1.length)?' · '+e.types1.join(', '):'')+
+      ' &nbsp;·&nbsp; <b>🌙 PM:</b> '+fmtHM(e.mins2||0)+((e.types2&&e.types2.length)?' · '+e.types2.join(', '):'')+
+      ' &nbsp;·&nbsp; <b>Σ:</b> '+fmtHM((e.mins1||0)+(e.mins2||0));
+    e.th.forEach(function(t,i){
+      const ap=thAMPM(t.s), col=ap==='AM'?'#7a5410':'#2c3e6b';
+      body+='<br><i style="color:'+col+';font-size:11px"><b>'+(ap==='AM'?'🌅':'🌙')+' Thời '+(i+1)+' ('+ap+'):</b> '+
+        (t.s||'--:--')+(t.e?'–'+t.e:'')+' · '+fmtHM(t.m||0)+
+        (t.r?' · '+_rl[t.r]:'')+(t.n?' — '+_esc(t.n):'')+'</i>';
+    });
     document.getElementById('dd-body').innerHTML=body;
   }
 
-  // Ghi chú
-  document.getElementById('dd-note-s').value=e?e.noteS||'':'';
-  document.getElementById('dd-note-t').value=e?e.noteT||'':'';
-  const _n1b=document.getElementById('dd-note-1b'); if(_n1b)_n1b.value=e?e.note1b||'':'';
-  const _n2b=document.getElementById('dd-note-2b'); if(_n2b)_n2b.value=e?e.note2b||'':'';
-
-  // Đánh giá sáng + tối
-  updateRatingBtns(e);
-
-  // Sửa dữ liệu
-  document.getElementById('dd-mins1').value=e?e.mins1||0:0;
-  document.getElementById('dd-mins2').value=e?e.mins2||0:0;
-  document.getElementById('dd-start1').value=e?e.start1||'':'';
-  document.getElementById('dd-end1').value=e?e.end1||'':'';
-  document.getElementById('dd-start2').value=e?e.start2||'':'';
-  document.getElementById('dd-end2').value=e?e.end2||'':'';
-  calcMins(1);calcMins(2);
+  // Danh sách thời để sửa
+  ddSess=(e&&e.th)?e.th.map(function(t){return {s:t.s||'',e:t.e||'',m:+t.m||0,r:t.r||null,n:t.n||''};}):[];
+  if(!ddSess.length) ddSess.push({s:'',e:'',m:0,r:null,n:''});
+  ddRenderSessions();
   document.getElementById('dd-edit-section').style.display='block';
 
   document.getElementById('day-detail').classList.add('on');
 }
 
-function updateRatingBtns(e){
+// ===== Danh sách thời động trong bảng sửa ngày =====
+let ddSess=[];
+function ddRenderSessions(){
+  const box=document.getElementById('dd-sess-list'); if(!box)return;
   const colors={'tot':'#2ecc71','can':'#FFFF00','kem':'#e74c3c'};
-  const vals={'s':e?e.ratingS:null,'t':e?e.ratingT:null,'1b':e?e.rating1b:null,'2b':e?e.rating2b:null};
-  ['s','t','1b','2b'].forEach(p=>{
-    ['tot','can','kem'].forEach(r=>{
-      const btn=document.getElementById('rating-'+p+'-'+r);
-      if(!btn)return;
-      const a=vals[p]===r;
-      btn.style.background=a?colors[r]:'transparent';
-      btn.style.color='#000000';
-      btn.style.borderColor=a?colors[r]:'var(--border2)';
-    });
+  box.innerHTML = ddSess.map(function(t,i){
+    const ap=thAMPM(t.s), am=(ap==='AM');
+    const bg=am?'#fff6df':'#edf1fa', bd=am?'#e0be66':'#a9b9dd', fg=am?'#7a5410':'#2c3e6b';
+    function rb(r,lbl,cls){
+      const on=t.r===r;
+      return '<button type="button" onclick="ddSetRating('+i+',\''+r+'\')" class="rbtn'+(cls||'')+'" style="'+(on?('background:'+colors[r]+';border-color:'+colors[r]+';color:#000'):'')+'">'+lbl+'</button>';
+    }
+    return '<div style="background:'+bg+';border:1px solid '+bd+';border-radius:var(--r);padding:9px 10px;margin-bottom:8px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+      +'<div style="font-size:11.5px;font-weight:800;color:'+fg+'">'+(am?'🌅':'🌙')+' Thời '+(i+1)+' · <span id="dd-ap-'+i+'">'+ap+'</span></div>'
+      +'<button type="button" onclick="ddDelSess('+i+')" style="border:none;background:transparent;color:#c0392b;font-weight:800;cursor:pointer;font-size:12px">✕ Xóa thời</button></div>'
+      +'<div class="trow">'
+      +'<span class="tbadge">T'+(i+1)+'</span>'
+      +'<input type="text" id="dd-s-'+i+'" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" value="'+_esc(t.s)+'" oninput="tfmt(this);ddCalc('+i+')" onblur="tnorm(this);ddCalc('+i+')" class="tin" title="Bắt đầu — gõ số, vd 450 = 4:50">'
+      +'<input type="text" id="dd-e-'+i+'" inputmode="numeric" maxlength="5" placeholder="--:--" autocomplete="off" value="'+_esc(t.e)+'" oninput="tfmt(this);ddCalc('+i+')" onblur="tnorm(this);ddCalc('+i+')" class="tin" title="Kết thúc — gõ số, vd 450 = 4:50">'
+      +'<input type="text" id="dd-m-'+i+'" readonly tabindex="-1" class="tmin" value="'+fmtHM(t.m||0)+'" title="Tổng phút">'
+      +'<span class="vsep"></span>'
+      +rb('tot','Tốt','')+rb('can','Trung bình',' rcan')+rb('kem','Kém','')
+      +'<span class="vsep"></span>'
+      +'<button type="button" onclick="noteCopy(\'dd-n-'+i+'\')" class="nbtn" title="Copy ghi chú">📋 Copy</button>'
+      +'<button type="button" onclick="notePaste(\'dd-n-'+i+'\')" class="nbtn" title="Dán vào ghi chú">📥 Dán</button>'
+      +'</div>'
+      +'<textarea id="dd-n-'+i+'" rows="3" placeholder="Ghi chú thời '+(i+1)+'..." class="tnote">'+_esc(t.n)+'</textarea>'
+      +'</div>';
+  }).join('');
+  const add=document.getElementById('dd-add-sess');
+  if(add){ add.style.display = ddSess.length>=10?'none':'inline-block'; add.textContent='＋ Thêm thời ('+ddSess.length+'/10)'; }
+  ddSums();
+}
+function ddCapture(){
+  ddSess.forEach(function(t,i){
+    const s=document.getElementById('dd-s-'+i), e2=document.getElementById('dd-e-'+i), n=document.getElementById('dd-n-'+i);
+    if(s)t.s=s.value; if(e2)t.e=e2.value; if(n)t.n=n.value;
+    t.m=_pairMins(t.s,t.e);
   });
 }
-
-function setDayRating(sess, r){
-  const k=currentDayKey;if(!k)return;
-  let e=getEntry(k);
-  if(!e){e={date:k,mins1:0,mins2:0,q1:3,q2:3,types1:[],types2:[]};ST.data.push(e);}
-  const field={'s':'ratingS','t':'ratingT','1b':'rating1b','2b':'rating2b'}[sess];
-  e[field]=e[field]===r?null:r;
-  save();updateRatingBtns(e);renderPieChart();
+function ddCalc(i){
+  const s=document.getElementById('dd-s-'+i), e2=document.getElementById('dd-e-'+i);
+  if(!ddSess[i])return;
+  ddSess[i].s=s?s.value:''; ddSess[i].e=e2?e2.value:'';
+  ddSess[i].m=_pairMins(ddSess[i].s, ddSess[i].e);
+  const m=document.getElementById('dd-m-'+i); if(m)m.value=fmtHM(ddSess[i].m);
+  const ap=document.getElementById('dd-ap-'+i); if(ap)ap.textContent=thAMPM(ddSess[i].s);
+  ddSums();
+}
+function ddSums(){
+  let am=0,pm=0;
+  ddSess.forEach(function(t){ if(thAMPM(t.s)==='AM')am+=(+t.m||0); else pm+=(+t.m||0); });
+  const ss=document.getElementById('dd-sum-s'); if(ss)ss.textContent=fmtHM(am);
+  const st=document.getElementById('dd-sum-t'); if(st)st.textContent=fmtHM(pm);
+  const sa=document.getElementById('dd-sum-all'); if(sa)sa.textContent=fmtHM(am+pm);
+}
+function ddSetRating(i,r){ ddCapture(); if(ddSess[i]) ddSess[i].r = (ddSess[i].r===r?null:r); ddRenderSessions(); }
+function ddDelSess(i){
+  ddCapture(); ddSess.splice(i,1);
+  if(!ddSess.length) ddSess.push({s:'',e:'',m:0,r:null,n:''});
+  ddRenderSessions();
+}
+function ddAddSess(){
+  ddCapture();
+  if(ddSess.length>=10){ toast('Tối đa 10 thời/ngày'); return; }
+  ddSess.push({s:'',e:'',m:0,r:null,n:''});
+  ddRenderSessions();
+  setTimeout(function(){ const s=document.getElementById('dd-s-'+(ddSess.length-1)); if(s)s.focus(); },50);
 }
 
 async function noteCopy(id){
@@ -2320,55 +2278,66 @@ function _pairMins(s,e){
   if(diff<0)diff+=24*60; // qua nửa đêm
   return diff>0?diff:0;
 }
-function calcMins(sess){
-  const t1=_pairMins(document.getElementById('dd-start'+sess).value, document.getElementById('dd-end'+sess).value);
-  const bEl=document.getElementById('dd-start'+sess+'b');
-  const rowB=document.getElementById('dd-row'+sess+'b');
-  const t2=(bEl&&rowB&&rowB.style.display!=='none')?_pairMins(bEl.value, document.getElementById('dd-end'+sess+'b').value):0;
-  const a1=document.getElementById('dd-min'+sess+'a'); if(a1)a1.value=fmtHM(t1);
-  const bt=document.getElementById('dd-min'+sess+'bt'); if(bt)bt.value=fmtHM(t2);
-  document.getElementById('dd-mins'+sess).value=t1+t2;
-  const tot=document.getElementById('dd-tot'+sess);
-  if(tot)tot.textContent='Tổng buổi '+((sess===1||sess==='1')?'sáng':'tối')+' (2 thời): '+fmtHM(t1+t2);
-  const m1=+((document.getElementById('dd-mins1')||{}).value)||0;
-  const m2=+((document.getElementById('dd-mins2')||{}).value)||0;
-  const ss=document.getElementById('dd-sum-s'); if(ss)ss.textContent=fmtHM(m1);
-  const st=document.getElementById('dd-sum-t'); if(st)st.textContent=fmtHM(m2);
-  const sa=document.getElementById('dd-sum-all'); if(sa)sa.textContent=fmtHM(m1+m2);
-}
-function ddToggleRow(sess){
-  const r=document.getElementById('dd-row'+sess+'b');
-  const btn=document.getElementById('dd-add'+sess+'b');
-  if(!r)return;
-  r.style.display='block';
-  if(btn)btn.style.display='none';
-  calcMins(sess);
-}
 
+// ===== Mô hình NHIỀU THỜI/NGÀY: e.th = [{s:'HH:MM',e:'HH:MM',m:phút,r:'tot|can|kem',n:'ghi chú'}], tối đa 10 =====
+// Quy tắc: thời bắt đầu 00:00–11:59 cộng vào AM (e.mins1), còn lại cộng vào PM (e.mins2).
+function _esc(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function thAMPM(s){ if(!s) return 'AM'; const h=+String(s).split(':')[0]; return (h<12)?'AM':'PM'; }
+function thRecalc(e){
+  if(!e||!e.th) return;
+  let am=0, pm=0;
+  e.th.forEach(function(t){ if(thAMPM(t.s)==='AM') am+=(+t.m||0); else pm+=(+t.m||0); });
+  e.mins1=am; e.mins2=pm;
+}
+function thNowHM(offMin){
+  const d=new Date(Date.now()-(offMin||0)*60000);
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+function thAppend(e, mins){ // ghi 1 thời vừa hoàn thành (từ đồng hồ), phân AM/PM theo giờ thực
+  if(!e.th) thMigrate(e);
+  if(!e.th) e.th=[];
+  e.th.push({s:thNowHM(mins), e:thNowHM(0), m:mins, r:null, n:''});
+  if(e.th.length>10) e.th=e.th.slice(-10);
+  thRecalc(e);
+}
+function thMigrate(e){ // chuyển dữ liệu kiểu cũ (sáng/tối + thời 2) sang danh sách thời — chạy 1 lần/ngày dữ liệu
+  if(!e || e.th) return;
+  const th=[];
+  const mb1=_pairMins(e.start1b||'',e.end1b||''), mb2=_pairMins(e.start2b||'',e.end2b||'');
+  let ma=(e.mins1||0)-mb1; if(ma<0) ma=_pairMins(e.start1||'',e.end1||'');
+  let mt=(e.mins2||0)-mb2; if(mt<0) mt=_pairMins(e.start2||'',e.end2||'');
+  if(ma>0||e.ratingS||e.noteS||e.start1) th.push({s:e.start1||'05:00', e:e.end1||'', m:Math.max(ma,0), r:e.ratingS||null, n:e.noteS||''});
+  if(mb1>0||e.rating1b||e.note1b||e.start1b) th.push({s:e.start1b||'08:00', e:e.end1b||'', m:mb1, r:e.rating1b||null, n:e.note1b||''});
+  if(mt>0||e.ratingT||e.noteT||e.start2) th.push({s:e.start2||'17:00', e:e.end2||'', m:Math.max(mt,0), r:e.ratingT||null, n:e.noteT||''});
+  if(mb2>0||e.rating2b||e.note2b||e.start2b) th.push({s:e.start2b||'19:00', e:e.end2b||'', m:mb2, r:e.rating2b||null, n:e.note2b||''});
+  e.th=th;
+  if(th.length) thRecalc(e);
+}
+function thMigrateAll(){ try{ (ST.data||[]).forEach(thMigrate); }catch(err){} }
+function thRatings(e){ // danh sách đánh giá của ngày (ưu tiên mô hình mới)
+  if(e&&e.th&&e.th.length) return e.th.map(function(t){return t.r;}).filter(Boolean);
+  return [e&&e.ratingS, e&&e.ratingT, e&&e.rating1b, e&&e.rating2b].filter(Boolean);
+}
 function saveDayDetail(){
   const k=currentDayKey;if(!k)return;
-  try{calcMins(1);calcMins(2);}catch(e){}
-  const mins1=+document.getElementById('dd-mins1').value||0;
-  const mins2=+document.getElementById('dd-mins2').value||0;
-  const noteS=document.getElementById('dd-note-s').value.trim();
-  const noteT=document.getElementById('dd-note-t').value.trim();
+  ddCapture();
+  const th=ddSess.filter(function(t){ return (t.m>0)||t.r||(t.n&&t.n.trim())||t.s; })
+    .map(function(t){ return {s:t.s||'', e:t.e||'', m:+t.m||0, r:t.r||null, n:(t.n||'').trim()}; })
+    .slice(0,10)
+    .sort(function(a,b){ return (a.s||'99:99').localeCompare(b.s||'99:99'); });
   let e=getEntry(k);
   if(!e){e={date:k,mins1:0,mins2:0,q1:3,q2:3,types1:[],types2:[]};ST.data.push(e);}
-  e.mins1=mins1;e.mins2=mins2;e.noteS=noteS;e.noteT=noteT;
-  e.start1=document.getElementById('dd-start1').value;
-  e.end1=document.getElementById('dd-end1').value;
-  e.start2=document.getElementById('dd-start2').value;
-  e.end2=document.getElementById('dd-end2').value;
-  e.start1b=document.getElementById('dd-start1b').value;
-  e.end1b=document.getElementById('dd-end1b').value;
-  e.start2b=document.getElementById('dd-start2b').value;
-  e.end2b=document.getElementById('dd-end2b').value;
+  e.th=th; thRecalc(e);
+  // đồng bộ trường cũ (tương thích): đánh giá & ghi chú của thời AM đầu và PM đầu
+  const fa=th.find(function(t){return thAMPM(t.s)==='AM';});
+  const fp=th.find(function(t){return thAMPM(t.s)==='PM';});
+  e.ratingS=fa?fa.r:null; e.noteS=fa?(fa.n||''):'';
+  e.ratingT=fp?fp.r:null; e.noteT=fp?(fp.n||''):'';
+  e.rating1b=null; e.note1b=''; e.rating2b=null; e.note2b='';
   const _g=document.getElementById('dd-gioi'); if(_g) e.gioi=_g.checked;
-  const _n1b=document.getElementById('dd-note-1b'); if(_n1b) e.note1b=_n1b.value.trim();
-  const _n2b=document.getElementById('dd-note-2b'); if(_n2b) e.note2b=_n2b.value.trim();
   save();renderAll();
   document.getElementById('day-detail').classList.remove('on');
-  toast('✓ Đã lưu ngày '+k);
+  toast('✓ Đã lưu ngày '+k+' ('+th.length+' thời)');
 }
 
 function renderPieChart(){
@@ -2377,8 +2346,7 @@ function renderPieChart(){
   const counts={tot:0,can:0,kem:0};
   ST.data.forEach(e=>{
     if(!e.date||!e.date.startsWith(thisMonth))return; // chỉ tháng đang xem
-    if(e.ratingS&&counts[e.ratingS]!==undefined)counts[e.ratingS]++;
-    if(e.ratingT&&counts[e.ratingT]!==undefined)counts[e.ratingT]++;
+    thRatings(e).forEach(function(r){ if(counts[r]!==undefined)counts[r]++; });
   });
   const total=counts.tot+counts.can+counts.kem;
   const legend=document.getElementById('pie-legend');
@@ -2484,7 +2452,7 @@ function renderRec(){
       if(e&&(e.mins2||0)>=ST.goal2) tOk++;
       if(e) mins+=(e.mins1||0)+(e.mins2||0)+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
       if(gioiPlannedKey(getDK(kk))){ gp++; if(e&&e.gioi) gk++; } else if(e&&e.gioi){ gk++; gp++; }
-      for(const r of [e&&e.ratingS, e&&e.ratingT, e&&e.rating1b, e&&e.rating2b]){
+      for(const r of thRatings(e||{})){
         if(r){ rated++; if(r==='tot')tot++; else if(r==='can')can++; else if(r==='kem')kem++; }
       }
     }
@@ -2513,8 +2481,8 @@ function renderRec(){
   const tone=v=>v>=80?cGood:v>=50?cWarn:cBad;
   let html='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">';
   html+=cell('🧘','ĐỦ 2 THỜI', pc(A.full)+'%','', delta(pc(A.full),pc(B.full)), tone(pc(A.full)));
-  html+=cell('🌅','ĐẠT KH SÁNG', pc(A.sOk)+'%','', delta(pc(A.sOk),pc(B.sOk)), tone(pc(A.sOk)));
-  html+=cell('🌙','ĐẠT KH TỐI', pc(A.tOk)+'%','', delta(pc(A.tOk),pc(B.tOk)), tone(pc(A.tOk)));
+  html+=cell('🌅','ĐẠT KH AM', pc(A.sOk)+'%','', delta(pc(A.sOk),pc(B.sOk)), tone(pc(A.sOk)));
+  html+=cell('🌙','ĐẠT KH PM', pc(A.tOk)+'%','', delta(pc(A.tOk),pc(B.tOk)), tone(pc(A.tOk)));
   html+=cell('⏱','TB MỖI NGÀY', nf(A.avg),'ph', delta(A.avg,B.avg), A.avg>=(ST.goal1+ST.goal2)?cGood:cWarn);
   html+=cell('📅','NGÀY CÓ THIỀN', pc(A.entD)+'%','', delta(pc(A.entD),pc(B.entD)), tone(pc(A.entD)));
   html+=cell('🔥','CHUỖI 2 THỜI', cur,'ngày','', cur>0?cGood:cBad);
@@ -2556,9 +2524,9 @@ function renderRec(){
     a:'Đặt mức tối thiểu <b>10 phút/ngày</b> không được bỏ — ngày bận vẫn ngồi 10 phút để không đứt chuỗi.'});
   if(pc(A.full)<50) weak.push({p:2,t:'Đủ 2 thời mới <b>'+pc(A.full)+'%</b> — phần lớn ngày chỉ ngồi một thời.',
     a:'Tuần này ưu tiên <b>có mặt đủ 2 thời</b>, chấp nhận rút mỗi thời còn '+Math.max(10,Math.round(ST.goal1/2))+'–'+ST.goal1+' phút; khi đã đều rồi mới tăng lại.'});
-  if(pc(A.tOk)<pc(A.sOk)-15) weak.push({p:3,t:'Buổi <b>tối</b> yếu hơn sáng rõ rệt ('+pc(A.tOk)+'% so với '+pc(A.sOk)+'%).',
+  if(pc(A.tOk)<pc(A.sOk)-15) weak.push({p:3,t:'<b>PM</b> yếu hơn AM rõ rệt ('+pc(A.tOk)+'% so với '+pc(A.sOk)+'%).',
     a:'Chốt một giờ ngồi tối cố định, đặt chuông nhắc trước 15 phút, và ngồi <b>trước</b> khi xem điện thoại/tin tức.'});
-  if(pc(A.sOk)<pc(A.tOk)-15) weak.push({p:3,t:'Buổi <b>sáng</b> yếu hơn tối rõ rệt ('+pc(A.sOk)+'% so với '+pc(A.tOk)+'%).',
+  if(pc(A.sOk)<pc(A.tOk)-15) weak.push({p:3,t:'<b>AM</b> yếu hơn PM rõ rệt ('+pc(A.sOk)+'% so với '+pc(A.tOk)+'%).',
     a:'Ngủ sớm hơn 30 phút và ngồi ngay sau khi thức dậy, trước khi làm bất cứ việc gì khác.'});
   if(A.avg<B.avg-10) weak.push({p:4,t:'Thời lượng giảm: <b>'+nf(A.avg)+' ph/ngày</b> so với <b>'+nf(B.avg)+' ph</b> của 30 ngày trước.',
     a:'Xem lại lịch sinh hoạt tháng qua, chọn lại khung giờ ít bị cắt ngang nhất và giữ cố định trong 2 tuần.'});
@@ -2590,18 +2558,30 @@ function exportData(){
 }
 
 // Lưu file bền cho mọi môi trường: APK (TWA) / PWA / trình duyệt máy tính
-function saveFileAs(name, blob, payloadText){
-  // 1) Android/APK: mở hộp Chia sẻ của hệ thống (lưu vào Tệp, gửi Zalo/Drive...)
+async function saveFileAs(name, blob, payloadText){
+  // 1) Cửa sổ "Lưu vào đâu" của hệ thống (Chrome máy tính + Android mới)
+  if(window.showSaveFilePicker){
+    try{
+      const h=await window.showSaveFilePicker({suggestedName:name,
+        types:[{description:'Dữ liệu JSON', accept:{'application/json':['.json']}}]});
+      const w=await h.createWritable(); await w.write(blob); await w.close();
+      toast('✓ Đã lưu: '+name); return;
+    }catch(err){
+      if(err && err.name==='AbortError') return; // người dùng bấm Hủy
+      // không hỗ trợ thật sự -> rơi xuống cách 2
+    }
+  }
+  // 2) Android/APK không có cửa sổ lưu: mở hộp Chia sẻ (chọn "Tệp" để lưu, hoặc gửi Zalo/Drive)
   try{
     const f=new File([blob], name, {type:blob.type||'application/json'});
     if(navigator.canShare && navigator.canShare({files:[f]})){
       navigator.share({files:[f], title:name}).catch(function(err){
-        if(err && err.name==='AbortError') return; // người dùng tự đóng hộp chia sẻ
+        if(err && err.name==='AbortError') return;
         saveFileAsDownload(name, blob, payloadText);
       });
       return;
     }
-  }catch(e){ /* rơi xuống cách 2 */ }
+  }catch(e){ /* rơi xuống cách 3 */ }
   saveFileAsDownload(name, blob, payloadText);
 }
 function saveFileAsDownload(name, blob, payloadText){
@@ -2642,6 +2622,7 @@ function importData(input){
 
 // RENDER ALL
 function renderAll(){
+  thMigrateAll();
   const today=new Date();
   document.getElementById('hdr-date').textContent=DAYS7[today.getDay()]+', '+today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear()+' · '+lunarLabelKey(getDK());
   renderToday();renderStreak();renderPlanPage();renderMonthPVA();renderTimerInfo();renderTodayPlanUI();renderExtraSessions();renderAlltimeStats();
