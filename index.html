@@ -355,6 +355,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div class="card-hd">📈 Xu hướng 30 ngày (so với 30 ngày trước)</div>
     <div id="rec-list"><div style="color:var(--muted);font-size:13px;padding:8px 0">Ghi lại buổi thiền để xem xu hướng.</div></div>
   </div>
+
+  <div class="card">
+    <div class="card-hd">⭐ Sự kiện đặc biệt</div>
+    <div id="event-list"><div style="color:var(--muted);font-size:13px;padding:8px 0">Chưa có sự kiện — ghi ở Chi tiết ngày (tab Tháng).</div></div>
+  </div>
 </div><!-- end pg-today -->
 
 <!-- Hidden timer elements for JS -->
@@ -549,6 +554,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <button onclick="ddZoom(1)" style="width:40px;height:30px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface2);font-size:15px;font-weight:800;cursor:pointer;color:var(--ink)">A+</button>
     </div>
     <div id="dd-zoomwrap">
+    <!-- Sự kiện đặc biệt của ngày -->
+    <div style="margin-bottom:12px;background:linear-gradient(135deg,#fff9e8,#fdeec8);border:1.5px solid #e0be66;border-radius:var(--r);padding:9px 12px">
+      <div style="font-size:11px;font-weight:800;color:#8a6d1a;letter-spacing:.5px;margin-bottom:5px">⭐ SỰ KIỆN ĐẶC BIỆT</div>
+      <input type="text" id="dd-event" placeholder="Ví dụ: vào Sơ thiền, Nhị thiền, Minh sát..." style="width:100%;padding:7px 10px;border:1px solid var(--border2);border-radius:9px;background:var(--surface);color:var(--ink);font-size:13px;font-family:inherit">
+    </div>
     <div id="dd-body" style="font-size:13px;color:var(--ink);line-height:2;margin-bottom:12px"></div>
 
     <!-- Tổng trên cùng -->
@@ -571,7 +581,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v118</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v119</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2168,6 +2178,7 @@ function showDayDetail(k){
   let e=getEntry(k);const d=new Date(k);
   if(e) thMigrate(e);
   document.getElementById('dd-title').textContent=DAYS7[d.getDay()]+', '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' · '+lunarLabelKey(k);
+  const _ev=document.getElementById('dd-event'); if(_ev) _ev.value=(e&&e.event)?e.event:'';
   const _gc=document.getElementById('dd-gioi');
   if(_gc){ _gc.checked=!!(e&&e.gioi);
     const _gh=document.getElementById('dd-gioi-hint');
@@ -2395,6 +2406,7 @@ function saveDayDetail(){
   e.ratingT=fp?fp.r:null; e.noteT=fp?(fp.n||''):'';
   e.rating1b=null; e.note1b=''; e.rating2b=null; e.note2b='';
   const _g=document.getElementById('dd-gioi'); if(_g) e.gioi=_g.checked;
+  const _ev=document.getElementById('dd-event'); if(_ev) e.event=_ev.value.trim();
   save();renderAll();
   document.getElementById('day-detail').classList.remove('on');
   toast('✓ Đã lưu ngày '+k+' ('+th.length+' thời)');
@@ -2682,8 +2694,29 @@ function importData(input){
 }
 
 // RENDER ALL
+function renderEvents(){
+  const box=document.getElementById('event-list'); if(!box)return;
+  const evs=(ST.data||[]).filter(function(e){return e.date&&e.event&&e.event.trim();})
+    .sort(function(a,b){return a.date.localeCompare(b.date);});
+  if(!evs.length){
+    box.innerHTML='<div style="color:var(--muted);font-size:13px;padding:8px 0">Chưa có sự kiện — ghi ở Chi tiết ngày (tab Tháng).</div>';
+    return;
+  }
+  box.innerHTML=evs.map(function(e){
+    const d=new Date(e.date);
+    const dl=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+    let am='';
+    try{ am=' · '+lunarLabelKey(e.date); }catch(err){}
+    return '<div style="display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--border2)">'
+      +'<span style="flex:none">⭐</span>'
+      +'<div style="min-width:0"><div style="font-size:11.5px;font-weight:700;color:var(--muted)">'+dl+am+'</div>'
+      +'<div style="font-size:13.5px;font-weight:700;color:var(--ink);overflow-wrap:break-word">'+_esc(e.event)+'</div></div>'
+      +'</div>';
+  }).join('');
+}
 function renderAll(){
   thMigrateAll();
+  renderEvents();
   const today=new Date();
   document.getElementById('hdr-date').textContent=DAYS7[today.getDay()]+', '+today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear()+' · '+lunarLabelKey(getDK());
   renderToday();renderStreak();renderPlanPage();renderMonthPVA();renderTimerInfo();renderTodayPlanUI();renderExtraSessions();renderAlltimeStats();
