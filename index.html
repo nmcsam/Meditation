@@ -556,7 +556,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div id="dd-zoomwrap">
     <!-- Sự kiện đặc biệt của ngày -->
     <div style="margin-bottom:12px;background:linear-gradient(135deg,#1e4fa3 0%,#163d85 50%,#0d2a63 100%);border:2px solid #0a1f4b;border-radius:var(--r);padding:10px 12px;box-shadow:0 3px 10px rgba(10,31,75,.45), inset 0 1px 0 rgba(255,255,255,.22)">
-      <div style="font-size:12px;font-weight:900;color:#fff;letter-spacing:.6px;margin-bottom:6px;text-shadow:0 1px 2px rgba(0,0,0,.4)">⭐ SỰ KIỆN ĐẶC BIỆT</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="font-size:12px;font-weight:900;color:#fff;letter-spacing:.6px;text-shadow:0 1px 2px rgba(0,0,0,.4)">⭐ SỰ KIỆN ĐẶC BIỆT</div>
+        <button type="button" id="dd-event-show" onclick="ddToggleEventShow()" style="border:none;border-radius:14px;padding:4px 10px;font-size:10.5px;font-weight:900;font-family:inherit;cursor:pointer"></button>
+      </div>
       <input type="text" id="dd-event" placeholder="Ví dụ: vào Sơ thiền, Nhị thiền, Minh sát..." style="width:100%;padding:8px 10px;border:1.5px solid #0a1f4b;border-radius:9px;background:#f4f8ff;color:#0d2a63;font-size:13px;font-weight:600;font-family:inherit">
     </div>
     <div id="dd-body" style="font-size:13px;color:var(--ink);line-height:2;margin-bottom:12px"></div>
@@ -581,7 +584,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v123</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v124</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2179,6 +2182,7 @@ function showDayDetail(k){
   if(e) thMigrate(e);
   document.getElementById('dd-title').textContent=DAYS7[d.getDay()]+', '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' · '+lunarLabelKey(k);
   const _ev=document.getElementById('dd-event'); if(_ev) _ev.value=(e&&e.event)?e.event:'';
+  ddEventShow=(e&&e.eventShow===false)?false:true; ddPaintEventShow();
   const _gc=document.getElementById('dd-gioi');
   if(_gc){ _gc.checked=!!(e&&e.gioi);
     const _gh=document.getElementById('dd-gioi-hint');
@@ -2219,6 +2223,18 @@ function showDayDetail(k){
 }
 
 // ===== Danh sách thời động trong bảng sửa ngày =====
+let ddEventShow=true;
+function ddPaintEventShow(){
+  const b=document.getElementById('dd-event-show'); if(!b)return;
+  if(ddEventShow){
+    b.textContent='● Hiện ở tab Hôm nay: BẬT';
+    b.style.background='#ffd54a'; b.style.color='#241500'; b.style.boxShadow='0 0 6px rgba(255,213,74,.7)';
+  }else{
+    b.textContent='○ Hiện ở tab Hôm nay: TẮT';
+    b.style.background='rgba(255,255,255,.18)'; b.style.color='#c9d8f5'; b.style.boxShadow='none';
+  }
+}
+function ddToggleEventShow(){ ddEventShow=!ddEventShow; ddPaintEventShow(); }
 let ddSess=[];
 function ddRenderSessions(){
   const box=document.getElementById('dd-sess-list'); if(!box)return;
@@ -2407,6 +2423,7 @@ function saveDayDetail(){
   e.rating1b=null; e.note1b=''; e.rating2b=null; e.note2b='';
   const _g=document.getElementById('dd-gioi'); if(_g) e.gioi=_g.checked;
   const _ev=document.getElementById('dd-event'); if(_ev) e.event=_ev.value.trim();
+  e.eventShow=ddEventShow;
   save();renderAll();
   document.getElementById('day-detail').classList.remove('on');
   toast('✓ Đã lưu ngày '+k+' ('+th.length+' thời)');
@@ -2696,7 +2713,7 @@ function importData(input){
 // RENDER ALL
 function renderEvents(){
   const box=document.getElementById('event-list'); if(!box)return;
-  const evs=(ST.data||[]).filter(function(e){return e.date&&e.event&&e.event.trim();})
+  const evs=(ST.data||[]).filter(function(e){return e.date&&e.event&&e.event.trim()&&e.eventShow!==false;})
     .sort(function(a,b){return a.date.localeCompare(b.date);});
   if(!evs.length){
     box.innerHTML='<div style="color:var(--muted);font-size:13px;padding:8px 0">Chưa có sự kiện — ghi ở Chi tiết ngày (tab Tháng).</div>';
