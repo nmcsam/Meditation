@@ -356,9 +356,9 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div id="rec-list"><div style="color:var(--muted);font-size:13px;padding:8px 0">Ghi lại buổi thiền để xem xu hướng.</div></div>
   </div>
 
-  <div class="card" style="background:linear-gradient(135deg,#fff3cd 0%,#f9dd85 60%,#efc456 100%);border:2px solid #b8860b;box-shadow:0 3px 10px rgba(184,134,11,.3), inset 0 1px 0 rgba(255,255,255,.65)">
-    <div class="card-hd" style="color:#5a3c0a;text-shadow:0 1px 0 rgba(255,255,255,.5)">⭐ Sự kiện đặc biệt</div>
-    <div id="event-list"><div style="color:#7a5a18;font-size:13px;padding:8px 0">Chưa có sự kiện — ghi ở Chi tiết ngày (tab Tháng).</div></div>
+  <div class="card" style="background:linear-gradient(135deg,#e0a92e 0%,#c8891a 50%,#93680b 100%);border:2px solid #7a5510;box-shadow:0 3px 10px rgba(122,85,16,.4), inset 0 1px 0 rgba(255,255,255,.35)">
+    <div class="card-hd" style="color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)">⭐ Sự kiện đặc biệt</div>
+    <div id="event-list"><div style="color:#ffeacb;font-size:13px;padding:8px 0">Chưa có sự kiện — ghi ở Chi tiết ngày (tab Tháng).</div></div>
   </div>
 </div><!-- end pg-today -->
 
@@ -555,9 +555,9 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     </div>
     <div id="dd-zoomwrap">
     <!-- Sự kiện đặc biệt của ngày -->
-    <div style="margin-bottom:12px;background:linear-gradient(135deg,#ffe9a8 0%,#f5c842 55%,#e0a92e 100%);border:2px solid #b8860b;border-radius:var(--r);padding:10px 12px;box-shadow:0 3px 10px rgba(184,134,11,.35), inset 0 1px 0 rgba(255,255,255,.7)">
-      <div style="font-size:11.5px;font-weight:800;color:#5a3c0a;letter-spacing:.6px;margin-bottom:6px;text-shadow:0 1px 0 rgba(255,255,255,.5)">⭐ SỰ KIỆN ĐẶC BIỆT</div>
-      <input type="text" id="dd-event" placeholder="Ví dụ: vào Sơ thiền, Nhị thiền, Minh sát..." style="width:100%;padding:8px 10px;border:1.5px solid #b8860b;border-radius:9px;background:#fffdf5;color:#3a2a08;font-size:13px;font-weight:600;font-family:inherit">
+    <div style="margin-bottom:12px;background:linear-gradient(135deg,#e0a92e 0%,#c8891a 50%,#93680b 100%);border:2px solid #7a5510;border-radius:var(--r);padding:10px 12px;box-shadow:0 3px 10px rgba(122,85,16,.45), inset 0 1px 0 rgba(255,255,255,.35)">
+      <div style="font-size:11.5px;font-weight:800;color:#fff;letter-spacing:.6px;margin-bottom:6px;text-shadow:0 1px 2px rgba(0,0,0,.35)">⭐ SỰ KIỆN ĐẶC BIỆT</div>
+      <input type="text" id="dd-event" placeholder="Ví dụ: vào Sơ thiền, Nhị thiền, Minh sát..." style="width:100%;padding:8px 10px;border:1.5px solid #7a5510;border-radius:9px;background:#fffdf5;color:#3a2a08;font-size:13px;font-weight:600;font-family:inherit">
     </div>
     <div id="dd-body" style="font-size:13px;color:var(--ink);line-height:2;margin-bottom:12px"></div>
 
@@ -581,7 +581,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v120</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v121</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2707,10 +2707,10 @@ function renderEvents(){
     const dl=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
     let am='';
     try{ am=' · '+lunarLabelKey(e.date); }catch(err){}
-    return '<div style="display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed rgba(140,100,20,.4)">'
+    return '<div style="display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.35)">'
       +'<span style="flex:none">⭐</span>'
-      +'<div style="min-width:0"><div style="font-size:11.5px;font-weight:700;color:#7a5a18">'+dl+am+'</div>'
-      +'<div style="font-size:13.5px;font-weight:800;color:#3a2a08;overflow-wrap:break-word">'+_esc(e.event)+'</div></div>'
+      +'<div style="min-width:0"><div style="font-size:11.5px;font-weight:700;color:#ffeacb;text-shadow:0 1px 1px rgba(0,0,0,.25)">'+dl+am+'</div>'
+      +'<div style="font-size:13.5px;font-weight:800;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3);overflow-wrap:break-word">'+_esc(e.event)+'</div></div>'
       +'</div>';
   }).join('');
 }
