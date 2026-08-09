@@ -220,8 +220,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <!-- ⏱ ĐỒNG HỒ THIỀN -->
   <div class="card" style="padding:12px">
-    <div class="card-hd" style="margin-bottom:10px">⏱ Đồng hồ thiền</div>
-    <div style="display:flex;align-items:center;gap:14px">
+    <div style="display:flex;gap:14px;align-items:baseline;margin-bottom:8px">
+      <div class="card-hd" style="flex:none;width:150px;text-align:center;margin:0">⏱ Đồng hồ thiền</div>
+      <div style="flex:1;font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.6px">THỜI GIAN THIỀN (PHÚT)</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:14px">
       <div style="position:relative;width:150px;height:150px;flex:none">
         <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg)">
           <circle cx="75" cy="75" r="62" fill="none" stroke="var(--border2)" stroke-width="8"/>
@@ -233,28 +236,27 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.6px;margin-bottom:7px">THỜI GIAN THIỀN (PHÚT)</div>
         <div style="display:flex;gap:8px;align-items:stretch;margin-bottom:9px">
-          <input type="text" id="timer-min-input" inputmode="numeric" maxlength="4" class="tin" style="flex:none;width:78px;height:62px;font-size:26px;font-weight:900;text-align:center;border-width:2px" placeholder="60" onchange="setTimerFromInput(this)" onblur="setTimerFromInput(this)">
-          <button id="timer-start-btn" class="tbtn start" onclick="timerStartStop()" style="flex:1;min-width:0;height:62px;padding:0 6px;font-size:16.5px;font-weight:900;white-space:nowrap">▶ Bắt đầu</button>
+          <input type="text" id="timer-min-input" inputmode="numeric" maxlength="4" class="tin" style="flex:none;width:calc(50% - 4px);height:62px;font-size:26px;font-weight:900;text-align:center;border-width:2px;box-sizing:border-box" placeholder="60" onchange="setTimerFromInput(this)" onblur="setTimerFromInput(this)">
+          <button id="timer-start-btn" class="tbtn start" onclick="timerStartStop()" style="flex:none;width:calc(50% - 4px);height:62px;padding:0 2px;font-size:14px;font-weight:900;white-space:nowrap;overflow:hidden;border-width:2px;box-sizing:border-box">▶ Bắt đầu</button>
         </div>
         <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;margin-bottom:6px"><input type="checkbox" id="bell-end" checked> 🔔 Chuông hết giờ</label>
         <div id="bell-selector" style="display:flex;gap:4px;flex-wrap:wrap">
           <button class="bell-opt on" onclick="selectBell(this,'chua')" style="padding:5px 8px;font-size:11px;font-weight:800">🔔 Chuông chùa ×3</button>
           <button class="bell-opt" onclick="selectBell(this,'bowl')" style="padding:5px 8px;font-size:11px">Chuông bát ×3</button>
           <button class="bell-opt" onclick="selectBell(this,'ding')" style="padding:5px 8px;font-size:11px">Ding ×3</button>
-          <button class="bell-opt" onclick="previewBell()" style="padding:5px 8px;font-size:11px;border-style:dashed">▶ Nghe thử</button>
         </div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap">
-      <label class="tbtn" style="padding:5px 10px;font-size:11.5px;cursor:pointer">🎵 <span id="custom-audio-name">Tải chuông riêng...</span>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <button class="tbtn" onclick="previewBell()" style="flex:1;min-width:0;padding:6px 2px;font-size:11.5px;white-space:nowrap">▶ Nghe thử</button>
+      <label class="tbtn" style="flex:1.4;min-width:0;padding:6px 2px;font-size:11.5px;cursor:pointer;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">🎵 <span id="custom-audio-name">Tải chuông riêng</span>
         <input type="file" id="custom-audio-input" accept="audio/*" onchange="loadCustomAudio(this)" style="display:none">
       </label>
-      <button id="custom-audio-clear" onclick="clearCustomAudio()" style="display:none;border:none;background:transparent;color:var(--rose);font-weight:800;cursor:pointer;font-size:12px">✕ Xóa</button>
-      <button id="notif-btn" class="tbtn" onclick="enableNotif()" style="padding:5px 10px;font-size:11.5px;margin-left:auto">🔔 Bật thông báo</button>
+      <button id="custom-audio-clear" onclick="clearCustomAudio()" style="display:none;border:none;background:transparent;color:var(--rose);font-weight:800;cursor:pointer;font-size:12px">✕</button>
+      <button id="notif-btn" class="tbtn" onclick="enableNotif()" style="flex:1.2;min-width:0;padding:6px 2px;font-size:11.5px;white-space:nowrap">🔔 Bật thông báo</button>
     </div>
-    <div style="font-size:10.5px;color:var(--muted);margin-top:8px">Hết giờ: chuông ngân 3 tiếng · thời tự ghi vào tab Tháng đúng AM/PM.</div>
+  </div>
   </div>
 
   <!-- CARD HÔM NAY: Kế hoạch + Thực tế gộp một thẻ -->
@@ -612,7 +614,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v131</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v132</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
