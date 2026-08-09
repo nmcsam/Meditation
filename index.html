@@ -234,6 +234,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       </div>
       <div style="flex:1;min-width:0">
         <div style="font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:5px">ĐẶT THỜI THIỀN (PHÚT)</div>
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px">
+          <input type="text" id="timer-min-input" inputmode="numeric" maxlength="4" class="tin" style="flex:none;width:58px;font-size:13px;font-weight:800;text-align:center" placeholder="phút" onchange="setTimerFromInput(this)" onblur="setTimerFromInput(this)">
+          <span style="font-size:11px;color:var(--muted)">← gõ số phút tùy ý</span>
+        </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:6px">
           <button class="tbtn tpreset" onclick="setTimerPreset(15,this)">15</button>
           <button class="tbtn tpreset" onclick="setTimerPreset(30,this)">30</button>
@@ -626,7 +630,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v126</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v128</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -702,7 +706,7 @@ const DAYS7=['CN','T2','T3','T4','T5','T6','T7'];
 const KEY='thien_v4';
 let ST={goal1:30,goal2:30,data:[]};
 let logSessNum=1;
-let timerMins=30,timerInterval=null,timerRemaining=0,timerTotal=0,timerRunning=false;
+let timerMins=30,timerInterval=null,timerRemaining=0,timerTotal=0,timerRunning=false,timerEndAt=0;
 let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
 let charts={},audioCtx=null,bellType='bowl';
 let wakeLock=null,swReg=null;
@@ -1627,6 +1631,28 @@ function ringBell(type,vol){
   }catch(e){}
 }
 let customAudio=null;
+// Âm nền cực nhỏ giữ app sống khi tắt màn hình (cơ chế như app nghe nhạc)
+let kaAudio=null;
+function kaWavURL(){
+  const sr=8000,n=sr,v=new DataView(new ArrayBuffer(44+n*2));
+  function ws(o,s){for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));}
+  ws(0,'RIFF');v.setUint32(4,36+n*2,true);ws(8,'WAVEfmt ');v.setUint32(16,16,true);
+  v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);
+  v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);
+  ws(36,'data');v.setUint32(40,n*2,true);
+  for(let i=0;i<n;i++)v.setInt16(44+i*2,(i%2)?2:-2,true); // gần như im lặng tuyệt đối
+  return URL.createObjectURL(new Blob([v.buffer],{type:'audio/wav'}));
+}
+function kaStart(){
+  try{
+    if(!kaAudio){ kaAudio=new Audio(kaWavURL()); kaAudio.loop=true; kaAudio.volume=0.02; }
+    kaAudio.play().catch(function(){});
+    if('mediaSession' in navigator){
+      try{ navigator.mediaSession.metadata=new MediaMetadata({title:'Đang thiền…', artist:'Thiền'}); }catch(e){}
+    }
+  }catch(e){}
+}
+function kaStop(){ try{ if(kaAudio) kaAudio.pause(); }catch(e){} }
 
 function loadCustomAudio(input){
   const file=input.files[0];
@@ -1665,7 +1691,7 @@ function adjTimerMins(delta){
   timerRemaining=timerMins*60;timerTotal=timerMins*60;
   document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
   document.querySelectorAll('.tpreset').forEach(b=>b.classList.remove('start'));
-  updateRing(1,1);
+  syncTimerInput(); updateRing(1,1);
 }
 function setTimerPreset(m,el){
   if(timerRunning){toast('Đang chạy — dừng trước khi đổi thời');return;}
@@ -1673,7 +1699,18 @@ function setTimerPreset(m,el){
   document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
   document.querySelectorAll('.tpreset').forEach(b=>b.classList.remove('start'));
   if(el) el.classList.add('start');
-  updateRing(1,1);
+  syncTimerInput(); updateRing(1,1);
+}
+function syncTimerInput(){ const i=document.getElementById('timer-min-input'); if(i) i.value=timerMins; }
+function setTimerFromInput(inp){
+  if(timerRunning){ syncTimerInput(); return; }
+  const m=parseInt(String(inp.value).replace(/\D/g,''),10);
+  if(!m||m<1){ syncTimerInput(); return; }
+  timerMins=Math.min(1200,m);
+  timerRemaining=timerMins*60; timerTotal=timerMins*60;
+  document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
+  document.querySelectorAll('.tpreset').forEach(b=>b.classList.remove('start'));
+  syncTimerInput(); updateRing(1,1);
 }
 function getActiveSession(){const k=getDK();const e=getEntry(k);return(!e||!e.mins1)?1:2;}
 function timerFmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
@@ -1708,17 +1745,20 @@ function timerStartStop(){
   if(!timerRunning){
     if(timerRemaining<=0){timerTotal=timerMins*60;timerRemaining=timerTotal;}
     timerRunning=true;
+    timerEndAt=Date.now()+timerRemaining*1000;
     document.getElementById('timer-start-btn').textContent='⏸ Đang chạy';
     document.getElementById('timer-start-btn').className='tbtn stop';
     document.getElementById('timer-state-lbl').textContent='Đang thiền…';
     requestWakeLock();
+    kaStart();
     timerInterval=setInterval(function(){
-      timerRemaining--;
+      timerRemaining=Math.max(0, Math.round((timerEndAt-Date.now())/1000));
       document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
       updateRing(timerRemaining,timerTotal);
       if(timerRemaining<=0){
         clearInterval(timerInterval);timerRunning=false;releaseWakeLock();
         document.getElementById('timer-start-btn').className='tbtn start';
+        setTimeout(kaStop, 4000); // để chuông ngân xong rồi mới tắt âm nền
         document.getElementById('timer-state-lbl').textContent='Hoàn thành 🙏';
         if(document.getElementById('bell-end')&&document.getElementById('bell-end').checked){ringBell(bellType,0.6);setTimeout(function(){ringBell(bellType,0.45);},1200);}
         const sess=getActiveSession();
@@ -1735,7 +1775,7 @@ function timerStartStop(){
       }
     },1000);
   }else{
-    clearInterval(timerInterval);timerRunning=false;releaseWakeLock();
+    clearInterval(timerInterval);timerRunning=false;releaseWakeLock();kaStop();
     // Lưu thời gian đã thiền khi dừng giữa chừng
     const elapsed=Math.round((timerTotal-timerRemaining)/60);
     if(elapsed>=1){
@@ -1755,8 +1795,17 @@ function timerStartStop(){
     updateRing(1,1);
   }
 }
+// Màn hình sáng lại / quay về app: đồng bộ đồng hồ theo giờ thực ngay
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState==='visible' && timerRunning){
+    timerRemaining=Math.max(0, Math.round((timerEndAt-Date.now())/1000));
+    document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
+    updateRing(timerRemaining,timerTotal);
+    requestWakeLock();
+  }
+});
 function timerReset(){
-  clearInterval(timerInterval);timerRunning=false;releaseWakeLock();
+  clearInterval(timerInterval);timerRunning=false;releaseWakeLock();kaStop();
   const p=getTodayPlan();const sess=getActiveSession();
   timerMins=sess===1?p.p1:p.p2;
   timerRemaining=timerMins*60;timerTotal=timerMins*60;
