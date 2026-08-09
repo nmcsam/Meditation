@@ -233,23 +233,12 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:5px">ĐẶT THỜI THIỀN (PHÚT)</div>
-        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px">
-          <input type="text" id="timer-min-input" inputmode="numeric" maxlength="4" class="tin" style="flex:none;width:58px;font-size:13px;font-weight:800;text-align:center" placeholder="phút" onchange="setTimerFromInput(this)" onblur="setTimerFromInput(this)">
-          <span style="font-size:11px;color:var(--muted)">← gõ số phút tùy ý</span>
+        <div style="font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">THỜI GIAN THIỀN</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="text" id="timer-min-input" inputmode="numeric" maxlength="4" class="tin" style="flex:none;width:86px;height:52px;font-size:24px;font-weight:900;text-align:center;border-width:2px" placeholder="60" onchange="setTimerFromInput(this)" onblur="setTimerFromInput(this)">
+          <span style="font-size:14px;font-weight:800;color:var(--ink)">phút</span>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:6px">
-          <button class="tbtn tpreset" onclick="setTimerPreset(15,this)">15</button>
-          <button class="tbtn tpreset" onclick="setTimerPreset(30,this)">30</button>
-          <button class="tbtn tpreset" onclick="setTimerPreset(45,this)">45</button>
-          <button class="tbtn tpreset" onclick="setTimerPreset(60,this)">60</button>
-          <button class="tbtn tpreset" onclick="setTimerPreset(90,this)">90</button>
-          <button class="tbtn tpreset" onclick="setTimerPreset(120,this)">120</button>
-        </div>
-        <div style="display:flex;gap:5px">
-          <button class="tbtn" onclick="adjTimerMins(-5)" style="flex:1;padding:6px 4px">−5ph</button>
-          <button class="tbtn" onclick="adjTimerMins(5)" style="flex:1;padding:6px 4px">+5ph</button>
-        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Gõ số phút rồi bấm Bắt đầu</div>
       </div>
     </div>
     <div style="display:flex;gap:8px;margin-top:10px">
@@ -259,10 +248,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;flex-wrap:wrap">
       <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700"><input type="checkbox" id="bell-end" checked> 🔔 Chuông hết giờ</label>
       <div id="bell-selector" style="display:flex;gap:4px;flex-wrap:wrap">
-        <button class="bell-opt on" onclick="selectBell(this,'bowl')" style="padding:4px 8px;font-size:11px">Chuông bát</button>
-        <button class="bell-opt" onclick="selectBell(this,'singing')" style="padding:4px 8px;font-size:11px">Ngân dài</button>
-        <button class="bell-opt" onclick="selectBell(this,'ding')" style="padding:4px 8px;font-size:11px">Ding</button>
-        <button class="bell-opt" onclick="previewBell()" style="padding:4px 8px;font-size:11px;border-style:dashed">▶ Nghe thử</button>
+        <button class="bell-opt on" onclick="selectBell(this,'chua')" style="padding:5px 9px;font-size:11.5px;font-weight:800">🔔 Chuông chùa ×3</button>
+        <button class="bell-opt" onclick="selectBell(this,'bowl')" style="padding:5px 9px;font-size:11.5px">Chuông bát ×3</button>
+        <button class="bell-opt" onclick="selectBell(this,'ding')" style="padding:5px 9px;font-size:11.5px">Ding ×3</button>
+        <button class="bell-opt" onclick="previewBell()" style="padding:5px 9px;font-size:11.5px;border-style:dashed">▶ Nghe thử</button>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">
@@ -630,7 +619,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v128</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v129</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -708,7 +697,7 @@ let ST={goal1:30,goal2:30,data:[]};
 let logSessNum=1;
 let timerMins=30,timerInterval=null,timerRemaining=0,timerTotal=0,timerRunning=false,timerEndAt=0;
 let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
-let charts={},audioCtx=null,bellType='bowl';
+let charts={},audioCtx=null,bellType='chua';
 let wakeLock=null,swReg=null;
 
 function save(){ST.updatedAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}queueCloudSave();}
@@ -1607,29 +1596,42 @@ function checkMonthReset(){
 // ── TIMER — DỪNG GHI VÀO THỰC TẾ (CỘNG DỒN) ──
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
 function ringBell(type,vol){
-  vol=vol||0.5;
+  vol=vol||1.0;
   // Nếu có file âm thanh riêng, dùng nó
   if(type==='custom'&&customAudio){
-    try{customAudio.currentTime=0;customAudio.volume=Math.min(1,vol*1.4);customAudio.play();}catch(e){}
+    try{customAudio.currentTime=0;customAudio.volume=1;customAudio.play();}catch(e){}
     return;
   }
   try{
-    const ctx=getAudioCtx();const t=ctx.currentTime;
-    function play(freq,dur,v){
-      const o=ctx.createOscillator();const g=ctx.createGain();
-      o.connect(g);g.connect(ctx.destination);
-      o.frequency.setValueAtTime(freq,t);o.frequency.exponentialRampToValueAtTime(freq*0.75,t+dur);
-      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+0.02);g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-      o.start(t);o.stop(t+dur);
+    const ctx=getAudioCtx();
+    function strike(t0,freqs,dur,v){ // một tiếng chuông = nhiều họa âm
+      freqs.forEach(function(f,idx){
+        const o=ctx.createOscillator();const g=ctx.createGain();
+        o.connect(g);g.connect(ctx.destination);
+        o.frequency.setValueAtTime(f.f,t0);
+        o.frequency.exponentialRampToValueAtTime(f.f*0.985,t0+dur);
+        const vv=v*f.v;
+        g.gain.setValueAtTime(0,t0);
+        g.gain.linearRampToValueAtTime(vv,t0+0.015);
+        g.gain.exponentialRampToValueAtTime(0.0008,t0+dur);
+        o.start(t0);o.stop(t0+dur);
+      });
     }
-    if(type==='bowl'){play(432,2.5,vol*0.7);play(648,2.2,vol*0.3);}
-    else if(type==='singing'){play(528,3,vol*0.6);play(792,2.8,vol*0.3);}
-    else if(type==='ding'){play(880,1.2,vol*0.8);}
-    else if(type==='gong'){play(110,3.5,vol*0.9);play(220,3,vol*0.5);}
-    else if(type==='soft'){play(660,2,vol*0.5);}
-    else{play(528,1,vol*0.7);setTimeout(function(){try{const c=getAudioCtx();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(528,c.currentTime);g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(vol*0.7,c.currentTime+0.02);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+1);o.start(c.currentTime);o.stop(c.currentTime+1);}catch(e){}},700);}
+    const t=ctx.currentTime+0.05;
+    if(type==='chua'){
+      // Đại hồng chung: trầm, ngân dài, 3 tiếng cách nhau 3.2s
+      const hs=[{f:165,v:.9},{f:330,v:.45},{f:445,v:.3},{f:660,v:.18},{f:990,v:.08}];
+      strike(t,hs,6.5,vol); strike(t+3.2,hs,6.5,vol); strike(t+6.4,hs,7.5,vol);
+    } else if(type==='bowl'){
+      const hs=[{f:432,v:.85},{f:648,v:.4},{f:864,v:.2}];
+      strike(t,hs,4,vol); strike(t+2.4,hs,4,vol); strike(t+4.8,hs,5,vol);
+    } else if(type==='ding'){
+      const hs=[{f:880,v:.9},{f:1760,v:.25}];
+      strike(t,hs,1.6,vol); strike(t+1.2,hs,1.6,vol); strike(t+2.4,hs,2.2,vol);
+    }
   }catch(e){}
 }
+
 let customAudio=null;
 // Âm nền cực nhỏ giữ app sống khi tắt màn hình (cơ chế như app nghe nhạc)
 let kaAudio=null;
@@ -1672,7 +1674,7 @@ function loadCustomAudio(input){
 
 function clearCustomAudio(){
   if(customAudio){customAudio.pause();customAudio=null;}
-  bellType='bowl';
+  bellType='chua';
   document.getElementById('custom-audio-name').textContent='Tải chuông riêng...';
   document.getElementById('custom-audio-name').style.color='var(--muted)';
   document.getElementById('custom-audio-clear').style.display='none';
@@ -1758,9 +1760,9 @@ function timerStartStop(){
       if(timerRemaining<=0){
         clearInterval(timerInterval);timerRunning=false;releaseWakeLock();
         document.getElementById('timer-start-btn').className='tbtn start';
-        setTimeout(kaStop, 4000); // để chuông ngân xong rồi mới tắt âm nền
+        setTimeout(kaStop, 16000); // để 3 tiếng chuông ngân trọn rồi mới tắt âm nền
         document.getElementById('timer-state-lbl').textContent='Hoàn thành 🙏';
-        if(document.getElementById('bell-end')&&document.getElementById('bell-end').checked){ringBell(bellType,0.6);setTimeout(function(){ringBell(bellType,0.45);},1200);}
+        if(document.getElementById('bell-end')&&document.getElementById('bell-end').checked){ringBell(bellType,1.0);}
         const sess=getActiveSession();
         sendNotif('🔔 Hết giờ!','Hoàn thành '+timerMins+'ph '+(sess===1?'thời AM':'thời PM')+'. Sadhu!');
         const k=getDK();let e=getEntry(k);
