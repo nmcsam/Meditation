@@ -233,18 +233,14 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">THỜI GIAN THIỀN</div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input type="text" id="timer-min-input" inputmode="numeric" maxlength="4" class="tin" style="flex:none;width:86px;height:52px;font-size:24px;font-weight:900;text-align:center;border-width:2px" placeholder="60" onchange="setTimerFromInput(this)" onblur="setTimerFromInput(this)">
-          <span style="font-size:14px;font-weight:800;color:var(--ink)">phút</span>
+        <div style="font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.6px;margin-bottom:7px">THỜI GIAN THIỀN (PHÚT)</div>
+        <div style="display:flex;gap:8px;align-items:stretch">
+          <input type="text" id="timer-min-input" inputmode="numeric" maxlength="4" class="tin" style="flex:none;width:76px;height:50px;font-size:24px;font-weight:900;text-align:center;border-width:2px" placeholder="60" onchange="setTimerFromInput(this)" onblur="setTimerFromInput(this)">
+          <button id="timer-start-btn" class="tbtn start" onclick="timerStartStop()" style="flex:1;min-width:0;height:50px;padding:0 6px;font-size:15px;font-weight:900;white-space:nowrap">▶ Bắt đầu</button>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Gõ số phút rồi bấm Bắt đầu</div>
       </div>
     </div>
-    <div style="display:flex;gap:8px;margin-top:10px">
-      <button id="timer-start-btn" class="tbtn start" onclick="timerStartStop()" style="flex:2;font-size:14.5px;font-weight:800">▶ Bắt đầu</button>
-      <button id="timer-reset-btn" class="tbtn" onclick="timerReset()" style="flex:1">↺ Theo KH</button>
-    </div>
+
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;flex-wrap:wrap">
       <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700"><input type="checkbox" id="bell-end" checked> 🔔 Chuông hết giờ</label>
       <div id="bell-selector" style="display:flex;gap:4px;flex-wrap:wrap">
@@ -261,7 +257,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <button id="custom-audio-clear" onclick="clearCustomAudio()" style="display:none;border:none;background:transparent;color:var(--rose);font-weight:800;cursor:pointer;font-size:12px">✕ Xóa</button>
       <button id="notif-btn" class="tbtn" onclick="enableNotif()" style="padding:5px 10px;font-size:11.5px;margin-left:auto">🔔 Bật thông báo</button>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5">Hết giờ: chuông reo và thời thiền <b>tự ghi vào ngày hôm nay</b> (tab Tháng) đúng thời <b>AM/PM theo giờ thực</b>. Dừng giữa chừng cũng ghi số phút đã ngồi.</div>
+    <div style="font-size:10.5px;color:var(--muted);margin-top:8px">Hết giờ: chuông ngân 3 tiếng · thời tự ghi vào tab Tháng đúng AM/PM.</div>
   </div>
 
   <!-- CARD HÔM NAY: Kế hoạch + Thực tế gộp một thẻ -->
@@ -619,7 +615,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v129</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v130</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1773,7 +1769,7 @@ function timerStartStop(){
         else { if(!e.types2||!e.types2.length)e.types2=['Ānāpāna']; }
         save();renderAll();toast('🔔 Hết giờ! Đã ghi '+timerMins+'ph');
         const s=getActiveSession();
-        document.getElementById('timer-start-btn').innerHTML='▶ '+(s===1?'🌅 AM':'🌙 PM');
+        document.getElementById('timer-start-btn').innerHTML='▶ Bắt đầu';
       }
     },1000);
   }else{
@@ -1789,7 +1785,7 @@ function timerStartStop(){
       save();renderAll();toast('Đã ghi '+elapsed+'ph (dừng giữa chừng)');
     }
     const s=getActiveSession();
-    document.getElementById('timer-start-btn').innerHTML='▶ '+(s===1?'🌅':'🌙')+' Tiếp tục';
+    document.getElementById('timer-start-btn').innerHTML='▶ Bắt đầu';
     document.getElementById('timer-start-btn').className='tbtn start';
     document.getElementById('timer-state-lbl').textContent='Đã dừng';
     // Reset để tránh cộng dồn lần sau
@@ -1812,9 +1808,10 @@ function timerReset(){
   timerMins=sess===1?p.p1:p.p2;
   timerRemaining=timerMins*60;timerTotal=timerMins*60;
   document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
-  document.getElementById('timer-start-btn').innerHTML='▶ '+(sess===1?'🌅 AM':'🌙 PM')+' — '+timerMins+'ph';
+  document.getElementById('timer-start-btn').innerHTML='▶ Bắt đầu';
   document.getElementById('timer-start-btn').className='tbtn start';
   document.getElementById('timer-state-lbl').textContent='Sẵn sàng';
+  syncTimerInput();
   updateRing(1,1);
 }
 
