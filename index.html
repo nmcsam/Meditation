@@ -591,7 +591,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v155</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v156</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1649,33 +1649,21 @@ function kaStart(){
     }
   }catch(e){}
 }
+// moKieu: 'link' = đi theo liên kết thật; 'open' = window.open
 const SAMSUNG_INTENTS = [
-  {ten:'Samsung Hẹn giờ',   u:'intent://setTimer/#Intent;action=android.intent.action.SET_TIMER;package=com.sec.android.app.clockpackage;end'},
-  {ten:'Samsung Báo thức',  u:'intent://setAlarm/#Intent;action=android.intent.action.SET_ALARM;package=com.sec.android.app.clockpackage;end'},
-  {ten:'Mở Samsung Clock',  u:'intent://main/#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.clockpackage;end'}
+  {ten:'Samsung Hẹn giờ',        moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;package=com.sec.android.app.clockpackage;end'},
+  {ten:'Mở app Samsung Clock',   moKieu:'link', u:'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.clockpackage;end'},
+  {ten:'Hẹn giờ (chung)',        moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;end'},
+  {ten:'Hẹn giờ (cửa sổ mới)',   moKieu:'open', u:'intent:#Intent;action=android.intent.action.SET_TIMER;end'},
+  {ten:'Qua Play Store → bấm MỞ',moKieu:'link', u:'market://details?id=com.sec.android.app.clockpackage'},
+  {ten:'Qua web Play → bấm MỞ',  moKieu:'link', u:'https://play.google.com/store/apps/details?id=com.sec.android.app.clockpackage'},
+  {ten:'Báo thức (chung)',       moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_ALARM;end'},
+  {ten:'DS hẹn giờ (chung)',     moKieu:'link', u:'intent:#Intent;action=android.intent.action.SHOW_TIMERS;end'},
+  {ten:'Google Clock',           moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;package=com.google.android.deskclock;end'},
+  {ten:'Báo thức (cửa sổ mới)',  moKieu:'open', u:'intent:#Intent;action=android.intent.action.SET_ALARM;end'}
 ];
-const GENERIC_INTENTS = [
-  {ten:'Hẹn giờ (chung)',   u:'intent://setTimer/#Intent;action=android.intent.action.SET_TIMER;end'},
-  {ten:'Báo thức (chung)',  u:'intent://setAlarm/#Intent;action=android.intent.action.SET_ALARM;end'},
-  {ten:'DS hẹn giờ (chung)',u:'intent://showTimers/#Intent;action=android.intent.action.SHOW_TIMERS;end'},
-  {ten:'Google Clock',      u:'intent://setTimer/#Intent;action=android.intent.action.SET_TIMER;package=com.google.android.deskclock;end'},
-  {ten:'Xiaomi/AOSP Clock', u:'intent://setTimer/#Intent;action=android.intent.action.SET_TIMER;package=com.android.deskclock;end'},
-  {ten:'Oppo Clock',        u:'intent://setTimer/#Intent;action=android.intent.action.SET_TIMER;package=com.coloros.alarmclock;end'},
-  {ten:'Vivo Clock',        u:'intent://setTimer/#Intent;action=android.intent.action.SET_TIMER;package=com.android.BBKClock;end'}
-];
-// Samsung (Z Fold: mã máy SM-F...) ưu tiên cú pháp Samsung trước
-const CLOCK_INTENTS = (/samsung|SM-[A-Z]/i.test(navigator.userAgent))
-  ? SAMSUNG_INTENTS.concat(GENERIC_INTENTS)
-  : GENERIC_INTENTS.concat(SAMSUNG_INTENTS);
-function _navIntent(u){
-  // bắn bằng thẻ liên kết thật — Chrome tin cậy hơn location.href với intent://
-  try{
-    const a=document.createElement('a');
-    a.href=u; a.style.display='none';
-    document.body.appendChild(a); a.click();
-    setTimeout(function(){ try{document.body.removeChild(a);}catch(e){} }, 100);
-  }catch(e){ try{ location.href=u; }catch(e2){} }
-}
+const GENERIC_INTENTS = SAMSUNG_INTENTS; // một thang chung, Samsung đứng đầu
+const CLOCK_INTENTS = SAMSUNG_INTENTS;
 function _armClockDetect(idx){
   let left=false;
   const mark=function(){ if(document.visibilityState==='hidden') left=true; };
@@ -1684,11 +1672,11 @@ function _armClockDetect(idx){
     document.removeEventListener('visibilitychange', mark);
     const a=document.getElementById('retry-clock-a');
     if(left){
-      try{ localStorage.setItem('thien_clock_lock2', String(idx)); }catch(e){}
+      try{ localStorage.setItem('thien_clock_lock3', String(idx)); }catch(e){}
       if(a) a.style.display='none';
     } else {
       const next=(idx+1) % CLOCK_INTENTS.length;
-      try{ localStorage.setItem('thien_clock_try2', String(next)); }catch(e){}
+      try{ localStorage.setItem('thien_clock_try3', String(next)); }catch(e){}
       if(a && !timerRunning){
         a.style.display='block';
         a.href=CLOCK_INTENTS[next].u;
@@ -1727,20 +1715,32 @@ function clockTap(ev){
   if(!/Android/i.test(navigator.userAgent)){ ev.preventDefault(); return false; }
   let idx=0;
   try{
-    const lock=localStorage.getItem('thien_clock_lock2');
-    idx = (lock!==null) ? parseInt(lock,10) : parseInt(localStorage.getItem('thien_clock_try2')||'0',10);
+    const lock=localStorage.getItem('thien_clock_lock3');
+    idx = (lock!==null) ? parseInt(lock,10) : parseInt(localStorage.getItem('thien_clock_try3')||'0',10);
   }catch(e){}
   idx = idx % CLOCK_INTENTS.length;
-  ev.currentTarget.href = CLOCK_INTENTS[idx].u;
+  const it = CLOCK_INTENTS[idx];
   _armClockDetect(idx);
-  return true; // trình duyệt tự điều hướng theo link intent://
+  if(it.moKieu==='open'){
+    ev.preventDefault();
+    try{ window.open(it.u, '_blank'); }catch(e){}
+    return false;
+  }
+  ev.currentTarget.href = it.u;
+  return true; // đi theo liên kết thật
 }
 function retryClockTap(ev){
   let next=0;
-  try{ next=parseInt(localStorage.getItem('thien_clock_try2')||'0',10); }catch(e){}
+  try{ next=parseInt(localStorage.getItem('thien_clock_try3')||'0',10); }catch(e){}
   next = next % CLOCK_INTENTS.length;
-  ev.currentTarget.href = CLOCK_INTENTS[next].u;
+  const it = CLOCK_INTENTS[next];
   _armClockDetect(next);
+  if(it.moKieu==='open'){
+    ev.preventDefault();
+    try{ window.open(it.u, '_blank'); }catch(e){}
+    return false;
+  }
+  ev.currentTarget.href = it.u;
   return true;
 }
 // ===== Trợ giúp: vành tiến độ + giữ màn hình + thông báo =====
