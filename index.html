@@ -218,28 +218,20 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <div style="text-align:left;font-size:18px;font-weight:900;letter-spacing:2px;color:var(--teal);margin:0 0 6px 2px"><span style="font-size:1.5em;vertical-align:middle;line-height:1">⓶</span> 🧘 BHĀVANĀ</div>
 
-  <!-- ⏱ ĐỒNG HỒ THIỀN -->
-  <div class="card" style="padding:10px 12px">
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px">
-      <div style="flex:none;position:relative">
-        <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;color:var(--muted);letter-spacing:.5px;white-space:nowrap">CÀI THỜI GIAN</div>
-        <input type="text" id="timer-min-input" inputmode="numeric" maxlength="4" class="tin" style="flex:none;width:76px;height:48px;font-size:22px;font-weight:900;text-align:center;border-width:2px;box-sizing:border-box" placeholder="60" onchange="setTimerFromInput(this)" onblur="setTimerFromInput(this)">
-      </div>
-      <div style="flex:none">
-        <div style="position:relative;width:112px;height:112px">
-          <svg width="112" height="112" viewBox="0 0 112 112" style="transform:rotate(-90deg)">
-            <circle cx="56" cy="56" r="48" fill="none" stroke="var(--border2)" stroke-width="7"/>
-            <circle id="timer-ring" cx="56" cy="56" r="48" fill="none" stroke="var(--teal)" stroke-width="7" stroke-linecap="round"/>
-          </svg>
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-            <span id="timer-display" style="font-size:21px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)">30:00</span>
-            <span id="timer-state-lbl" style="font-size:9px;color:var(--muted)">Sẵn sàng</span>
-          </div>
+  <!-- ⏱ ĐỒNG HỒ THIỀN — chạm đồng hồ: mở Hẹn giờ máy để cài, app đếm thời gian ngồi -->
+  <div class="card" style="padding:12px">
+    <div onclick="timerTap()" style="display:flex;justify-content:center;cursor:pointer">
+      <div style="position:relative;width:150px;height:150px">
+        <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg)">
+          <circle cx="75" cy="75" r="64" fill="none" stroke="var(--border2)" stroke-width="8"/>
+          <circle id="timer-ring" cx="75" cy="75" r="64" fill="none" stroke="var(--teal)" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <span id="timer-display" style="font-size:27px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)">00:00</span>
+          <span id="timer-state-lbl" style="font-size:9.5px;color:var(--muted);text-align:center;line-height:1.3;max-width:110px">Chạm để bắt đầu</span>
         </div>
       </div>
-      <button id="timer-start-btn" class="tbtn start" onclick="timerStartStop()" style="flex:none;width:98px;height:48px;padding:0 4px;font-size:13.5px;font-weight:900;white-space:nowrap;overflow:hidden;box-sizing:border-box">▶ Bắt đầu</button>
     </div>
-    <input type="checkbox" id="bell-end" checked style="display:none">
   </div>
   </div>
 
@@ -598,7 +590,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v146</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v150</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1656,6 +1648,17 @@ function kaStart(){
     }
   }catch(e){}
 }
+function launchSystemTimer(){
+  if(!/Android/i.test(navigator.userAgent)) return;
+  let left=false;
+  const mark=function(){ if(document.visibilityState==='hidden') left=true; };
+  document.addEventListener('visibilitychange', mark);
+  try{ location.href='intent://setTimer/#Intent;action=android.intent.action.SET_TIMER;end'; }catch(e){}
+  setTimeout(function(){
+    document.removeEventListener('visibilitychange', mark);
+    if(!left) toast('⏰ Hãy mở app Đồng hồ hẹn giờ — đồng hồ ở đây vẫn đang đếm');
+  }, 1800);
+}
 function kaStop(){ try{ if(kaAudio){ kaAudio.onended=null; kaAudio.pause(); } }catch(e){} }
 
 function loadCustomAudio(input){
@@ -1719,7 +1722,7 @@ function setTimerFromInput(inp){
 function getActiveSession(){const k=getDK();const e=getEntry(k);return(!e||!e.mins1)?1:2;}
 function timerFmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
 function updateRing(remaining,total){
-  const r=48;const circ=2*Math.PI*r;const frac=total>0?remaining/total:1;
+  const r=64;const circ=2*Math.PI*r;const frac=total>0?remaining/total:1;
   const ring=document.getElementById('timer-ring');if(!ring)return;
   ring.style.strokeDasharray=circ.toFixed(1);
   ring.style.strokeDashoffset=(circ*(1-frac)).toFixed(1);
@@ -1745,22 +1748,16 @@ function updateNotifBtn(){
 }
 async function registerSW(){try{if('serviceWorker' in navigator){swReg=await navigator.serviceWorker.register('./sw.js');}}catch(e){}}
 async function requestPersist(){try{if(navigator.storage&&navigator.storage.persist){await navigator.storage.persist();}}catch(e){}}
-function timerStartStop(){
+function timerTap(){
   if(!timerRunning){
-    if(timerRemaining<=0){timerTotal=timerMins*60;timerRemaining=timerTotal;}
-    timerRunning=true; timerOvertime=false;
-    timerStartAt=Date.now();
-    timerEndAt=Date.now()+timerRemaining*1000;
-    document.getElementById('timer-ring').style.stroke='var(--teal)';
-    document.getElementById('timer-start-btn').textContent='⏸ Đang chạy';
-    document.getElementById('timer-start-btn').className='tbtn stop';
-    document.getElementById('timer-state-lbl').textContent='Đang thiền…';
+    timerRunning=true; timerStartAt=Date.now();
+    document.getElementById('timer-state-lbl').textContent='Đang thiền — chạm để kết thúc & ghi';
+    updateRing(1,1);
     requestWakeLock();
-    kaStart(); // âm 45Hz tai không nghe được — giữ app thức khi tắt màn hình để chuông kêu (~1-2% pin/giờ)
-    timerInterval=setInterval(timerTick,1000);
+    timerInterval=setInterval(timerTick,1000); timerTick();
+    launchSystemTimer(); // mở app Đồng hồ NGAY trong cú chạm để bạn cài hẹn giờ ở đó
   }else{
-    // ⏹ DỪNG (trước hay sau giờ đều vậy): ghi đúng tổng thời gian đã ngồi theo giờ thực
-    clearInterval(timerInterval);timerRunning=false;timerOvertime=false;releaseWakeLock();kaStop();
+    clearInterval(timerInterval); timerRunning=false; releaseWakeLock();
     const elapsed=Math.round((Date.now()-timerStartAt)/60000);
     if(elapsed>=1){
       const k=getDK();let e=getEntry(k);
@@ -1772,37 +1769,16 @@ function timerStartStop(){
     } else {
       toast('Chưa đủ 1 phút — không ghi');
     }
-    document.getElementById('timer-start-btn').innerHTML='▶ Bắt đầu';
-    document.getElementById('timer-start-btn').className='tbtn start';
-    document.getElementById('timer-state-lbl').textContent='Đã ghi 🙏';
-    document.getElementById('timer-ring').style.stroke='var(--teal)';
-    timerRemaining=timerMins*60;timerTotal=timerMins*60;
-    document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
+    document.getElementById('timer-display').textContent='00:00';
+    document.getElementById('timer-state-lbl').textContent='Chạm để bắt đầu';
     updateRing(1,1);
   }
 }
 function timerTick(){
-  const now=Date.now();
-  if(!timerOvertime){
-    timerRemaining=Math.max(0, Math.round((timerEndAt-now)/1000));
-    document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
-    updateRing(timerRemaining,timerTotal);
-    if(timerRemaining<=0){
-      // HẾT GIỜ: chuông ngân, KHÔNG dừng, KHÔNG ghi — đếm tiếp phần quá giờ
-      timerOvertime=true;
-      ringBell(bellType);
-      document.getElementById('timer-state-lbl').textContent='Đủ giờ 🔔 — đang đếm thêm';
-      document.getElementById('timer-start-btn').textContent='⏹ Kết thúc & ghi';
-      document.getElementById('timer-ring').style.stroke='#b8860b';
-      updateRing(0,timerTotal);
-      sendNotif('🔔 Đủ '+timerMins+' phút!','Đồng hồ vẫn đếm tiếp — bấm ⏹ khi xả thiền để ghi tổng thời gian.');
-    }
-  }else{
-    const over=Math.max(0, Math.round((now-timerEndAt)/1000));
-    document.getElementById('timer-display').textContent='+'+timerFmt(over);
-    document.getElementById('timer-state-lbl').textContent='Tổng: '+Math.round((now-timerStartAt)/60000)+'ph';
-  }
+  const s=Math.max(0, Math.floor((Date.now()-timerStartAt)/1000));
+  document.getElementById('timer-display').textContent=timerFmt(s);
 }
+
 // Màn hình sáng lại / quay về app: đồng bộ đồng hồ theo giờ thực ngay
 document.addEventListener('visibilitychange', function(){
   if(document.visibilityState==='visible' && timerRunning){
@@ -1811,17 +1787,12 @@ document.addEventListener('visibilitychange', function(){
   }
 });
 function timerReset(){
-  clearInterval(timerInterval);timerRunning=false;releaseWakeLock();kaStop();
-  const p=getTodayPlan();const sess=getActiveSession();
-  timerMins=sess===1?p.p1:p.p2;
-  timerRemaining=timerMins*60;timerTotal=timerMins*60;
-  document.getElementById('timer-display').textContent=timerFmt(timerRemaining);
-  document.getElementById('timer-start-btn').innerHTML='▶ Bắt đầu';
-  document.getElementById('timer-start-btn').className='tbtn start';
-  document.getElementById('timer-state-lbl').textContent='Sẵn sàng';
-  syncTimerInput();
+  clearInterval(timerInterval); timerRunning=false;
+  const d=document.getElementById('timer-display'); if(d) d.textContent='00:00';
+  const s=document.getElementById('timer-state-lbl'); if(s) s.textContent='Chạm để bắt đầu';
   updateRing(1,1);
 }
+
 
 // RENDER TODAY
 function renderToday(){
