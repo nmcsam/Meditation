@@ -218,60 +218,58 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <div style="text-align:left;font-size:18px;font-weight:900;letter-spacing:2px;color:var(--teal);margin:0 0 6px 2px"><span style="font-size:1.5em;vertical-align:middle;line-height:1">⓶</span> 🧘 BHĀVANĀ</div>
 
-  <!-- ⏱ ĐỒNG HỒ THIỀN — đồng hồ là liên kết thật mở app Đồng hồ máy -->
-  <div class="card" style="padding:12px">
-    <a id="clock-a" href="#" onclick="return clockTap(event)" style="display:flex;justify-content:center;text-decoration:none;color:inherit;cursor:pointer">
-      <div style="position:relative;width:150px;height:150px">
-        <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg)">
-          <circle cx="75" cy="75" r="64" fill="none" stroke="var(--border2)" stroke-width="8"/>
-          <circle id="timer-ring" cx="75" cy="75" r="64" fill="none" stroke="var(--teal)" stroke-width="8" stroke-linecap="round"/>
-        </svg>
-        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-          <span id="timer-display" style="font-size:27px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)">00:00</span>
-          <span id="timer-state-lbl" style="font-size:9.5px;color:var(--muted);text-align:center;line-height:1.3;max-width:110px">Chạm → mở Hẹn giờ máy</span>
-        </div>
-      </div>
-    </a>
-    <a id="retry-clock-a" href="#" onclick="return retryClockTap(event)" style="display:none;box-sizing:border-box;width:100%;margin-top:8px;height:34px;line-height:31px;text-align:center;border-radius:var(--r);border:1.5px dashed #b8860b;background:transparent;color:#7a5410;font-weight:800;font-size:11.5px;text-decoration:none">🔁 Thử cách khác mở app Đồng hồ</a>
-  </div>
-  </div>
-
-  <!-- CARD HÔM NAY: Kế hoạch + Thực tế gộp một thẻ -->
+  <!-- ⏱ ĐỒNG HỒ + AM/PM cùng một thẻ: đồng hồ trái, AM trên phải, PM dưới phải -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-      <div class="sess-block" id="sess1-card">
-        <div class="sess-lbl" id="sess1-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px">🌅 AM</div>
-        <div style="display:flex;align-items:stretch;margin:3px 0 1px">
-          <div style="flex:1;min-width:0">
-            <div id="sess1-khlbl" style="font-size:9.5px;color:var(--muted)">Kế hoạch</div>
-            <div style="font-size:17px;font-weight:800;line-height:1.25"><span id="ti-goal1" style="color:inherit">—</span></div>
-          </div>
-          <div id="sess1-vdiv" style="width:0;border-left:1.5px solid rgba(0,0,0,.28);margin:1px 5px"></div>
-          <div style="flex:1;min-width:0">
-            <div id="sess1-ttlbl" style="font-size:9.5px;color:var(--muted)">Thực tế</div>
-            <div class="sess-mins" id="sess1-mins" style="font-size:17px;line-height:1.25">— ph</div>
+    <div style="display:flex;align-items:stretch;gap:10px">
+      <a id="clock-a" href="#" onclick="return clockTap(event)" style="flex:none;text-decoration:none;color:inherit;cursor:pointer">
+        <div style="position:relative;width:150px;height:150px">
+          <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg)">
+            <circle cx="75" cy="75" r="64" fill="none" stroke="var(--border2)" stroke-width="8"/>
+            <circle id="timer-ring" cx="75" cy="75" r="64" fill="none" stroke="var(--teal)" stroke-width="8" stroke-linecap="round"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <span id="timer-display" style="font-size:38px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1">0</span>
+            <span id="timer-state-lbl" style="font-size:9.5px;color:var(--muted);text-align:center;line-height:1.3;max-width:120px;margin-top:2px">phút — chạm để hẹn giờ</span>
           </div>
         </div>
-        <div style="font-size:9px" id="sess1-type"></div>
-        <div style="font-size:9px" id="sess1-status"></div>
-      </div>
-      <div class="sess-block" id="sess2-card">
-        <div class="sess-lbl" id="sess2-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px">🌙 PM</div>
-        <div style="display:flex;align-items:stretch;margin:3px 0 1px">
-          <div style="flex:1;min-width:0">
-            <div id="sess2-khlbl" style="font-size:9.5px;color:var(--muted)">Kế hoạch</div>
-            <div style="font-size:17px;font-weight:800;line-height:1.25"><span id="ti-goal2" style="color:inherit">—</span></div>
+      </a>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+        <div class="sess-block" id="sess1-card">
+          <div class="sess-lbl" id="sess1-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px">🌅 AM</div>
+          <div style="display:flex;align-items:stretch;margin:3px 0 1px">
+            <div style="flex:1;min-width:0">
+              <div id="sess1-khlbl" style="font-size:9.5px;color:var(--muted)">Kế hoạch</div>
+              <div style="font-size:17px;font-weight:800;line-height:1.25"><span id="ti-goal1" style="color:inherit">—</span></div>
+            </div>
+            <div id="sess1-vdiv" style="width:0;border-left:1.5px solid rgba(0,0,0,.28);margin:1px 5px"></div>
+            <div style="flex:1;min-width:0">
+              <div id="sess1-ttlbl" style="font-size:9.5px;color:var(--muted)">Thực tế</div>
+              <div class="sess-mins" id="sess1-mins" style="font-size:17px;line-height:1.25">— ph</div>
+            </div>
           </div>
-          <div id="sess2-vdiv" style="width:0;border-left:1.5px solid rgba(0,0,0,.28);margin:1px 5px"></div>
-          <div style="flex:1;min-width:0">
-            <div id="sess2-ttlbl" style="font-size:9.5px;color:var(--muted)">Thực tế</div>
-            <div class="sess-mins" id="sess2-mins" style="font-size:17px;line-height:1.25">— ph</div>
-          </div>
+          <div style="font-size:9px" id="sess1-type"></div>
+          <div style="font-size:9px" id="sess1-status"></div>
         </div>
-        <div style="font-size:9px" id="sess2-type"></div>
-        <div style="font-size:9px" id="sess2-status"></div>
+        <div class="sess-block" id="sess2-card">
+          <div class="sess-lbl" id="sess2-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px">🌙 PM</div>
+          <div style="display:flex;align-items:stretch;margin:3px 0 1px">
+            <div style="flex:1;min-width:0">
+              <div id="sess2-khlbl" style="font-size:9.5px;color:var(--muted)">Kế hoạch</div>
+              <div style="font-size:17px;font-weight:800;line-height:1.25"><span id="ti-goal2" style="color:inherit">—</span></div>
+            </div>
+            <div id="sess2-vdiv" style="width:0;border-left:1.5px solid rgba(0,0,0,.28);margin:1px 5px"></div>
+            <div style="flex:1;min-width:0">
+              <div id="sess2-ttlbl" style="font-size:9.5px;color:var(--muted)">Thực tế</div>
+              <div class="sess-mins" id="sess2-mins" style="font-size:17px;line-height:1.25">— ph</div>
+            </div>
+          </div>
+          <div style="font-size:9px" id="sess2-type"></div>
+          <div style="font-size:9px" id="sess2-status"></div>
+        </div>
       </div>
     </div>
+    <a id="retry-clock-a" href="#" onclick="return retryClockTap(event)" style="display:none;box-sizing:border-box;width:100%;margin-top:8px;height:34px;line-height:31px;text-align:center;border-radius:var(--r);border:1.5px dashed #b8860b;background:transparent;color:#7a5410;font-weight:800;font-size:11.5px;text-decoration:none">🔁 Thử cách khác mở app Đồng hồ</a>
+    <div style="border-top:1px dashed var(--border2);margin:8px 0 6px"></div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <span style="font-size:13px;font-weight:800;white-space:nowrap">Tổng số giờ thiền: <span id="today-total" style="color:var(--teal)">0ph</span></span>
       <span style="color:var(--border2);font-weight:700">|</span>
@@ -591,7 +589,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v156</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v162</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1650,20 +1648,42 @@ function kaStart(){
   }catch(e){}
 }
 // moKieu: 'link' = đi theo liên kết thật; 'open' = window.open
-const SAMSUNG_INTENTS = [
-  {ten:'Samsung Hẹn giờ',        moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;package=com.sec.android.app.clockpackage;end'},
-  {ten:'Mở app Samsung Clock',   moKieu:'link', u:'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.clockpackage;end'},
-  {ten:'Hẹn giờ (chung)',        moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;end'},
-  {ten:'Hẹn giờ (cửa sổ mới)',   moKieu:'open', u:'intent:#Intent;action=android.intent.action.SET_TIMER;end'},
-  {ten:'Qua Play Store → bấm MỞ',moKieu:'link', u:'market://details?id=com.sec.android.app.clockpackage'},
-  {ten:'Qua web Play → bấm MỞ',  moKieu:'link', u:'https://play.google.com/store/apps/details?id=com.sec.android.app.clockpackage'},
-  {ten:'Báo thức (chung)',       moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_ALARM;end'},
-  {ten:'DS hẹn giờ (chung)',     moKieu:'link', u:'intent:#Intent;action=android.intent.action.SHOW_TIMERS;end'},
-  {ten:'Google Clock',           moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;package=com.google.android.deskclock;end'},
-  {ten:'Báo thức (cửa sổ mới)',  moKieu:'open', u:'intent:#Intent;action=android.intent.action.SET_ALARM;end'}
-];
-const GENERIC_INTENTS = SAMSUNG_INTENTS; // một thang chung, Samsung đứng đầu
-const CLOCK_INTENTS = SAMSUNG_INTENTS;
+// QUAN TRỌNG: intent:// có package=... mà máy không khớp thì Chrome TỰ NHẢY sang Play Store.
+// Thêm S.browser_fallback_url=... để chặn hẳn việc rơi vào "cửa hàng".
+const FB = 'S.browser_fallback_url=https%3A%2F%2Fnmcsam.github.io%2FMeditation%2F;';
+// Điền sẵn số phút: LENGTH (giây) + SKIP_UI=false → app Đồng hồ mở thẳng màn Hẹn giờ đã có sẵn số
+function _xtra(mins){
+  const s = Math.max(60, Math.round((mins||30)*60));
+  return 'i.android.intent.extra.alarm.LENGTH='+s+';'
+       + 'S.android.intent.extra.alarm.MESSAGE=Thi%E1%BB%81n;'
+       + 'B.android.intent.extra.alarm.SKIP_UI=false;';
+}
+function clockIntents(mins){
+  const X=_xtra(mins);
+  return [
+   {ten:'Samsung Hẹn giờ',      moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;'+X+'package=com.sec.android.app.clockpackage;'+FB+'end'},
+   {ten:'Hẹn giờ (chung)',      moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;'+X+FB+'end'},
+   {ten:'Google Clock',         moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;'+X+'package=com.google.android.deskclock;'+FB+'end'},
+   {ten:'Hẹn giờ (cửa sổ mới)', moKieu:'open', u:'intent:#Intent;action=android.intent.action.SET_TIMER;'+X+FB+'end'},
+   {ten:'Mở app Samsung Clock', moKieu:'link', u:'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.clockpackage;'+FB+'end'},
+   {ten:'DS hẹn giờ (chung)',   moKieu:'link', u:'intent:#Intent;action=android.intent.action.SHOW_TIMERS;'+FB+'end'},
+   {ten:'Báo thức (chung)',     moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_ALARM;'+FB+'end'}
+  ];
+}
+const CLOCK_N = 7;
+// Số phút kế hoạch của thời đang tới (sáng dùng p1, chiều dùng p2)
+function planMinNow(){
+  try{ const p=getTodayPlan(); const m=(new Date().getHours()<12)? p.p1 : p.p2; return Math.max(0,Math.round(m||0)); }
+  catch(e){ return 0; }
+}
+function showIdleClock(){
+  const d=document.getElementById('timer-display'), l=document.getElementById('timer-state-lbl');
+  if(!d) return;
+  const m=planMinNow();
+  d.style.fontSize='38px';
+  d.textContent = m>0 ? String(m) : '—';
+  if(l) l.textContent='phút — chạm để hẹn giờ';
+}
 function _armClockDetect(idx){
   let left=false;
   const mark=function(){ if(document.visibilityState==='hidden') left=true; };
@@ -1672,15 +1692,16 @@ function _armClockDetect(idx){
     document.removeEventListener('visibilitychange', mark);
     const a=document.getElementById('retry-clock-a');
     if(left){
-      try{ localStorage.setItem('thien_clock_lock3', String(idx)); }catch(e){}
+      try{ localStorage.setItem('thien_clock_lock4', String(idx)); }catch(e){}
       if(a) a.style.display='none';
     } else {
-      const next=(idx+1) % CLOCK_INTENTS.length;
-      try{ localStorage.setItem('thien_clock_try3', String(next)); }catch(e){}
+      const next=(idx+1) % CLOCK_N;
+      try{ localStorage.setItem('thien_clock_try4', String(next)); }catch(e){}
       if(a && !timerRunning){
         a.style.display='block';
-        a.href=CLOCK_INTENTS[next].u;
-        a.textContent='🔁 Chưa mở được — chạm thử cách '+(next+1)+'/'+CLOCK_INTENTS.length+' ('+CLOCK_INTENTS[next].ten+')';
+        const _L=clockIntents(planMinNow());
+        a.href=_L[next].u;
+        a.textContent='🔁 Chưa mở được — chạm thử cách '+(next+1)+'/'+CLOCK_N+' ('+_L[next].ten+')';
       }
       toast('⏰ Máy chặn cách này — chạm nút 🔁 thử cách khác, hoặc tự mở app Đồng hồ');
     }
@@ -1699,8 +1720,7 @@ function clockTap(ev){
       else { if(!e.types2||!e.types2.length)e.types2=['Ānāpāna']; }
       save();renderAll();toast('✓ Đã ghi '+elapsed+'ph vào hôm nay');
     } else { toast('Chưa đủ 1 phút — không ghi'); }
-    document.getElementById('timer-display').textContent='00:00';
-    document.getElementById('timer-state-lbl').textContent='Chạm → mở Hẹn giờ máy';
+    showIdleClock();
     updateRing(1,1);
     return false;
   }
@@ -1711,15 +1731,15 @@ function clockTap(ev){
   }
   // CHẠM 1: đi theo LIÊN KẾT THẬT sang app Đồng hồ
   timerWaiting=true; timerTapAt=Date.now(); timerHiddenAt=0;
-  document.getElementById('timer-state-lbl').textContent='Cài hẹn giờ xong, chạm lần nữa để đếm';
+  document.getElementById('timer-state-lbl').textContent='Cài xong → chạm lần nữa để đếm';
   if(!/Android/i.test(navigator.userAgent)){ ev.preventDefault(); return false; }
   let idx=0;
   try{
-    const lock=localStorage.getItem('thien_clock_lock3');
-    idx = (lock!==null) ? parseInt(lock,10) : parseInt(localStorage.getItem('thien_clock_try3')||'0',10);
+    const lock=localStorage.getItem('thien_clock_lock4');
+    idx = (lock!==null) ? parseInt(lock,10) : parseInt(localStorage.getItem('thien_clock_try4')||'0',10);
   }catch(e){}
-  idx = idx % CLOCK_INTENTS.length;
-  const it = CLOCK_INTENTS[idx];
+  idx = idx % CLOCK_N;
+  const it = clockIntents(planMinNow())[idx];
   _armClockDetect(idx);
   if(it.moKieu==='open'){
     ev.preventDefault();
@@ -1731,9 +1751,9 @@ function clockTap(ev){
 }
 function retryClockTap(ev){
   let next=0;
-  try{ next=parseInt(localStorage.getItem('thien_clock_try3')||'0',10); }catch(e){}
-  next = next % CLOCK_INTENTS.length;
-  const it = CLOCK_INTENTS[next];
+  try{ next=parseInt(localStorage.getItem('thien_clock_try4')||'0',10); }catch(e){}
+  next = next % CLOCK_N;
+  const it = clockIntents(planMinNow())[next];
   _armClockDetect(next);
   if(it.moKieu==='open'){
     ev.preventDefault();
@@ -1780,7 +1800,10 @@ function timerBegin(startAt){
 }
 function timerTick(){
   const s=Math.max(0, Math.floor((Date.now()-timerStartAt)/1000));
-  document.getElementById('timer-display').textContent=timerFmt(s);
+  const d=document.getElementById('timer-display');
+  const t=timerFmt(s);
+  d.style.fontSize = (t.length>5) ? '25px' : '29px';
+  d.textContent=t;
 }
 
 
@@ -1866,6 +1889,7 @@ function renderTimerInfo(){
   document.getElementById('ti-goal2').textContent=fmtHM(p.p2);
   const _ta1=document.getElementById('ti-act1'); if(_ta1) _ta1.textContent=e&&e.mins1?fmtHM(e.mins1):'—';
   const _ta2=document.getElementById('ti-act2'); if(_ta2) _ta2.textContent=e&&e.mins2?fmtHM(e.mins2):'—';
+  if(typeof timerRunning!=='undefined' && !timerRunning && !timerWaiting) showIdleClock();
 }
 
 function renderStreak(){
