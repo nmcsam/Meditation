@@ -218,9 +218,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <div style="text-align:left;font-size:18px;font-weight:900;letter-spacing:2px;color:var(--teal);margin:0 0 6px 2px"><span style="font-size:1.5em;vertical-align:middle;line-height:1">⓶</span> 🧘 BHĀVANĀ</div>
 
-  <!-- ⏱ ĐỒNG HỒ THIỀN — đồng hồ là liên kết thật mở app Đồng hồ máy -->
+  <!-- ⏱ ĐỒNG HỒ THIỀN — chạm: bắt đầu đếm / kết thúc & ghi. Mốc giờ khắc vào bộ nhớ vĩnh viễn:
+     tắt màn hình hay app bị diệt, mở lại vẫn đúng từng giây, 0 pin -->
   <div class="card" style="padding:12px">
-    <a id="clock-a" href="#" onclick="return clockTap(event)" style="display:flex;justify-content:center;text-decoration:none;color:inherit;cursor:pointer">
+    <div onclick="timerTap()" style="display:flex;justify-content:center;cursor:pointer">
       <div style="position:relative;width:150px;height:150px">
         <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg)">
           <circle cx="75" cy="75" r="64" fill="none" stroke="var(--border2)" stroke-width="8"/>
@@ -228,12 +229,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </svg>
         <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
           <span id="timer-display" style="font-size:27px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)">00:00</span>
-          <span id="timer-state-lbl" style="font-size:9.5px;color:var(--muted);text-align:center;line-height:1.3;max-width:110px">Chạm → mở Hẹn giờ máy</span>
+          <span id="timer-state-lbl" style="font-size:9.5px;color:var(--muted);text-align:center;line-height:1.3;max-width:110px">Chạm để bắt đầu</span>
         </div>
       </div>
-    </a>
-    <a id="retry-clock-a" href="#" onclick="return retryClockTap(event)" style="display:none;box-sizing:border-box;width:100%;margin-top:8px;height:34px;line-height:31px;text-align:center;border-radius:var(--r);border:1.5px dashed #b8860b;background:transparent;color:#7a5410;font-weight:800;font-size:11.5px;text-decoration:none">🔁 Thử cách khác mở app Đồng hồ</a>
-    <div id="clock-diag" style="text-align:center;font-size:9px;color:var(--muted);margin-top:5px"></div>
+    </div>
   </div>
   </div>
 
@@ -592,7 +591,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v157</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v158</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1650,69 +1649,10 @@ function kaStart(){
     }
   }catch(e){}
 }
-// moKieu: 'link' = đi theo liên kết thật; 'open' = window.open
-const SAMSUNG_INTENTS = [
-  {ten:'Samsung Hẹn giờ',        moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;package=com.sec.android.app.clockpackage;end'},
-  {ten:'Mở app Samsung Clock',   moKieu:'link', u:'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.clockpackage;end'},
-  {ten:'Hẹn giờ (chung)',        moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;end'},
-  {ten:'Hẹn giờ (cửa sổ mới)',   moKieu:'open', u:'intent:#Intent;action=android.intent.action.SET_TIMER;end'},
-  {ten:'Qua Play Store → bấm MỞ',moKieu:'link', u:'market://details?id=com.sec.android.app.clockpackage'},
-  {ten:'Qua web Play → bấm MỞ',  moKieu:'link', u:'https://play.google.com/store/apps/details?id=com.sec.android.app.clockpackage'},
-  {ten:'Báo thức (chung)',       moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_ALARM;end'},
-  {ten:'DS hẹn giờ (chung)',     moKieu:'link', u:'intent:#Intent;action=android.intent.action.SHOW_TIMERS;end'},
-  {ten:'Google Clock',           moKieu:'link', u:'intent:#Intent;action=android.intent.action.SET_TIMER;package=com.google.android.deskclock;end'},
-  {ten:'Báo thức (cửa sổ mới)',  moKieu:'open', u:'intent:#Intent;action=android.intent.action.SET_ALARM;end'}
-];
-const GENERIC_INTENTS = SAMSUNG_INTENTS; // một thang chung, Samsung đứng đầu
-const CLOCK_INTENTS = SAMSUNG_INTENTS;
-function currentClockIdx(){
-  try{
-    const lock=localStorage.getItem('thien_clock_lock3');
-    if(lock!==null) return parseInt(lock,10) % CLOCK_INTENTS.length;
-    return parseInt(localStorage.getItem('thien_clock_try3')||'0',10) % CLOCK_INTENTS.length;
-  }catch(e){ return 0; }
-}
-function clockDiag(msg){ const d=document.getElementById('clock-diag'); if(d) d.textContent=msg; }
-function syncClockHref(){
-  const a=document.getElementById('clock-a'); if(!a) return;
-  if(timerRunning || timerWaiting) return;
-  const idx=currentClockIdx(); const it=CLOCK_INTENTS[idx];
-  a.href = (it.moKieu==='open') ? '#' : it.u; // link tĩnh nguyên chất — không đổi lúc chạm
-  let daKhoa=false; try{ daKhoa = localStorage.getItem('thien_clock_lock3')!==null; }catch(e){}
-  clockDiag((daKhoa?'Đã khóa cách ':'Cách ')+(idx+1)+'/'+CLOCK_INTENTS.length+': '+it.ten);
-}
-function _armClockDetect(idx){
-  let left=false;
-  const mark=function(){ if(document.visibilityState==='hidden') left=true; };
-  document.addEventListener('visibilitychange', mark);
-  clockDiag('Đang thử cách '+(idx+1)+'/'+CLOCK_INTENTS.length+': '+CLOCK_INTENTS[idx].ten+'…');
-  setTimeout(function(){
-    document.removeEventListener('visibilitychange', mark);
-    const a=document.getElementById('retry-clock-a');
-    if(left){
-      try{ localStorage.setItem('thien_clock_lock3', String(idx)); }catch(e){}
-      if(a) a.style.display='none';
-      clockDiag('✓ Đã khóa cách '+(idx+1)+': '+CLOCK_INTENTS[idx].ten);
-    } else {
-      const next=(idx+1) % CLOCK_INTENTS.length;
-      try{ localStorage.setItem('thien_clock_try3', String(next)); }catch(e){}
-      clockDiag('✗ Cách '+(idx+1)+' bị chặn');
-      if(next===0){
-        alert('Máy đã chặn cả '+CLOCK_INTENTS.length+' cách mở tự động.\n\nCÁCH CHẮC CHẮN TRÊN Z FOLD (làm 1 lần):\n• Mở Cài đặt → Màn hình Edge → Edge Panel → Apps\n• Tạo CẶP ỨNG DỤNG (App Pair): Thiền + Đồng hồ\n→ Từ đó 1 chạm mở cả hai app cạnh nhau: cài hẹn giờ bên phải, chạm đồng hồ đếm bên trái.\n\nHoặc đơn giản: tự mở app Đồng hồ hẹn giờ — đồng hồ trong app vẫn đếm-ghi đầy đủ.');
-      }
-      if(a && !timerRunning){
-        const it2=CLOCK_INTENTS[next];
-        a.style.display='block';
-        a.href=(it2.moKieu==='open')?'#':it2.u;
-        a.textContent='🔁 Chưa mở được — chạm thử cách '+(next+1)+'/'+CLOCK_INTENTS.length+' ('+it2.ten+')';
-      }
-    }
-  }, 2000);
-}
-function clockTap(ev){
+function timerTap(){
   if(timerRunning){
-    ev.preventDefault();
     clearInterval(timerInterval); timerRunning=false; releaseWakeLock();
+    try{ localStorage.removeItem('thien_run'); }catch(e){}
     const elapsed=Math.round((Date.now()-timerStartAt)/60000);
     if(elapsed>=1){
       const k=getDK();let e=getEntry(k);
@@ -1723,49 +1663,21 @@ function clockTap(ev){
       save();renderAll();toast('✓ Đã ghi '+elapsed+'ph vào hôm nay');
     } else { toast('Chưa đủ 1 phút — không ghi'); }
     document.getElementById('timer-display').textContent='00:00';
-    document.getElementById('timer-state-lbl').textContent='Chạm → mở Hẹn giờ máy';
+    document.getElementById('timer-state-lbl').textContent='Chạm để bắt đầu';
     updateRing(1,1);
-    syncClockHref();
-    return false;
+    return;
   }
-  if(timerWaiting){
-    ev.preventDefault();
-    timerBegin(Date.now()); // CHẠM 2: bắt đầu đếm
-    return false;
-  }
-  // CHẠM 1: đi theo LIÊN KẾT THẬT sang app Đồng hồ
-  timerWaiting=true; timerTapAt=Date.now(); timerHiddenAt=0;
-  document.getElementById('timer-state-lbl').textContent='Cài hẹn giờ xong, chạm lần nữa để đếm';
-  if(!/Android/i.test(navigator.userAgent)){ ev.preventDefault(); return false; }
-  let idx=0;
-  try{
-    const lock=localStorage.getItem('thien_clock_lock3');
-    idx = (lock!==null) ? parseInt(lock,10) : parseInt(localStorage.getItem('thien_clock_try3')||'0',10);
-  }catch(e){}
-  idx = currentClockIdx();
-  const it = CLOCK_INTENTS[idx];
-  _armClockDetect(idx);
-  if(it.moKieu==='open'){
-    ev.preventDefault();
-    try{ window.open(it.u, '_blank'); }catch(e){}
-    return false;
-  }
-  return true; // href đã cài tĩnh từ trước — cú chạm là link nguyên chất 100%
+  timerBegin(Date.now());
 }
-function retryClockTap(ev){
-  let next=0;
-  try{ next=parseInt(localStorage.getItem('thien_clock_try3')||'0',10); }catch(e){}
-  next = next % CLOCK_INTENTS.length;
-  const it = CLOCK_INTENTS[next];
-  _armClockDetect(next);
-  if(it.moKieu==='open'){
-    ev.preventDefault();
-    try{ window.open(it.u, '_blank'); }catch(e){}
-    return false;
-  }
-  return true; // href của nút đã cài sẵn khi hiện nút
+function timerBegin(startAt){
+  timerRunning=true; timerStartAt=startAt;
+  try{ localStorage.setItem('thien_run', JSON.stringify({s:startAt})); }catch(e){}
+  document.getElementById('timer-state-lbl').textContent='Đang thiền — chạm để kết thúc & ghi';
+  updateRing(1,1);
+  requestWakeLock();
+  clearInterval(timerInterval);
+  timerInterval=setInterval(timerTick,1000); timerTick();
 }
-// ===== Trợ giúp: vành tiến độ + giữ màn hình + thông báo =====
 function requestPersist(){
   try{ if(navigator.storage && navigator.storage.persist){ navigator.storage.persist(); } }catch(e){}
 }
@@ -1791,15 +1703,7 @@ function sendNotif(t,body){
 function enableNotif(){
   try{ if('Notification' in window) Notification.requestPermission(); }catch(e){}
 }
-function timerBegin(startAt){
-  timerWaiting=false; timerRunning=true; timerStartAt=startAt;
-  const _rb=document.getElementById('retry-clock-a'); if(_rb) _rb.style.display='none';
-  document.getElementById('timer-state-lbl').textContent='Đang thiền — chạm để kết thúc & ghi';
-  updateRing(1,1);
-  requestWakeLock();
-  clearInterval(timerInterval);
-  timerInterval=setInterval(timerTick,1000); timerTick();
-}
+
 function timerTick(){
   const s=Math.max(0, Math.floor((Date.now()-timerStartAt)/1000));
   document.getElementById('timer-display').textContent=timerFmt(s);
@@ -1817,12 +1721,19 @@ document.addEventListener('visibilitychange', function(){
   }
 });
 function timerReset(){
+  let run=null;
+  try{ run=JSON.parse(localStorage.getItem('thien_run')||'null'); }catch(e){}
+  if(run && run.s && Date.now()-run.s < 24*3600*1000){
+    timerBegin(run.s); // nối lại thời đang ngồi — đúng từng giây theo giờ thực
+    return;
+  }
+  try{ localStorage.removeItem('thien_run'); }catch(e){}
   clearInterval(timerInterval); timerRunning=false; timerWaiting=false;
   const d=document.getElementById('timer-display'); if(d) d.textContent='00:00';
-  const s=document.getElementById('timer-state-lbl'); if(s) s.textContent='Chạm → mở Hẹn giờ máy';
+  const s=document.getElementById('timer-state-lbl'); if(s) s.textContent='Chạm để bắt đầu';
   updateRing(1,1);
-  if(typeof syncClockHref==='function') syncClockHref();
 }
+
 
 
 // RENDER TODAY
