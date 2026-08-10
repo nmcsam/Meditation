@@ -598,7 +598,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v145</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v146</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1756,6 +1756,7 @@ function timerStartStop(){
     document.getElementById('timer-start-btn').className='tbtn stop';
     document.getElementById('timer-state-lbl').textContent='Đang thiền…';
     requestWakeLock();
+    kaStart(); // âm 45Hz tai không nghe được — giữ app thức khi tắt màn hình để chuông kêu (~1-2% pin/giờ)
     timerInterval=setInterval(timerTick,1000);
   }else{
     // ⏹ DỪNG (trước hay sau giờ đều vậy): ghi đúng tổng thời gian đã ngồi theo giờ thực
