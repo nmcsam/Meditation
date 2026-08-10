@@ -220,7 +220,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <!-- ⏱ ĐỒNG HỒ THIỀN 2 NỬA (trên: thực tế · dưới: cài đặt) + AM/PM bên phải -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div style="display:flex;align-items:center;justify-content:center;gap:8px">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px">
       <div onclick="timerTap()" style="flex:none;cursor:pointer">
         <div style="position:relative;width:164px;height:164px">
           <svg width="164" height="164" viewBox="0 0 164 164" style="transform:rotate(-90deg)">
@@ -240,8 +240,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           </div>
         </div>
       </div>
-      <div style="flex:none;width:140px;display:flex;flex-direction:column;gap:6px">
-        <div class="sess-block" id="sess1-card">
+      
+        <div style="flex:none;display:flex;gap:8px"><div class="sess-block" id="sess1-card" style="flex:none;width:140px;box-sizing:border-box">
         <div class="sess-lbl" id="sess1-lbl" style="font-weight:800;font-size:14.5px;margin-bottom:1px"><span style="display:inline-block;width:22px;font-size:15px;text-align:center;vertical-align:-1px">🌅</span>AM</div>
         <div style="display:flex;align-items:stretch;margin:3px 0 1px">
           <div style="flex:1;min-width:0">
@@ -257,7 +257,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:9px" id="sess1-type"></div>
         <div style="font-size:9px" id="sess1-status"></div>
       </div>
-        <div class="sess-block" id="sess2-card">
+        <div class="sess-block" id="sess2-card" style="flex:none;width:140px;box-sizing:border-box">
         <div class="sess-lbl" id="sess2-lbl" style="font-weight:800;font-size:14.5px;margin-bottom:1px"><span style="display:inline-block;width:22px;font-size:15px;text-align:center;vertical-align:-1px">🌙</span>PM</div>
         <div style="display:flex;align-items:stretch;margin:3px 0 1px">
           <div style="flex:1;min-width:0">
@@ -272,8 +272,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div style="font-size:9px" id="sess2-type"></div>
         <div style="font-size:9px" id="sess2-status"></div>
-      </div>
-    </div>
+      </div></div>
   </div>
 
   <!-- Cửa sổ động cài thời gian -->
