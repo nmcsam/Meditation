@@ -218,28 +218,30 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <div style="text-align:left;font-size:18px;font-weight:900;letter-spacing:2px;color:var(--teal);margin:0 0 6px 2px"><span style="font-size:1.5em;vertical-align:middle;line-height:1">⓶</span> 🧘 BHĀVANĀ</div>
 
-  <!-- ⏱ ĐỒNG HỒ THIỀN — chạm: bắt đầu đếm / kết thúc & ghi. Mốc giờ khắc vào bộ nhớ vĩnh viễn:
-     tắt màn hình hay app bị diệt, mở lại vẫn đúng từng giây, 0 pin -->
-  <div class="card" style="padding:12px">
-    <div onclick="timerTap()" style="display:flex;justify-content:center;cursor:pointer">
-      <div style="position:relative;width:150px;height:150px">
-        <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg)">
-          <circle cx="75" cy="75" r="64" fill="none" stroke="var(--border2)" stroke-width="8"/>
-          <circle id="timer-ring" cx="75" cy="75" r="64" fill="none" stroke="var(--teal)" stroke-width="8" stroke-linecap="round"/>
-        </svg>
-        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-          <span id="timer-display" style="font-size:27px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)">00:00</span>
-          <span id="timer-state-lbl" style="font-size:9.5px;color:var(--muted);text-align:center;line-height:1.3;max-width:110px">Chạm để bắt đầu</span>
+  <!-- ⏱ ĐỒNG HỒ THIỀN 2 NỬA (trên: thực tế · dưới: cài đặt) + AM/PM bên phải -->
+  <div class="card" style="padding:10px 12px;margin-bottom:6px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div onclick="timerTap()" style="flex:none;cursor:pointer">
+        <div style="position:relative;width:150px;height:150px">
+          <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg)">
+            <circle cx="75" cy="75" r="64" fill="none" stroke="var(--border2)" stroke-width="8"/>
+            <circle id="timer-ring" cx="75" cy="75" r="64" fill="none" stroke="var(--teal)" stroke-width="8" stroke-linecap="round"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div style="text-align:center">
+              <div style="font-size:7.5px;color:var(--muted);letter-spacing:.5px;font-weight:800">THỰC TẾ</div>
+              <span id="timer-display" style="font-size:23px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.1">00:00</span>
+            </div>
+            <div style="width:66px;border-top:1.5px solid var(--border2);margin:4px 0"></div>
+            <div style="text-align:center">
+              <span id="timer-set-display" style="font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muted);line-height:1.1">--:--</span>
+              <div style="font-size:7.5px;color:var(--muted);letter-spacing:.5px;font-weight:800">CÀI ĐẶT</div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  </div>
-
-  <!-- CARD HÔM NAY: Kế hoạch + Thực tế gộp một thẻ -->
-  <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-      <div class="sess-block" id="sess1-card">
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+        <div class="sess-block" id="sess1-card">
         <div class="sess-lbl" id="sess1-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px"><span style="display:inline-block;width:22px;font-size:15px;text-align:center;vertical-align:-1px">🌅</span>AM</div>
         <div style="display:flex;align-items:stretch;margin:3px 0 1px">
           <div style="flex:1;min-width:0">
@@ -255,7 +257,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:9px" id="sess1-type"></div>
         <div style="font-size:9px" id="sess1-status"></div>
       </div>
-      <div class="sess-block" id="sess2-card">
+        <div class="sess-block" id="sess2-card">
         <div class="sess-lbl" id="sess2-lbl" style="font-weight:800;font-size:16px;margin-bottom:2px"><span style="display:inline-block;width:22px;font-size:15px;text-align:center;vertical-align:-1px">🌙</span>PM</div>
         <div style="display:flex;align-items:stretch;margin:3px 0 1px">
           <div style="flex:1;min-width:0">
@@ -271,6 +273,22 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         <div style="font-size:9px" id="sess2-type"></div>
         <div style="font-size:9px" id="sess2-status"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- Cửa sổ động cài thời gian -->
+  <div id="timer-modal" onclick="timerModalGo(event)" style="position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:900;display:none;align-items:center;justify-content:center">
+    <div class="card" style="width:272px;padding:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)">
+      <div style="font-size:12.5px;font-weight:900;letter-spacing:.5px;margin-bottom:12px">⏱ THỜI GIAN THIỀN (PHÚT)</div>
+      <input id="timer-modal-min" class="tin" inputmode="numeric" maxlength="4" onclick="event.stopPropagation()" style="width:116px;height:58px;font-size:28px;font-weight:900;text-align:center;border-width:2px;box-sizing:border-box">
+      <div style="margin-top:14px;font-size:13px;font-weight:900;color:var(--teal)">▶ Chạm vào đây để BẮT ĐẦU</div>
+    </div>
+  </div>
+  </div>
+
+  <!-- CARD HÔM NAY: Kế hoạch + Thực tế gộp một thẻ -->
+  <div class="card" style="padding:10px 12px;margin-bottom:6px">
+    
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <span style="font-size:13px;font-weight:800;white-space:nowrap">Tổng số giờ thiền: <span id="today-total" style="color:var(--teal)">0ph</span></span>
@@ -591,7 +609,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v158</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v159</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -667,7 +685,7 @@ const DAYS7=['CN','T2','T3','T4','T5','T6','T7'];
 const KEY='thien_v4';
 let ST={goal1:30,goal2:30,data:[]};
 let logSessNum=1;
-let timerMins=30,timerInterval=null,timerRemaining=0,timerTotal=0,timerRunning=false,timerEndAt=0,timerStartAt=0,timerOvertime=false,timerWaiting=false,timerHiddenAt=0,timerTapAt=0;
+let timerMins=30,timerInterval=null,timerRemaining=0,timerTotal=0,timerRunning=false,timerEndAt=0,timerStartAt=0,timerOvertime=false,timerWaiting=false,timerHiddenAt=0,timerTapAt=0,timerSetSecs=0,timerRung=false;
 let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
 let charts={},audioCtx=null,bellType='chua';
 let wakeLock=null,swReg=null;
@@ -1649,9 +1667,28 @@ function kaStart(){
     }
   }catch(e){}
 }
+// ===== CỤM HÀM PHỤ (hợp nhất, chống thất lạc) =====
+function timerFmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function updateRing(rem,total){
+  const ring=document.getElementById('timer-ring'); if(!ring) return;
+  const r=64; const circ=2*Math.PI*r;
+  const frac=(total>0)? Math.max(0,Math.min(1,rem/total)) : 1;
+  ring.style.strokeDasharray=String(Math.round(circ*10)/10);
+  ring.style.strokeDashoffset=String(Math.round(circ*(1-frac)*10)/10);
+}
+let _wl=null;
+async function requestWakeLock(){ try{ if('wakeLock' in navigator){ _wl=await navigator.wakeLock.request('screen'); } }catch(e){} }
+function releaseWakeLock(){ try{ if(_wl){ _wl.release(); _wl=null; } }catch(e){} }
+function sendNotif(t,body){ try{ if('Notification' in window && Notification.permission==='granted'){ new Notification(t,{body:body}); } }catch(e){} }
+function enableNotif(){ try{ if('Notification' in window) Notification.requestPermission(); }catch(e){} }
+function updateNotifBtn(){}
+function registerSW(){ try{ if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); } }catch(e){} }
+function requestPersist(){ try{ if(navigator.storage && navigator.storage.persist){ navigator.storage.persist(); } }catch(e){} }
+function kaStop(){ try{ if(kaAudio){ kaAudio.onended=null; kaAudio.pause(); } }catch(e){} }
 function timerTap(){
   if(timerRunning){
-    clearInterval(timerInterval); timerRunning=false; releaseWakeLock();
+    // KẾT THÚC: ghi thời gian THỰC TẾ đã ngồi
+    clearInterval(timerInterval); timerRunning=false; releaseWakeLock(); kaStop();
     try{ localStorage.removeItem('thien_run'); }catch(e){}
     const elapsed=Math.round((Date.now()-timerStartAt)/60000);
     if(elapsed>=1){
@@ -1663,51 +1700,52 @@ function timerTap(){
       save();renderAll();toast('✓ Đã ghi '+elapsed+'ph vào hôm nay');
     } else { toast('Chưa đủ 1 phút — không ghi'); }
     document.getElementById('timer-display').textContent='00:00';
-    document.getElementById('timer-state-lbl').textContent='Chạm để bắt đầu';
+    document.getElementById('timer-ring').style.stroke='var(--teal)';
     updateRing(1,1);
     return;
   }
-  timerBegin(Date.now());
+  // NGHỈ: mở cửa sổ động cài thời gian
+  const inp=document.getElementById('timer-modal-min');
+  let last=30; try{ last=parseInt(localStorage.getItem('thien_last_set')||'30',10)||30; }catch(e){}
+  inp.value=last;
+  document.getElementById('timer-modal').style.display='flex';
+  setTimeout(function(){ try{inp.focus(); inp.select();}catch(e){} }, 60);
 }
-function timerBegin(startAt){
+function timerModalGo(ev){
+  if(ev && ev.target && ev.target.id==='timer-modal-min') return; // gõ số thì không đóng
+  const inp=document.getElementById('timer-modal-min');
+  const m=parseInt(String(inp.value).replace(/\D/g,''),10);
+  if(!m || m<1){ toast('Gõ số phút thiền trước đã'); return; }
+  try{ localStorage.setItem('thien_last_set', String(Math.min(1200,m))); }catch(e){}
+  document.getElementById('timer-modal').style.display='none';
+  timerBegin(Date.now(), Math.min(1200,m), 0);
+}
+function timerBegin(startAt, setMins, daRung){
   timerRunning=true; timerStartAt=startAt;
-  try{ localStorage.setItem('thien_run', JSON.stringify({s:startAt})); }catch(e){}
-  document.getElementById('timer-state-lbl').textContent='Đang thiền — chạm để kết thúc & ghi';
-  updateRing(1,1);
+  timerSetSecs=(setMins||0)*60; timerRung=!!daRung;
+  try{ localStorage.setItem('thien_run', JSON.stringify({s:startAt, m:setMins||0, r:timerRung?1:0})); }catch(e){}
+  document.getElementById('timer-set-display').textContent = timerSetSecs>0 ? timerFmt(timerSetSecs) : '--:--';
+  document.getElementById('timer-ring').style.stroke = timerRung ? 'var(--rose)' : 'var(--teal)';
   requestWakeLock();
+  kaStart(); // chạy ngầm khi tắt màn hình (âm 45Hz tai không nghe — tốn ít pin, đã chấp nhận)
   clearInterval(timerInterval);
   timerInterval=setInterval(timerTick,1000); timerTick();
 }
-function requestPersist(){
-  try{ if(navigator.storage && navigator.storage.persist){ navigator.storage.persist(); } }catch(e){}
-}
-function registerSW(){
-  try{ if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); } }catch(e){}
-}
-function timerFmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
-function updateNotifBtn(){}
-function updateRing(rem,total){
-  const ring=document.getElementById('timer-ring'); if(!ring) return;
-  const r=64; const circ=2*Math.PI*r;
-  const frac=(total>0)? Math.max(0,Math.min(1,rem/total)) : 1;
-  ring.style.strokeDasharray=String(Math.round(circ*10)/10);
-  ring.style.strokeDashoffset=String(Math.round(circ*(1-frac)*10)/10);
-}
-async function requestWakeLock(){
-  try{ if('wakeLock' in navigator){ wakeLock=await navigator.wakeLock.request('screen'); } }catch(e){}
-}
-function releaseWakeLock(){ try{ if(wakeLock){ wakeLock.release(); wakeLock=null; } }catch(e){} }
-function sendNotif(t,body){
-  try{ if('Notification' in window && Notification.permission==='granted'){ new Notification(t,{body:body}); } }catch(e){}
-}
-function enableNotif(){
-  try{ if('Notification' in window) Notification.requestPermission(); }catch(e){}
-}
-
 function timerTick(){
   const s=Math.max(0, Math.floor((Date.now()-timerStartAt)/1000));
   document.getElementById('timer-display').textContent=timerFmt(s);
+  if(timerSetSecs>0){
+    updateRing(Math.max(0, timerSetSecs-s), timerSetSecs);
+    if(!timerRung && s>=timerSetSecs){
+      timerRung=true;
+      try{ const r=JSON.parse(localStorage.getItem('thien_run')||'{}'); r.r=1; localStorage.setItem('thien_run', JSON.stringify(r)); }catch(e){}
+      ringBell(bellType); // 3 tiếng chuông chùa qua kênh âm đang sống — ngân cả khi màn hình tắt
+      document.getElementById('timer-ring').style.stroke='var(--rose)';
+      sendNotif('🔔 Đủ giờ thiền!','Đồng hồ vẫn đếm tiếp — chạm đồng hồ khi xả thiền để ghi.');
+    }
+  } else { updateRing(1,1); }
 }
+
 
 
 // Màn hình sáng lại / quay về app: đồng bộ đồng hồ theo giờ thực ngay
@@ -1724,15 +1762,17 @@ function timerReset(){
   let run=null;
   try{ run=JSON.parse(localStorage.getItem('thien_run')||'null'); }catch(e){}
   if(run && run.s && Date.now()-run.s < 24*3600*1000){
-    timerBegin(run.s); // nối lại thời đang ngồi — đúng từng giây theo giờ thực
+    timerBegin(run.s, run.m||0, run.r||0); // nối lại đúng giây, giữ trạng thái đã rung chuông
     return;
   }
   try{ localStorage.removeItem('thien_run'); }catch(e){}
-  clearInterval(timerInterval); timerRunning=false; timerWaiting=false;
+  clearInterval(timerInterval); timerRunning=false; timerWaiting=false; timerSetSecs=0; timerRung=false;
   const d=document.getElementById('timer-display'); if(d) d.textContent='00:00';
-  const s=document.getElementById('timer-state-lbl'); if(s) s.textContent='Chạm để bắt đầu';
+  let last=null; try{ last=localStorage.getItem('thien_last_set'); }catch(e){}
+  const sd=document.getElementById('timer-set-display'); if(sd) sd.textContent = last ? timerFmt(parseInt(last,10)*60) : '--:--';
   updateRing(1,1);
 }
+
 
 
 
