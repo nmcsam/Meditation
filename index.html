@@ -230,11 +230,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
             <div style="text-align:center">
               <div style="font-size:6.5px;color:var(--muted);letter-spacing:.4px;font-weight:800">THỰC TẾ</div>
-              <span id="timer-display" style="font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.1">00:00</span>
+              <span id="timer-display" style="font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.1">00:00</span>
             </div>
             <div style="width:48px;border-top:1px solid var(--border2);margin:2px 0"></div>
             <div style="text-align:center">
-              <span id="timer-set-display" style="font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muted);line-height:1.1">--:--</span>
+              <span id="timer-set-display" style="font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muted);line-height:1.1">--:--</span>
               <div style="font-size:6.5px;color:var(--muted);letter-spacing:.4px;font-weight:800">CÀI ĐẶT</div>
             </div>
           </div>
@@ -613,7 +613,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v162</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v163</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1673,6 +1673,10 @@ function kaStart(){
 }
 // ===== CỤM HÀM PHỤ (hợp nhất, chống thất lạc) =====
 function timerFmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function timerFmtHMS(s){
+  const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), g=s%60;
+  return h+':'+String(m).padStart(2,'0')+':'+String(g).padStart(2,'0');
+}
 function updateRing(rem,total){
   const ring=document.getElementById('timer-ring'); if(!ring) return;
   const r=44; const circ=2*Math.PI*r;
@@ -1718,7 +1722,7 @@ function timerTap(){
       else { if(!e.types2||!e.types2.length)e.types2=['Ānāpāna']; }
       save();renderAll();toast('✓ Đã ghi '+elapsed+'ph vào hôm nay');
     } else { toast('Chưa đủ 1 phút — không ghi'); }
-    document.getElementById('timer-display').textContent='00:00';
+    document.getElementById('timer-display').textContent='0:00:00';
     document.getElementById('timer-ring').style.stroke='var(--teal)';
     updateRing(1,1);
     return;
@@ -1743,7 +1747,7 @@ function timerBegin(startAt, setMins, daRung){
   timerRunning=true; timerStartAt=startAt;
   timerSetSecs=(setMins||0)*60; timerRung=!!daRung;
   try{ localStorage.setItem('thien_run', JSON.stringify({s:startAt, m:setMins||0, r:timerRung?1:0})); }catch(e){}
-  document.getElementById('timer-set-display').textContent = timerSetSecs>0 ? timerFmt(timerSetSecs) : '--:--';
+  document.getElementById('timer-set-display').textContent = timerSetSecs>0 ? timerFmtHMS(timerSetSecs) : '--:--:--';
   document.getElementById('timer-ring').style.stroke = timerRung ? 'var(--rose)' : 'var(--teal)';
   requestWakeLock();
   kaStart(); // chạy ngầm khi tắt màn hình (âm 45Hz tai không nghe — tốn ít pin, đã chấp nhận)
@@ -1752,7 +1756,7 @@ function timerBegin(startAt, setMins, daRung){
 }
 function timerTick(){
   const s=Math.max(0, Math.floor((Date.now()-timerStartAt)/1000));
-  document.getElementById('timer-display').textContent=timerFmt(s);
+  document.getElementById('timer-display').textContent=timerFmtHMS(s);
   if(timerSetSecs>0){
     updateRing(Math.max(0, timerSetSecs-s), timerSetSecs);
     if(!timerRung && s>=timerSetSecs){
@@ -1786,9 +1790,9 @@ function timerReset(){
   }
   try{ localStorage.removeItem('thien_run'); }catch(e){}
   clearInterval(timerInterval); timerRunning=false; timerWaiting=false; timerSetSecs=0; timerRung=false;
-  const d=document.getElementById('timer-display'); if(d) d.textContent='00:00';
+  const d=document.getElementById('timer-display'); if(d) d.textContent='0:00:00';
   let last=null; try{ last=localStorage.getItem('thien_last_set'); }catch(e){}
-  const sd=document.getElementById('timer-set-display'); if(sd) sd.textContent = last ? timerFmt(parseInt(last,10)*60) : '--:--';
+  const sd=document.getElementById('timer-set-display'); if(sd) sd.textContent = last ? timerFmtHMS(parseInt(last,10)*60) : '--:--:--';
   updateRing(1,1);
 }
 
