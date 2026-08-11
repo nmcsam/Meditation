@@ -290,6 +290,18 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div></div>
   </div>
 
+  <!-- Bảng cảm nhận sau thời thiền -->
+  <div id="note-modal" style="position:fixed;inset:0;background:rgba(10,20,15,.55);z-index:905;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box">
+    <div class="card" style="width:100%;max-width:520px;padding:16px;box-sizing:border-box;box-shadow:0 10px 30px rgba(0,0,0,.35)">
+      <div id="note-modal-title" style="font-size:13.5px;font-weight:900;margin-bottom:10px">🧘 Cảm nhận thời thiền</div>
+      <textarea id="note-modal-text" placeholder="Viết cảm nhận về thời thiền: đề mục, tầm–tứ, hỷ–lạc, trạng thái tâm, chướng ngại…" style="width:100%;box-sizing:border-box;min-height:46vh;padding:10px;border:1.5px solid var(--border2);border-radius:var(--r);font-family:inherit;font-size:14px;line-height:1.55;resize:vertical;background:var(--surface);color:var(--ink)"></textarea>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button onclick="noteModalSave()" style="flex:1;height:44px;border-radius:var(--r);border:none;background:var(--teal);color:#fff;font-weight:900;font-size:14px;font-family:inherit;cursor:pointer">✓ Lưu cảm nhận</button>
+        <button onclick="noteModalClose()" style="flex:1;height:44px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;color:var(--muted);font-weight:800;font-size:13px;font-family:inherit;cursor:pointer">Bỏ qua</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Cửa sổ động cài thời gian -->
   <div id="timer-modal" onclick="timerModalGo(event)" style="position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:900;display:none;align-items:center;justify-content:center">
     <div class="card" style="width:272px;padding:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)">
@@ -592,6 +604,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <input type="text" id="dd-event" placeholder="Ví dụ: vào Sơ thiền, Nhị thiền, Minh sát..." style="width:100%;padding:8px 10px;border:1.5px solid #0a1f4b;border-radius:9px;background:#f4f8ff;color:#0d2a63;font-size:13px;font-weight:600;font-family:inherit">
     </div>
     <div id="dd-body" style="font-size:13px;color:var(--ink);line-height:2;margin-bottom:12px"></div>
+    <button onclick="copyDayReport()" style="width:100%;margin:-4px 0 12px;height:38px;border-radius:var(--r);border:1.5px solid var(--teal);background:transparent;color:var(--teal);font-weight:900;font-size:12.5px;font-family:inherit;cursor:pointer">📋 Copy báo cáo thiền sư (toàn bộ cảm nhận trong ngày)</button>
 
     <!-- Tổng trên cùng -->
     <div style="margin-bottom:12px;background:var(--surface2);border-radius:var(--r);padding:10px 12px">
@@ -613,7 +626,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v163</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v164</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1598,7 +1611,7 @@ function ringBell(type){
   try{
     if(kaAudio){
       kaAudio.onended=function(){ if(timerRunning){ kaStart(); } };
-      kaAudio.loop=false; kaAudio.src=url; kaAudio.volume=1;
+      kaAudio.loop=false; _kaMode='bell'; kaAudio.src=url; kaAudio.volume=1;
       kaAudio.play().catch(function(){ const a=new Audio(url); a.volume=1; a.play().catch(function(){}); });
     } else {
       const a=new Audio(url); a.volume=1; a.play().catch(function(){});
@@ -1660,14 +1673,23 @@ function bellWavURL(type){
   _bellURLs[type]=URL.createObjectURL(new Blob([dv.buffer],{type:'audio/wav'}));
   return _bellURLs[type];
 }
+let _kaMode='off'; // 'ka' = âm giữ thức, 'bell' = đang ngân chuông
 function kaStart(){
   try{
     if(!kaAudio){ kaAudio=new Audio(); }
     kaAudio.onended=null;
     kaAudio.src=kaWavURL(); kaAudio.loop=true; kaAudio.volume=1;
+    _kaMode='ka';
     kaAudio.play().catch(function(){});
     if('mediaSession' in navigator){
-      try{ navigator.mediaSession.metadata=new MediaMetadata({title:'Đang thiền…', artist:'Thiền'}); }catch(e){}
+      try{
+        navigator.mediaSession.metadata=new MediaMetadata({title:'Đang thiền…', artist:'Thiền Tracker'});
+        navigator.mediaSession.playbackState='playing';
+        // đăng ký đủ bộ điều khiển để hệ thống coi là app nhạc thực thụ, không đóng băng
+        navigator.mediaSession.setActionHandler('play',  function(){ try{kaAudio.play();}catch(e){} });
+        navigator.mediaSession.setActionHandler('pause', function(){ try{kaAudio.play();}catch(e){} });
+        navigator.mediaSession.setActionHandler('stop',  function(){ try{kaAudio.play();}catch(e){} });
+      }catch(e){}
     }
   }catch(e){}
 }
@@ -1692,7 +1714,7 @@ function enableNotif(){ try{ if('Notification' in window) Notification.requestPe
 function updateNotifBtn(){}
 function registerSW(){ try{ if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); } }catch(e){} }
 function requestPersist(){ try{ if(navigator.storage && navigator.storage.persist){ navigator.storage.persist(); } }catch(e){} }
-function kaStop(){ try{ if(kaAudio){ kaAudio.onended=null; kaAudio.pause(); } }catch(e){} }
+function kaStop(){ _kaMode='off'; try{ if(kaAudio){ kaAudio.onended=null; kaAudio.pause(); } }catch(e){} }
 function fitTimerRow(){
   const row=document.getElementById('timer-row'); if(!row) return;
   const host=row.parentElement; if(!host) return;
@@ -1721,6 +1743,8 @@ function timerTap(){
       if(thAMPM(thNowHM(elapsed))==='AM'){ if(!e.types1||!e.types1.length)e.types1=['Ānāpāna']; }
       else { if(!e.types2||!e.types2.length)e.types2=['Ānāpāna']; }
       save();renderAll();toast('✓ Đã ghi '+elapsed+'ph vào hôm nay');
+      _noteKey=k; _noteIdx=e.th.length-1;
+      openNoteModal(elapsed);
     } else { toast('Chưa đủ 1 phút — không ghi'); }
     document.getElementById('timer-display').textContent='0:00:00';
     document.getElementById('timer-ring').style.stroke='var(--teal)';
@@ -1743,6 +1767,58 @@ function timerModalGo(ev){
   document.getElementById('timer-modal').style.display='none';
   timerBegin(Date.now(), Math.min(1200,m), 0);
 }
+function _roman(n){ const R=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII']; return R[n-1]||String(n); }
+function _tongH(m){ m=+m||0; const h=Math.floor(m/60), mm=m%60; if(h&&mm) return h+'h'+String(mm).padStart(2,'0'); if(h) return h+'h'; return mm+'ph'; }
+function copyDayReport(){
+  const e=getEntry(currentDayKey);
+  if(!e || !e.th || !e.th.length){ toast('Ngày này chưa có thời thiền'); return; }
+  const ds=e.th.slice().sort(function(a,b){
+    const ga=(thAMPMof(a)==='AM')?0:1, gb=(thAMPMof(b)==='AM')?0:1;
+    if(ga!==gb) return ga-gb;
+    return (a.s||'99:99').localeCompare(b.s||'99:99');
+  });
+  let out='';
+  ds.forEach(function(t,i){
+    out+=(i?'\n\n':'')+'• Thời thiền '+_roman(i+1)+': Từ '+(t.s||'--:--')+' Đến '+(t.e||'--:--')+' Tổng '+_tongH(t.m||0)+'\n'
+        +((t.n&&t.n.trim())? t.n.trim() : '(chưa ghi cảm nhận)');
+  });
+  function done(){ toast('✓ Đã copy báo cáo — dán vào tin nhắn gửi thiền sư'); }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); });
+  } else { _copyFallback(out); done(); }
+}
+function _copyFallback(txt){
+  try{
+    const ta=document.createElement('textarea'); ta.value=txt;
+    ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  }catch(e){}
+}
+let _noteKey=null,_noteIdx=-1;
+function openNoteModal(mins){
+  const t=document.getElementById('note-modal-title');
+  if(t) t.textContent='🧘 Cảm nhận thời thiền ('+fmtHM(mins)+')';
+  const ta=document.getElementById('note-modal-text'); if(ta) ta.value='';
+  document.getElementById('note-modal').style.display='flex';
+  setTimeout(function(){ try{ta.focus();}catch(e){} }, 80);
+}
+function noteModalSave(){
+  try{
+    const ta=document.getElementById('note-modal-text');
+    const txt=(ta.value||'').trim();
+    if(_noteKey!==null && _noteIdx>=0){
+      const e=getEntry(_noteKey);
+      if(e && e.th && e.th[_noteIdx]){ e.th[_noteIdx].n=txt; save(); renderAll(); }
+    }
+    if(txt) toast('✓ Đã lưu cảm nhận');
+  }catch(e){}
+  noteModalClose();
+}
+function noteModalClose(){
+  document.getElementById('note-modal').style.display='none';
+  _noteKey=null; _noteIdx=-1;
+}
 function timerBegin(startAt, setMins, daRung){
   timerRunning=true; timerStartAt=startAt;
   timerSetSecs=(setMins||0)*60; timerRung=!!daRung;
@@ -1755,6 +1831,8 @@ function timerBegin(startAt, setMins, daRung){
   timerInterval=setInterval(timerTick,1000); timerTick();
 }
 function timerTick(){
+  // chó canh: nếu hệ thống tạm dừng âm giữ thức khi đang chạy -> phát lại ngay
+  if(timerRunning && _kaMode==='ka' && kaAudio && kaAudio.paused){ try{ kaAudio.play().catch(function(){}); }catch(e){} }
   const s=Math.max(0, Math.floor((Date.now()-timerStartAt)/1000));
   document.getElementById('timer-display').textContent=timerFmtHMS(s);
   if(timerSetSecs>0){
