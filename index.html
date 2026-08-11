@@ -315,8 +315,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <!-- Biểu đồ tháng chiếm phần lớn -->
       <div style="flex:1;min-width:0">
         <div style="display:flex;gap:10px;margin-bottom:3px">
-          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#076d5e"></div>🌅 AM</div>
-          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#7a1c38"></div>🌙 PM</div>
+          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#076d5e"></div>AM</div>
+          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#7a1c38"></div>PM</div>
         </div>
         <div id="month-chart" style="position:relative;width:100%;height:144px"></div>
       </div>
@@ -622,7 +622,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v184</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v185</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2101,8 +2101,8 @@ function renderMonthPVA(){
   html+='<div style="position:absolute;left:0;right:0;top:0;height:'+H+'px">';
 
   // Đường KH AM (nét liền vàng đất)
-  html+='<div style="position:absolute;left:0;right:0;bottom:'+g1b+'px;height:2px;background:#b8860b;z-index:5">';
-  html+='<span style="position:absolute;right:2px;bottom:3px;font-size:7px;color:#b8860b;background:var(--surface);padding:0 2px;white-space:nowrap">AM:'+ST.goal1+'ph</span>';
+  html+='<div style="position:absolute;left:0;right:0;bottom:'+g1b+'px;height:0;border-top:1.5px dashed #000;z-index:5">';
+  html+='<span style="position:absolute;left:2px;bottom:3px;font-size:7px;color:#000;background:var(--surface);padding:0 2px;white-space:nowrap">AM:'+ST.goal1+'ph</span>';
   html+='</div>';
 
   // Đường KH PM (nét đứt đỏ mận)
@@ -2127,10 +2127,8 @@ function renderMonthPVA(){
     // Ngày đã qua không thiền: hiện cột nhỏ màu đỏ nhạt để thấy đủ 31 ngày
     const emptyH=0; // ngày không thiền không hiện cột
 
-    const p1=ST.goal1>0?m1/ST.goal1:0;
-    const p2=ST.goal2>0?m2/ST.goal2:0;
-    const c1=m1>0?(p1>=1?'#076d5e':p1>=0.7?'#3aab8a':'#f0b429'):'rgba(192,57,43,.22)';
-    const c2=m2>0?(p2>=1?'#7a1c38':p2>=0.7?'#b03060':'#f0b429'):'rgba(192,57,43,.22)';
+    const c1='#076d5e'; // AM một màu
+    const c2='#7a1c38'; // PM một màu
     const show1=m1>0||isPast||isToday;
     const show2=m2>0||isPast||isToday;
     const total=m1+m2;
