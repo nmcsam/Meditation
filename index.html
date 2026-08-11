@@ -580,11 +580,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   
 <!-- Cửa sổ động cài thời gian -->
-  <div id="timer-modal" onclick="timerModalGo(event)" style="position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:900;display:none;align-items:center;justify-content:center">
+  <div id="timer-modal" onclick="if(event.target===this){this.style.display='none';}" style="position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:900;display:none;align-items:center;justify-content:center">
     <div class="card" style="width:272px;padding:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)">
       <div style="font-size:12.5px;font-weight:900;letter-spacing:.5px;margin-bottom:12px">⏱ THỜI GIAN THIỀN (PHÚT)</div>
       <input id="timer-modal-min" class="tin" inputmode="numeric" maxlength="4" onclick="event.stopPropagation()" style="width:116px;height:58px;font-size:28px;font-weight:900;text-align:center;border-width:2px;box-sizing:border-box">
-      <div style="margin-top:14px;font-size:13px;font-weight:900;color:var(--teal)">▶ Chạm vào đây để BẮT ĐẦU</div>
+      <button onclick="timerModalGo()" style="display:block;width:100%;margin-top:14px;height:50px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:900;font-size:16px;font-family:inherit;cursor:pointer">▶ Bắt đầu</button>
     </div>
   </div>
 
@@ -617,7 +617,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     </div>
     <!-- Sửa dữ liệu ngày đã qua -->
     <div id="dd-edit-section" style="margin-bottom:14px">
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Sửa dữ liệu · tối đa 10 thời/ngày — bắt đầu 00:00–11:59 tính vào AM, còn lại tính vào PM</div>
       <div id="dd-sess-list"></div>
       <button type="button" id="dd-add-sess" onclick="ddAddSess()" style="margin-top:2px;padding:6px 14px;font-size:12px;border:1.5px dashed var(--border2);border-radius:10px;background:transparent;color:var(--ink);font-weight:800;cursor:pointer">＋ Thêm thời</button>
     </div>
@@ -629,7 +628,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v166</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v167</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1811,8 +1810,7 @@ function timerTap(){
   document.getElementById('timer-modal').style.display='flex';
   setTimeout(function(){ try{inp.focus(); inp.select();}catch(e){} }, 60);
 }
-function timerModalGo(ev){
-  if(ev && ev.target && ev.target.id==='timer-modal-min') return; // gõ số thì không đóng
+function timerModalGo(){
   const inp=document.getElementById('timer-modal-min');
   const m=parseInt(String(inp.value).replace(/\D/g,''),10);
   if(!m || m<1){ toast('Gõ số phút thiền trước đã'); return; }
@@ -2522,7 +2520,7 @@ function ddRenderSessions(){
       +'<span class="vsep"></span>'
       +'</div>'
       +((t.n&&t.n.trim())
-        ? '<textarea id="dd-n-'+i+'" rows="3" class="tnote" style="font-size:14px;line-height:1.55" oninput="ddSess['+i+'].n=this.value">'+_esc(t.n)+'</textarea>'
+        ? '<textarea id="dd-n-'+i+'" rows="3" readonly class="tnote" style="font-size:14px;line-height:1.55;cursor:pointer" onclick="ddOpenNote('+i+')" title="Chạm để sửa trong bảng lớn">'+_esc(t.n)+'</textarea>'
         : '<button type="button" onclick="ddOpenNote('+i+')" style="width:100%;margin-top:2px;height:38px;border-radius:8px;border:1.5px dashed '+bd+';background:transparent;color:var(--muted);font-weight:700;font-size:13px;font-family:inherit;cursor:pointer">📝 Ghi chú thời thiền</button>')
       +'</div>';
   }).join('');
