@@ -401,11 +401,39 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <!-- THÁNG -->
 <div class="page" id="pg-month">
+  <div class="card" style="background:linear-gradient(180deg,#fdf1cf 0%,#f7e3ae 100%);border:1.5px solid #d9b45a">
+    <div class="card-hd" style="color:#7a5410;font-size:13px;font-weight:900" id="gioi-month-title">Kế hoạch bát quan trai giới</div>
+    <div class="mcell" style="min-height:0;display:block;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+        <div class="mcell-label">☸ Giữ 8 giới tháng này</div>
+        <div style="font-size:13px;font-weight:800" id="mo-gioi-txt">0/0</div>
+      </div>
+      <div style="height:7px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;margin-top:5px"><div id="mo-gioi-bar" style="height:100%;width:0%;background:#b8860b;border-radius:4px"></div></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px" id="mo-gioi-note"></div>
+    </div>
+      <div id="gioi-pairs-month"></div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.55">
+        <div style="margin-bottom:5px">• Mỗi chấm là một ngày. Số phía trên: <b style="color:#0a7a4f">ngày dương (xanh)</b> / <b style="color:#c0392b">ngày âm (đỏ)</b>. Chấm <b style="color:#c9891a">vàng rực</b> là hôm nay.</div>
+        <div style="margin-bottom:5px">• <b>Hàng KẾ HOẠCH</b>: 8 ngày bát quan trai âm lịch <b>1 · 8 · 14 · 15 · 18 · 23 · 29 · 30</b> (tháng thiếu: 28 · 29) tự thắp <b style="color:#c9891a">vàng</b>, cố định không đổi.</div>
+        <div style="margin-bottom:5px">• Muốn thêm ngày kế hoạch riêng: chạm chấm ngày khác trên hàng KẾ HOẠCH — <b>chạm 2 lần để xác nhận</b>. Chạm lại để bỏ.</div>
+        <div style="margin-bottom:5px">• <b>Hàng THỰC TẾ</b>: ngày nào đã giữ giới, chạm chấm ngày đó (<b>2 lần</b>) → chấm chuyển <b style="color:#0a7a4f">xanh</b>.</div>
+        <div style="margin-bottom:5px">• Ghi nhầm: chạm chấm xanh → bấm <b>Xóa — xong</b>.</div>
+        <div style="margin-bottom:5px">• Ngày kế hoạch <b>đã qua</b> mà chưa giữ: chấm thực tế chuyển <b style="color:#c0392b">đỏ</b>.</div>
+        <div>• Kế hoạch và thực tế được phép khác ngày. Kết quả hiện ở đây và ở tab Hôm nay.</div>
+      </div>
+  </div>
+
   <div class="card">
-    <div class="cal-nav">
-      <button onclick="prevMonth()">&#8249;</button>
-      <span class="cal-month" id="cal-month-label"></span>
-      <button onclick="nextMonth()">&#8250;</button>
+    <div id="cal-head-row" style="display:flex;align-items:center;gap:4px;margin-bottom:10px;flex-wrap:nowrap;white-space:nowrap">
+      <button onclick="prevMonth()" style="border:none;background:transparent;font-size:18px;color:var(--muted);cursor:pointer;padding:2px 6px;flex:none">&#8249;</button>
+      <span id="cal-month-label" style="flex:none;font-size:13px;font-weight:900;color:var(--ink)"></span>
+      <button onclick="nextMonth()" style="border:none;background:transparent;font-size:18px;color:var(--muted);cursor:pointer;padding:2px 6px;flex:none">&#8250;</button>
+      <span style="flex:1"></span>
+      <span style="flex:none;font-size:12.5px;font-weight:900;color:var(--ink)">Kế hoạch (phút):</span>
+      <span style="flex:none;font-size:12px;font-weight:800;color:#7a5410">AM</span>
+      <input type="number" id="goal1-input" min="5" max="1200" value="30" oninput="updateGoal(1,this.value)" style="flex:none;width:48px;padding:3px 5px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;font-weight:800;background:var(--surface);color:var(--ink)">
+      <span style="flex:none;font-size:12px;font-weight:800;color:#2c3e6b">PM</span>
+      <input type="number" id="goal2-input" min="5" max="1200" value="30" oninput="updateGoal(2,this.value)" style="flex:none;width:48px;padding:3px 5px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;font-weight:800;background:var(--surface);color:var(--ink)">
     </div>
     <div class="cal-hdr">
       <div class="cal-hdr-cell">CN</div><div class="cal-hdr-cell">T2</div><div class="cal-hdr-cell">T3</div>
@@ -413,16 +441,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="cal-hdr-cell">T7</div>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
-    <div id="cal-legend-row" style="display:flex;gap:6px;margin-top:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap">
-      <div class="lg-item" style="flex:none"><div class="lg-dot" style="background:#2ECC40"></div>Đủ 2 thời</div>
-      <div class="lg-item" style="flex:none"><div class="lg-dot" style="background:#FFDC00;border:1px solid #ccc"></div>1 thời</div>
-      <div class="lg-item" style="flex:none"><div class="lg-dot" style="background:#FF4136"></div>Bỏ</div>
-      <span style="flex:none;color:var(--border2)">|</span>
-      <span style="flex:none;font-size:10px;font-weight:800;color:var(--ink)">Kế hoạch (phút):</span>
-      <span style="flex:none;font-size:10px;font-weight:800;color:#7a5410">AM</span>
-      <input type="number" id="goal1-input" min="5" max="1200" value="30" oninput="updateGoal(1,this.value)" style="flex:none;width:44px;padding:2px 4px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:11px;font-weight:800;background:var(--surface);color:var(--ink)">
-      <span style="flex:none;font-size:10px;font-weight:800;color:#2c3e6b">PM</span>
-      <input type="number" id="goal2-input" min="5" max="1200" value="30" oninput="updateGoal(2,this.value)" style="flex:none;width:44px;padding:2px 4px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:11px;font-weight:800;background:var(--surface);color:var(--ink)">
+    <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+      <div class="lg-item"><div class="lg-dot" style="background:#2ECC40"></div>Đủ 2 thời</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#FFDC00;border:1px solid #ccc"></div>1 thời</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#FF4136"></div>Bỏ</div>
     </div>
   </div>
   <div class="card">
@@ -455,27 +477,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     </div>
   </div>
 
-    <div class="card" style="background:linear-gradient(180deg,#fdf1cf 0%,#f7e3ae 100%);border:1.5px solid #d9b45a">
-    <div class="card-hd" style="color:#7a5410">☸ Giữ 8 giới — kế hoạch &amp; thực tế tháng này</div>
-    <div class="mcell" style="min-height:0;display:block;margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-        <div class="mcell-label">☸ Giữ 8 giới tháng này</div>
-        <div style="font-size:13px;font-weight:800" id="mo-gioi-txt">0/0</div>
-      </div>
-      <div style="height:7px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;margin-top:5px"><div id="mo-gioi-bar" style="height:100%;width:0%;background:#b8860b;border-radius:4px"></div></div>
-      <div style="font-size:10px;color:var(--muted);margin-top:3px" id="mo-gioi-note"></div>
-    </div>
-      <div id="gioi-pairs-month"></div>
-      <div style="font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.55">
-        <div style="margin-bottom:5px">• Mỗi chấm là một ngày. Số phía trên: <b style="color:#0a7a4f">ngày dương (xanh)</b> / <b style="color:#c0392b">ngày âm (đỏ)</b>. Chấm <b style="color:#c9891a">vàng rực</b> là hôm nay.</div>
-        <div style="margin-bottom:5px">• <b>Hàng KẾ HOẠCH</b>: 8 ngày bát quan trai âm lịch <b>1 · 8 · 14 · 15 · 18 · 23 · 29 · 30</b> (tháng thiếu: 28 · 29) tự thắp <b style="color:#c9891a">vàng</b>, cố định không đổi.</div>
-        <div style="margin-bottom:5px">• Muốn thêm ngày kế hoạch riêng: chạm chấm ngày khác trên hàng KẾ HOẠCH — <b>chạm 2 lần để xác nhận</b>. Chạm lại để bỏ.</div>
-        <div style="margin-bottom:5px">• <b>Hàng THỰC TẾ</b>: ngày nào đã giữ giới, chạm chấm ngày đó (<b>2 lần</b>) → chấm chuyển <b style="color:#0a7a4f">xanh</b>.</div>
-        <div style="margin-bottom:5px">• Ghi nhầm: chạm chấm xanh → bấm <b>Xóa — xong</b>.</div>
-        <div style="margin-bottom:5px">• Ngày kế hoạch <b>đã qua</b> mà chưa giữ: chấm thực tế chuyển <b style="color:#c0392b">đỏ</b>.</div>
-        <div>• Kế hoạch và thực tế được phép khác ngày. Kết quả hiện ở đây và ở tab Hôm nay.</div>
-      </div>
-  </div>
+    
 </div>
 
 <!-- NĂM -->
@@ -611,7 +613,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v181</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v182</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1766,7 +1768,7 @@ function fitTimerRow(){
   }
 
   // hàng chú giải + kế hoạch của tab Tháng: luôn một dòng, chật thì thu đồng tỉ lệ
-  const lg=document.getElementById('cal-legend-row');
+  const lg=document.getElementById('cal-head-row');
   if(lg){
     lg.style.zoom='1';
     const w=lg.clientWidth, need2=lg.scrollWidth; // clientWidth của chính hàng = bề rộng khả dụng đã trừ đệm thẻ
@@ -2279,6 +2281,9 @@ function renderCalendar(){
   const WDC=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const labels=['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
   document.getElementById('cal-month-label').textContent=labels[calMonth]+' '+calYear;
+  var _gt=document.getElementById('gioi-month-title');
+  if(_gt) _gt.textContent='Tháng '+(calMonth+1)+' năm '+calYear+' - Kế hoạch bát quan trai giới';
+  try{fitTimerRow();}catch(e){}
   const firstDay=new Date(calYear,calMonth,1).getDay();
   const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
   const todayStr=getDK();
