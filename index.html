@@ -42,9 +42,9 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto;width:100%
 .sync-code-input{width:100%;padding:10px;font-size:16px;letter-spacing:2px;text-align:center;font-weight:700;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);text-transform:uppercase}
 .nav{display:flex;background:#ffffff;border-bottom:1px solid #e0e0e0}
 .nav-btn{flex:1;border:none;background:transparent;padding:9px 2px 7px;font-size:10px;font-weight:500;color:#999999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-bottom:2px solid transparent;border-radius:10px 10px 0 0;transition:background .12s}
-.nav-btn.on{background:linear-gradient(180deg,rgba(7,109,94,.14) 0%,rgba(7,109,94,.05) 60%,rgba(7,109,94,0) 100%);box-shadow:0 1px 0 rgba(255,255,255,.8) inset}
+.nav-btn.on{background:linear-gradient(180deg,#0e8a77 0%,#076d5e 100%);box-shadow:0 2px 6px rgba(4,60,50,.35)}
 .nav-btn svg{width:17px;height:17px;stroke-width:1.7}
-.nav-btn.on{color:#076d5e;font-weight:700;border-bottom-color:#076d5e}
+.nav-btn.on{color:#fff;font-weight:800;border-bottom-color:#b8860b}
 .scroll{flex:1;overflow-y:auto;padding:12px 12px 80px;background:transparent}
 .page{display:none}.page.on{display:block}
 .card{background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 26%),linear-gradient(180deg,#ffffff 0%,#fdfaf4 60%,#f1ead9 100%);border:1px solid #ded4bd;border-radius:var(--rl);padding:12px 14px;margin-bottom:10px;box-shadow:0 6px 14px rgba(70,50,15,.16),0 2px 0 rgba(255,255,255,1) inset,0 -3px 6px rgba(150,125,75,.10) inset;position:relative}
@@ -222,8 +222,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
   <!-- ⏱ ĐỒNG HỒ THIỀN 2 NỬA (trên: thực tế · dưới: cài đặt) + AM/PM bên phải -->
   <div class="card" style="padding:10px 12px;margin-bottom:6px">
-    <div id="timer-row" style="display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:8px">
-      <div style="flex:none;display:flex;gap:8px"><div onclick="timerTap()" style="flex:none;width:112px;display:flex;justify-content:center;cursor:pointer">
+    <div id="timer-row" style="display:flex;flex-wrap:nowrap;align-items:center;gap:8px;width:100%">
+      <div onclick="timerTap()" style="flex:none;width:112px;display:flex;justify-content:center;cursor:pointer">
         <div style="position:relative;width:104px;height:104px">
           <svg width="104" height="104" viewBox="0 0 104 104" style="transform:rotate(-90deg)">
             <circle cx="52" cy="52" r="44" fill="none" stroke="var(--border2)" stroke-width="7"/>
@@ -242,7 +242,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           </div>
         </div>
       </div>
-        <div class="sess-block" id="sess1-card" style="flex:none;width:112px;height:104px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 6px">
+        <div class="sess-block" id="sess1-card" style="flex:1 1 112px;min-width:112px;height:104px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 6px">
         <div class="sess-lbl" id="sess1-lbl" style="font-weight:800;font-size:12.5px;line-height:1.15"><span style="display:inline-block;width:17px;font-size:12.5px;text-align:center;vertical-align:-1px">🌅</span>AM</div>
         <div style="display:flex;align-items:stretch;margin:1px 0">
           <div style="flex:1;min-width:0">
@@ -256,8 +256,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           </div>
         </div>
         <div style="font-size:8px" id="sess1-status"></div>
-      </div></div>
-        <div style="flex:none;display:flex;gap:8px"><div class="sess-block" id="sess2-card" style="flex:none;width:112px;height:104px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 6px">
+      </div>
+        <div class="sess-block" id="sess2-card" style="flex:1 1 112px;min-width:112px;height:104px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 6px">
         <div class="sess-lbl" id="sess2-lbl" style="font-weight:800;font-size:12.5px;line-height:1.15"><span style="display:inline-block;width:17px;font-size:12.5px;text-align:center;vertical-align:-1px">🌙</span>PM</div>
         <div style="display:flex;align-items:stretch;margin:1px 0">
           <div style="flex:1;min-width:0">
@@ -272,7 +272,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div>
         <div style="font-size:8px" id="sess2-status"></div>
       </div>
-        <div class="sess-block" id="tong-card" style="flex:none;width:112px;height:104px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 6px">
+        <div class="sess-block" id="tong-card" style="flex:1 1 112px;min-width:112px;height:104px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 6px">
           <div style="font-weight:800;font-size:12.5px;line-height:1.15"><span style="display:inline-block;width:17px;font-size:12.5px;text-align:center;vertical-align:-1px">⏱</span>Tổng</div>
           <div style="display:flex;align-items:stretch;margin:1px 0">
             <div style="flex:1;min-width:0">
@@ -287,7 +287,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           </div>
           <div style="font-size:8px"><span id="daily-result-badge" style="font-size:8px;font-weight:700;padding:1px 6px;border-radius:4px;background:var(--surface3);color:var(--muted)">—</span></div>
           <div id="today-bar" style="display:none"></div>
-        </div></div>
+        </div>
   </div>
 
   
@@ -624,7 +624,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v187</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v189</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
