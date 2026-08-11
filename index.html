@@ -253,7 +253,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <div class="sess-mins" id="sess1-mins" style="font-size:12.5px;line-height:1.2">— ph</div>
           </div>
         </div>
-        <div style="font-size:8px" id="sess1-type"></div>
         <div style="font-size:8px" id="sess1-status"></div>
       </div></div>
         <div style="flex:none;display:flex;gap:8px"><div class="sess-block" id="sess2-card" style="flex:none;width:112px;height:104px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 6px">
@@ -269,7 +268,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
             <div class="sess-mins" id="sess2-mins" style="font-size:12.5px;line-height:1.2">— ph</div>
           </div>
         </div>
-        <div style="font-size:8px" id="sess2-type"></div>
         <div style="font-size:8px" id="sess2-status"></div>
       </div>
         <div class="sess-block" id="tong-card" style="flex:none;width:112px;height:104px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-evenly;padding:6px 6px">
@@ -412,7 +410,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div style="font-size:10px;color:var(--muted);margin-top:3px" id="mo-gioi-note"></div>
     </div>
       <div id="gioi-pairs-month"></div>
-      <div style="font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.55">
+      <button id="gioi-help-btn" onclick="(function(b){var x=document.getElementById('gioi-help-body');var on=x.style.display==='none';x.style.display=on?'block':'none';b.textContent=on?'− Thu gọn giải thích':'+ Xem giải thích';})(this)" style="margin-top:10px;border:1px dashed #d9b45a;background:transparent;color:#7a5410;font-weight:800;font-size:11px;font-family:inherit;border-radius:7px;padding:4px 10px;cursor:pointer">+ Xem giải thích</button>
+      <div id="gioi-help-body" style="display:none;font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.55">
         <div style="margin-bottom:5px">• Mỗi chấm là một ngày. Số phía trên: <b style="color:#0a7a4f">ngày dương (xanh)</b> / <b style="color:#c0392b">ngày âm (đỏ)</b>. Chấm <b style="color:#c9891a">vàng rực</b> là hôm nay.</div>
         <div style="margin-bottom:5px">• <b>Hàng KẾ HOẠCH</b>: 8 ngày bát quan trai âm lịch <b>1 · 8 · 14 · 15 · 18 · 23 · 29 · 30</b> (tháng thiếu: 28 · 29) tự thắp <b style="color:#c9891a">vàng</b>, cố định không đổi.</div>
         <div style="margin-bottom:5px">• Muốn thêm ngày kế hoạch riêng: chạm chấm ngày khác trên hàng KẾ HOẠCH — <b>chạm 2 lần để xác nhận</b>. Chạm lại để bỏ.</div>
@@ -431,9 +430,9 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <span style="flex:1"></span>
       <span style="flex:none;font-size:12.5px;font-weight:900;color:var(--ink)">Kế hoạch (phút):</span>
       <span style="flex:none;font-size:12px;font-weight:800;color:#7a5410">AM</span>
-      <input type="number" id="goal1-input" min="5" max="1200" value="30" oninput="updateGoal(1,this.value)" style="flex:none;width:48px;padding:3px 5px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;font-weight:800;background:var(--surface);color:var(--ink)">
+      <input type="text" id="goal1-input" readonly value="30" onclick="openGoalModal(1)" style="flex:none;width:48px;padding:3px 5px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;font-weight:800;background:var(--surface);color:var(--ink);cursor:pointer;text-align:center">
       <span style="flex:none;font-size:12px;font-weight:800;color:#2c3e6b">PM</span>
-      <input type="number" id="goal2-input" min="5" max="1200" value="30" oninput="updateGoal(2,this.value)" style="flex:none;width:48px;padding:3px 5px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;font-weight:800;background:var(--surface);color:var(--ink)">
+      <input type="text" id="goal2-input" readonly value="30" onclick="openGoalModal(2)" style="flex:none;width:48px;padding:3px 5px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;font-weight:800;background:var(--surface);color:var(--ink);cursor:pointer;text-align:center">
     </div>
     <div class="cal-hdr">
       <div class="cal-hdr-cell">CN</div><div class="cal-hdr-cell">T2</div><div class="cal-hdr-cell">T3</div>
@@ -531,7 +530,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="margin-top:12px">
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">☸ Giữ 8 giới — kế hoạch &amp; thực tế tháng này</div>
       <div id="gioi-pairs-month"></div>
-      <div style="font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.55">
+      <button id="gioi-help-btn" onclick="(function(b){var x=document.getElementById('gioi-help-body');var on=x.style.display==='none';x.style.display=on?'block':'none';b.textContent=on?'− Thu gọn giải thích':'+ Xem giải thích';})(this)" style="margin-top:10px;border:1px dashed #d9b45a;background:transparent;color:#7a5410;font-weight:800;font-size:11px;font-family:inherit;border-radius:7px;padding:4px 10px;cursor:pointer">+ Xem giải thích</button>
+      <div id="gioi-help-body" style="display:none;font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.55">
         <div style="margin-bottom:5px">• Mỗi chấm là một ngày. Số phía trên: <b style="color:#0a7a4f">ngày dương (xanh)</b> / <b style="color:#c0392b">ngày âm (đỏ)</b>. Chấm <b style="color:#c9891a">vàng rực</b> là hôm nay.</div>
         <div style="margin-bottom:5px">• <b>Hàng KẾ HOẠCH</b>: 8 ngày bát quan trai âm lịch <b>1 · 8 · 14 · 15 · 18 · 23 · 29 · 30</b> (tháng thiếu: 28 · 29) tự thắp <b style="color:#c9891a">vàng</b>, cố định không đổi.</div>
         <div style="margin-bottom:5px">• Muốn thêm ngày kế hoạch riêng: chạm chấm ngày khác trên hàng KẾ HOẠCH — <b>chạm 2 lần để xác nhận</b>. Chạm lại để bỏ.</div>
@@ -564,7 +564,16 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   </div>
 
   
-<!-- Cửa sổ động cài thời gian -->
+<!-- Bảng động nhập kế hoạch -->
+  <div id="goal-modal" onclick="if(event.target===this){this.style.display='none';}" style="position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:1100;display:none;align-items:center;justify-content:center">
+    <div class="card" style="width:272px;padding:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)">
+      <div id="goal-modal-title" style="font-size:15px;font-weight:900;margin-bottom:12px">Kế hoạch AM (phút)</div>
+      <input type="number" id="goal-modal-min" inputmode="numeric" min="5" max="1200" style="width:150px;font-size:34px;font-weight:900;text-align:center;padding:10px;border:2px solid var(--teal);border-radius:12px;font-family:inherit;background:var(--surface);color:var(--ink)">
+      <button onclick="goalModalGo()" style="display:block;width:100%;margin-top:14px;height:50px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:900;font-size:16px;font-family:inherit;cursor:pointer">✓ Xong</button>
+    </div>
+  </div>
+
+  <!-- Cửa sổ động cài thời gian -->
   <div id="timer-modal" onclick="if(event.target===this){this.style.display='none';}" style="position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:900;display:none;align-items:center;justify-content:center">
     <div class="card" style="width:272px;padding:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)">
       <div style="font-size:12.5px;font-weight:900;letter-spacing:.5px;margin-bottom:12px">⏱ THỜI GIAN THIỀN (PHÚT)</div>
@@ -613,7 +622,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v182</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v183</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1776,6 +1785,25 @@ function fitTimerRow(){
   }
 }
 window.addEventListener('resize', function(){ fitTimerRow(); });
+let _goalWhich=1;
+function openGoalModal(n){
+  _goalWhich=n;
+  const t=document.getElementById('goal-modal-title');
+  if(t) t.textContent='Kế hoạch '+(n===1?'AM':'PM')+' (phút)';
+  const inp=document.getElementById('goal-modal-min');
+  if(inp) inp.value = n===1 ? ST.goal1 : ST.goal2;
+  document.getElementById('goal-modal').style.display='flex';
+  setTimeout(function(){ try{inp.focus(); inp.select();}catch(e){} }, 80);
+}
+function goalModalGo(){
+  const inp=document.getElementById('goal-modal-min');
+  let v=parseInt(inp.value,10);
+  if(!isFinite(v)||v<5) v=5; if(v>1200) v=1200;
+  updateGoal(_goalWhich, v);
+  const el=document.getElementById('goal'+_goalWhich+'-input'); if(el) el.value=v;
+  document.getElementById('goal-modal').style.display='none';
+  toast('✓ Kế hoạch '+(_goalWhich===1?'AM':'PM')+': '+v+'ph');
+}
 function timerTap(){
   if(timerRunning){
     // KẾT THÚC: ghi thời gian THỰC TẾ đã ngồi
@@ -1980,7 +2008,7 @@ function renderToday(){
     const card=document.getElementById('sess'+n+'-card');
     const types=(e&&n==='1'?e.types1:e?e.types2:[])|| [];
     document.getElementById('sess'+n+'-mins').textContent=m>0?fmtHM(m):'— ph';
-    document.getElementById('sess'+n+'-type').textContent=types.length?types.slice(0,2).join(', '):'';
+    var _ty=document.getElementById('sess'+n+'-type'); if(_ty) _ty.textContent=types.length?types.slice(0,2).join(', '):'';
     const plan=n==='1'?getTodayPlan().p1:getTodayPlan().p2;
     const dat=plan>0 && m>=plan;
     document.getElementById('sess'+n+'-status').textContent=dat?'✓ Đạt kế hoạch':(m>0?'✗ Chưa đủ '+fmtHM(plan):'');
@@ -1989,7 +2017,7 @@ function renderToday(){
     card.style.borderColor=dat?'#0a5c47':'#a93226';
     document.getElementById('sess'+n+'-mins').style.color   = '#fff';
     document.getElementById('sess'+n+'-lbl').style.color    = 'rgba(255,255,255,.92)';
-    document.getElementById('sess'+n+'-type').style.color   = 'rgba(255,255,255,.85)';
+    if(_ty) _ty.style.color='rgba(255,255,255,.85)';
     document.getElementById('sess'+n+'-status').style.color = '#fff';
     const _kh=document.getElementById('sess'+n+'-khlbl'); if(_kh)_kh.style.color='rgba(255,255,255,.85)';
     const _tt=document.getElementById('sess'+n+'-ttlbl'); if(_tt)_tt.style.color='rgba(255,255,255,.85)';
@@ -2867,8 +2895,13 @@ function renderRec(){
     return d>0 ? '<span style="color:#0a7a4f;font-size:8px;font-weight:700">▲ +'+d+'</span>'
                : '<span style="color:#c0392b;font-size:8px;font-weight:700">▼ '+d+'</span>';
   }
-  function cell(icon,label,val,unit,sub,color){
-    return '<div style="background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:6px 5px;display:flex;flex-direction:column;justify-content:center;min-height:54px">'
+  function bgOf(a,b){
+    const d=a-b;
+    if(!isFinite(d)||Math.abs(d)<2) return 'var(--surface2)';
+    return d>0 ? 'rgba(46,204,113,.22)' : 'rgba(255,220,0,.30)';
+  }
+  function cell(icon,label,val,unit,sub,color,bg){
+    return '<div style="background:'+(bg||'var(--surface2)')+';border:1px solid var(--border2);border-radius:9px;padding:6px 5px;display:flex;flex-direction:column;justify-content:center;min-height:54px">'
       +'<div style="font-size:7.5px;color:var(--muted);font-weight:700;line-height:1.15;margin-bottom:2px">'+icon+' '+label+'</div>'
       +'<div style="font-size:14px;font-weight:800;color:'+(color||'var(--ink)')+';line-height:1">'+val+(unit?'<span style="font-size:8.5px;font-weight:600;color:var(--muted)"> '+unit+'</span>':'')+'</div>'
       +'<div style="margin-top:2px;line-height:1">'+(sub||'')+'</div></div>';
@@ -2876,13 +2909,13 @@ function renderRec(){
   const cGood='#0a7a4f', cWarn='#b8860b', cBad='#c0392b';
   const tone=v=>v>=80?cGood:v>=50?cWarn:cBad;
   let html='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">';
-  html+=cell('🧘','ĐỦ 2 THỜI', pc(A.full)+'%','', delta(pc(A.full),pc(B.full)), tone(pc(A.full)));
-  html+=cell('🌅','ĐẠT KH AM', pc(A.sOk)+'%','', delta(pc(A.sOk),pc(B.sOk)), tone(pc(A.sOk)));
-  html+=cell('🌙','ĐẠT KH PM', pc(A.tOk)+'%','', delta(pc(A.tOk),pc(B.tOk)), tone(pc(A.tOk)));
-  html+=cell('⏱','TB MỖI NGÀY', nf(A.avg),'ph', delta(A.avg,B.avg), A.avg>=(ST.goal1+ST.goal2)?cGood:cWarn);
-  html+=cell('📅','NGÀY CÓ THIỀN', pc(A.entD)+'%','', delta(pc(A.entD),pc(B.entD)), tone(pc(A.entD)));
+  html+=cell('🧘','ĐỦ 2 THỜI', pc(A.full)+'%','', delta(pc(A.full),pc(B.full)), tone(pc(A.full)), bgOf(pc(A.full),pc(B.full)));
+  html+=cell('🌅','ĐẠT KH AM', pc(A.sOk)+'%','', delta(pc(A.sOk),pc(B.sOk)), tone(pc(A.sOk)), bgOf(pc(A.sOk),pc(B.sOk)));
+  html+=cell('🌙','ĐẠT KH PM', pc(A.tOk)+'%','', delta(pc(A.tOk),pc(B.tOk)), tone(pc(A.tOk)), bgOf(pc(A.tOk),pc(B.tOk)));
+  html+=cell('⏱','TB MỖI NGÀY', nf(A.avg),'ph', delta(A.avg,B.avg), A.avg>=(ST.goal1+ST.goal2)?cGood:cWarn, bgOf(A.avg,B.avg));
+  html+=cell('📅','NGÀY CÓ THIỀN', pc(A.entD)+'%','', delta(pc(A.entD),pc(B.entD)), tone(pc(A.entD)), bgOf(pc(A.entD),pc(B.entD)));
   html+=cell('🔥','CHUỖI 2 THỜI', cur,'ngày','', cur>0?cGood:cBad);
-  html+=cell('☸','GIỮ 8 GIỚI', A.gp>0?(A.gk+'/'+A.gp):'—','', A.gp>0?delta(Math.round(A.gk/A.gp*100), B.gp?Math.round(B.gk/B.gp*100):0):'', (A.gp>0&&A.gk>=A.gp)?cGood:cWarn);
+  html+=cell('☸','GIỮ 8 GIỚI', A.gp>0?(A.gk+'/'+A.gp):'—','', A.gp>0?delta(Math.round(A.gk/A.gp*100), B.gp?Math.round(B.gk/B.gp*100):0):'', (A.gp>0&&A.gk>=A.gp)?cGood:cWarn, A.gp>0?bgOf(Math.round(A.gk/A.gp*100), B.gp?Math.round(B.gk/B.gp*100):0):'var(--surface2)');
   html+=cell('○','THỜI "TỐT"', A.rated>0?(ratedPct(A.tot)+'%'):'—','', A.rated>0?'<span style="color:var(--muted);font-size:8px">'+A.rated+' lượt đánh giá</span>':'', A.rated>0?tone(ratedPct(A.tot)):'var(--muted)');
   html+='</div>';
   html+='<div style="font-size:8.5px;color:var(--muted);margin-top:5px">30 ngày qua · mũi tên so với 30 ngày trước đó</div>';
