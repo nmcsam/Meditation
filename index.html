@@ -624,7 +624,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v191</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v192</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1788,8 +1788,13 @@ function fitTimerRow(){
   const need=472; // 4 khối 112 + 3 khe 8
   const cs=getComputedStyle(host);
   const avail=host.clientWidth - (parseFloat(cs.paddingLeft)||0) - (parseFloat(cs.paddingRight)||0);
+  if(!(avail>80)){ // chưa đo được (trang ẩn / chưa dựng xong) -> trả về mặc định và thử lại
+    row.style.width='100%'; row.style.zoom='1';
+    requestAnimationFrame(function(){ setTimeout(fitTimerRow, 120); });
+    return;
+  }
   const sc=Math.min(1, avail/need);
-  if(sc<1){ row.style.width='472px'; } else { row.style.width='100%'; } // hẹp: khóa đúng khổ thiết kế rồi thu — không tràn; rộng: nở hết
+  if(sc<1){ row.style.width='472px'; } else { row.style.width='100%'; } // hẹp: khóa đúng khổ thiết kế rồi thu — không tràn; rộng: nở hết chia đều
   if('zoom' in row.style){
     row.style.zoom=String(sc);
     row.style.transform=''; host.style.height='';
@@ -1808,6 +1813,8 @@ function fitTimerRow(){
   }
 }
 window.addEventListener('resize', function(){ fitTimerRow(); });
+window.addEventListener('load', function(){ setTimeout(fitTimerRow, 200); });
+document.addEventListener('visibilitychange', function(){ if(!document.hidden) setTimeout(fitTimerRow, 100); });
 let _goalWhich=1;
 function openGoalModal(n){
   _goalWhich=n;
