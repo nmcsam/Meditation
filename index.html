@@ -290,26 +290,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
         </div></div>
   </div>
 
-  <!-- Bảng cảm nhận sau thời thiền -->
-  <div id="note-modal" style="position:fixed;inset:0;background:rgba(10,20,15,.55);z-index:905;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box">
-    <div class="card" style="width:100%;max-width:520px;padding:16px;box-sizing:border-box;box-shadow:0 10px 30px rgba(0,0,0,.35)">
-      <div id="note-modal-title" style="font-size:13.5px;font-weight:900;margin-bottom:10px">🧘 Cảm nhận thời thiền</div>
-      <textarea id="note-modal-text" placeholder="Viết cảm nhận về thời thiền: đề mục, tầm–tứ, hỷ–lạc, trạng thái tâm, chướng ngại…" style="width:100%;box-sizing:border-box;min-height:46vh;padding:10px;border:1.5px solid var(--border2);border-radius:var(--r);font-family:inherit;font-size:14px;line-height:1.55;resize:vertical;background:var(--surface);color:var(--ink)"></textarea>
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <button onclick="noteModalSave()" style="flex:1;height:44px;border-radius:var(--r);border:none;background:var(--teal);color:#fff;font-weight:900;font-size:14px;font-family:inherit;cursor:pointer">✓ Lưu cảm nhận</button>
-        <button onclick="noteModalClose()" style="flex:1;height:44px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;color:var(--muted);font-weight:800;font-size:13px;font-family:inherit;cursor:pointer">Bỏ qua</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Cửa sổ động cài thời gian -->
-  <div id="timer-modal" onclick="timerModalGo(event)" style="position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:900;display:none;align-items:center;justify-content:center">
-    <div class="card" style="width:272px;padding:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)">
-      <div style="font-size:12.5px;font-weight:900;letter-spacing:.5px;margin-bottom:12px">⏱ THỜI GIAN THIỀN (PHÚT)</div>
-      <input id="timer-modal-min" class="tin" inputmode="numeric" maxlength="4" onclick="event.stopPropagation()" style="width:116px;height:58px;font-size:28px;font-weight:900;text-align:center;border-width:2px;box-sizing:border-box">
-      <div style="margin-top:14px;font-size:13px;font-weight:900;color:var(--teal)">▶ Chạm vào đây để BẮT ĐẦU</div>
-    </div>
-  </div>
+  
   </div>
 
   <!-- CARD HÔM NAY: Kế hoạch + Thực tế gộp một thẻ -->
@@ -585,6 +566,28 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 </div>
 
 <!-- DAY DETAIL -->
+<!-- Bảng cảm nhận sau thời thiền -->
+  <div id="note-modal" style="position:fixed;inset:0;background:rgba(10,20,15,.55);z-index:1200;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box">
+    <div class="card" style="width:100%;max-width:520px;padding:16px;box-sizing:border-box;box-shadow:0 10px 30px rgba(0,0,0,.35)">
+      <div id="note-modal-title" style="font-size:15px;font-weight:900;margin-bottom:10px">🧘 Cảm nhận thời thiền</div>
+      <textarea id="note-modal-text" placeholder="Viết cảm nhận về thời thiền: đề mục, tầm–tứ, hỷ–lạc, trạng thái tâm, chướng ngại…" style="width:100%;box-sizing:border-box;min-height:46vh;padding:12px;border:1.5px solid var(--border2);border-radius:var(--r);font-family:inherit;font-size:17px;line-height:1.6;resize:vertical;background:var(--surface);color:var(--ink)"></textarea>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button onclick="noteModalSave()" style="flex:1;height:44px;border-radius:var(--r);border:none;background:var(--teal);color:#fff;font-weight:900;font-size:14px;font-family:inherit;cursor:pointer">✓ Lưu cảm nhận</button>
+        <button onclick="noteModalClose()" style="flex:1;height:44px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;color:var(--muted);font-weight:800;font-size:13px;font-family:inherit;cursor:pointer">Bỏ qua</button>
+      </div>
+    </div>
+  </div>
+
+  
+<!-- Cửa sổ động cài thời gian -->
+  <div id="timer-modal" onclick="timerModalGo(event)" style="position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:900;display:none;align-items:center;justify-content:center">
+    <div class="card" style="width:272px;padding:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)">
+      <div style="font-size:12.5px;font-weight:900;letter-spacing:.5px;margin-bottom:12px">⏱ THỜI GIAN THIỀN (PHÚT)</div>
+      <input id="timer-modal-min" class="tin" inputmode="numeric" maxlength="4" onclick="event.stopPropagation()" style="width:116px;height:58px;font-size:28px;font-weight:900;text-align:center;border-width:2px;box-sizing:border-box">
+      <div style="margin-top:14px;font-size:13px;font-weight:900;color:var(--teal)">▶ Chạm vào đây để BẮT ĐẦU</div>
+    </div>
+  </div>
+
 <div class="detail-overlay" id="day-detail">
   <div class="detail-sheet" id="dd-sheet">
     <button class="detail-close" onclick="document.getElementById('day-detail').classList.remove('on')">&#10005;</button>
@@ -626,7 +629,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v165</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v166</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2519,11 +2522,8 @@ function ddRenderSessions(){
       +'<span class="vsep"></span>'
       +'</div>'
       +((t.n&&t.n.trim())
-        ? '<div style="background:var(--surface);border:1px solid '+bd+';border-radius:8px;padding:7px 9px;margin-top:2px">'
-          +'<div style="font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word">'+_esc(t.n)+'</div>'
-          +'<button type="button" onclick="ddOpenNote('+i+')" style="margin-top:6px;height:30px;padding:0 14px;border-radius:7px;border:1.5px solid '+bd+';background:transparent;color:'+fg+';font-weight:800;font-size:11.5px;font-family:inherit;cursor:pointer">✎ Sửa</button>'
-          +'</div>'
-        : '<button type="button" onclick="ddOpenNote('+i+')" style="width:100%;margin-top:2px;height:36px;border-radius:8px;border:1.5px dashed '+bd+';background:transparent;color:var(--muted);font-weight:700;font-size:12px;font-family:inherit;cursor:pointer">📝 Ghi chú thời thiền</button>')
+        ? '<textarea id="dd-n-'+i+'" rows="3" class="tnote" style="font-size:14px;line-height:1.55" oninput="ddSess['+i+'].n=this.value">'+_esc(t.n)+'</textarea>'
+        : '<button type="button" onclick="ddOpenNote('+i+')" style="width:100%;margin-top:2px;height:38px;border-radius:8px;border:1.5px dashed '+bd+';background:transparent;color:var(--muted);font-weight:700;font-size:13px;font-family:inherit;cursor:pointer">📝 Ghi chú thời thiền</button>')
       +'</div>';
   }).join('');
   const add=document.getElementById('dd-add-sess');
