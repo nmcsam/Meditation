@@ -626,7 +626,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v169</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v170</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1828,13 +1828,13 @@ function copyDayReport(){
   });
   let out='';
   ds.forEach(function(t,i){
-    out+=(i?'\n\n':'')+'• Thời thiền '+_roman(i+1)+': Từ '+(t.s||'--:--')+' Đến '+(t.e||'--:--')+' Tổng '+_tongH(t.m||0)+'\n'
+    out+=(i?'\n\n':'')+'• Thời thiền '+_roman(i+1)+': Từ '+(t.s||'--:--')+' Đến '+(t.e||'--:--')+' ('+_tongH(t.m||0)+')\n'
         +((t.n&&t.n.trim())? t.n.trim() : '(chưa ghi cảm nhận)');
   });
   // bản HTML: tiêu đề in đậm thật khi dán vào nơi hỗ trợ định dạng
   let html='';
   ds.forEach(function(t,i){
-    html+=(i?'<br><br>':'')+'<b>• Thời thiền '+_roman(i+1)+': Từ '+(t.s||'--:--')+' Đến '+(t.e||'--:--')+' Tổng '+_tongH(t.m||0)+'</b><br>'
+    html+=(i?'<br><br>':'')+'<b>• Thời thiền '+_roman(i+1)+': Từ '+(t.s||'--:--')+' Đến '+(t.e||'--:--')+' ('+_tongH(t.m||0)+')</b><br>'
         +_esc((t.n&&t.n.trim())? t.n.trim() : '(chưa ghi cảm nhận)').replace(/\n/g,'<br>');
   });
   function done(){ toast('✓ Đã copy báo cáo — dán vào tin nhắn gửi thiền sư'); }
@@ -2392,16 +2392,19 @@ function renderCalDayChart(){
     }
   }
   const labels=[]; for(let h=0;h<24;h++) labels.push(h);
-  // khung cao nhất
-  let best=0; for(let h=1;h<24;h++) if(bins[h]>bins[best]) best=h;
+  // khung cao nhất riêng AM (0-11h) và PM (12-23h)
+  let bestAM=0; for(let h=1;h<12;h++) if(bins[h]>bins[bestAM]) bestAM=h;
+  let bestPM=12; for(let h=13;h<24;h++) if(bins[h]>bins[bestPM]) bestPM=h;
+  function khung(h){ return String(h).padStart(2,'0')+':00–'+String((h+1)%24).padStart(2,'0')+':00'; }
   const note=document.getElementById('hour-freq-note');
   if(note){
-    if(bins[best]>0){
-      note.textContent='🏆 Khung nhiều nhất: '+String(best).padStart(2,'0')+':00–'+String((best+1)%24).padStart(2,'0')+':00 · '+fmtHM(bins[best]);
+    if(bins[bestAM]>0 || bins[bestPM]>0){
+      note.textContent='🏆 Khung nhiều nhất: AM '+(bins[bestAM]>0?khung(bestAM):'—')+', PM '+(bins[bestPM]>0?khung(bestPM):'—');
     } else { note.textContent='Chưa có dữ liệu trong tháng này'; }
   }
-  const ptCol=bins.map(function(v,h){ return h===best&&v>0 ? 'rgba(184,134,11,1)' : 'rgba(7,109,94,.9)'; });
-  const ptR=bins.map(function(v,h){ return h===best&&v>0 ? 4.5 : 2; });
+  const best=(bins[bestAM]>=bins[bestPM])?bestAM:bestPM;
+  const ptCol=bins.map(function(v,h){ return ((h===bestAM||h===bestPM)&&v>0) ? 'rgba(184,134,11,1)' : 'rgba(7,109,94,.9)'; });
+  const ptR=bins.map(function(v,h){ return ((h===bestAM||h===bestPM)&&v>0) ? 4.5 : 2; });
   const gc='rgba(0,0,0,.07)';const tc='#5a6878';
   if(charts.calDay)charts.calDay.destroy();
   charts.calDay=new Chart(document.getElementById('cal-day-chart'),{
