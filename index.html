@@ -627,7 +627,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v198</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v199</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1900,8 +1900,9 @@ function copyDayReport(){
   // bản HTML: tiêu đề in đậm thật khi dán vào nơi hỗ trợ định dạng
   let html='';
   ds.forEach(function(t,i){
-    html+=(i?'<br><br>':'')+'<b>• Thời thiền '+_roman(i+1)+': Từ '+(t.s||'--:--')+' Đến '+(t.e||'--:--')+' ('+_tongH(t.m||0)+')</b><br>'
-        +_esc((t.n&&t.n.trim())? t.n.trim() : '(chưa ghi cảm nhận)').replace(/\n/g,'<br>');
+    if(i) html+='<div><br></div>'; // dòng trống tách các thời — tường minh, không bị trình soạn thảo nuốt
+    html+='<div><b>• Thời thiền '+_roman(i+1)+': Từ '+(t.s||'--:--')+' Đến '+(t.e||'--:--')+' ('+_tongH(t.m||0)+')</b></div>'
+        +'<div>'+_esc((t.n&&t.n.trim())? t.n.trim() : '(chưa ghi cảm nhận)').replace(/\n/g,'<br>')+'</div>';
   });
   function done(){ toast('✓ Đã copy báo cáo — dán vào tin nhắn gửi thiền sư'); }
   if(navigator.clipboard && navigator.clipboard.write && window.ClipboardItem){
