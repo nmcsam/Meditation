@@ -310,19 +310,17 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <span id="mpva-verdict" style="flex:none;font-size:9.5px;font-weight:800">—</span>
       <span id="mpva-full" style="display:none">0</span><span id="mpva-miss" style="display:none">0</span><span id="mpva-gioi" style="display:none">0/0</span>
     </div>
-    <div style="height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-bottom:6px">
-      <div id="mpva-progress" style="height:100%;border-radius:2px;background:var(--teal);width:0%"></div>
-    </div>
+      <div id="mpva-progress" style="display:none"></div>
     <div style="display:flex;gap:8px;align-items:flex-start">
       <!-- Biểu đồ tháng chiếm phần lớn -->
       <div style="flex:1;min-width:0">
         <div style="display:flex;gap:10px;margin-bottom:3px">
-          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#076d5e"></div>AM</div>
-          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#7a1c38"></div>PM</div>
+          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#076d5e"></div>Thời AM</div>
+          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:var(--muted);font-weight:600"><div style="width:8px;height:8px;border-radius:2px;background:#7a1c38"></div>Thời PM</div>
           <span style="color:var(--border2)">|</span>
-          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:#1a56db;font-weight:700"><div style="width:20px;height:2px;background:repeating-linear-gradient(90deg,#1a56db 0 3px,transparent 3px 6px,#1a56db 6px 14px,transparent 14px 17px)"></div>KH AM <span id="lg-kh-am">180ph</span></div>
+          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:#1a56db;font-weight:700"><div style="width:20px;height:1.5px;background:repeating-linear-gradient(90deg,#1a56db 0 3px,transparent 3px 6px,#1a56db 6px 14px,transparent 14px 17px)"></div>Kế hoạch AM <span id="lg-kh-am">180ph</span></div>
           <span style="color:var(--border2)">|</span>
-          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:#8b3a52;font-weight:700"><div style="width:20px;height:0;border-top:1.5px dashed #8b3a52"></div>KH PM <span id="lg-kh-pm">90ph</span></div>
+          <div style="display:flex;align-items:center;gap:3px;font-size:8px;color:#8b3a52;font-weight:700"><div style="width:20px;height:0;border-top:1.5px dashed #8b3a52"></div>Kế hoạch PM <span id="lg-kh-pm">90ph</span></div>
         </div>
         <div id="month-chart" style="position:relative;width:100%;height:144px"></div>
       </div>
@@ -628,7 +626,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v196</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v197</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2142,7 +2140,7 @@ function renderMonthPVA(){
   html+='<div style="position:absolute;left:0;right:0;top:0;height:'+H+'px">';
 
   // Đường KH AM (nét liền vàng đất)
-  html+='<div style="position:absolute;left:0;right:0;bottom:'+g1b+'px;height:2px;background:repeating-linear-gradient(90deg,#1a56db 0 3px,transparent 3px 6px,#1a56db 6px 14px,transparent 14px 17px);z-index:5"></div>';
+  html+='<div style="position:absolute;left:0;right:0;bottom:'+g1b+'px;height:1.5px;background:repeating-linear-gradient(90deg,#1a56db 0 3px,transparent 3px 6px,#1a56db 6px 14px,transparent 14px 17px);z-index:5"></div>';
 
   // Đường KH PM (nét đứt đỏ mận)
   html+='<div style="position:absolute;left:0;right:0;bottom:'+g2b+'px;height:0;border-top:1.5px dashed #8b3a52;z-index:5"></div>';
