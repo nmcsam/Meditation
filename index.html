@@ -505,7 +505,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <!-- So sánh số giờ giữa các năm (2026–2040) -->
   <div class="card" style="padding:10px 12px">
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">SỐ GIỜ THIỀN THEO NĂM (2026–2040)</div>
-    <div style="position:relative;height:150px"><canvas id="chart-yearly"></canvas></div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><div id="chart-yearly-box" style="position:relative;height:150px;width:100%"><canvas id="chart-yearly"></canvas></div></div>
   </div>
 </div><!-- end pg-year -->
 
@@ -624,7 +624,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v193</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v195</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -978,9 +978,9 @@ function gioiStrip2HTML(interactive, y, m){
   function key(d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
   // Kích cỡ: cả tab Tháng lẫn tab Hôm nay đều dùng chấm to + ô cố định, trượt ngang được
   var CELL=27, DOT=20, NUMF=10, RH=26, BR=1.6;
-  var cellCss='flex:none;width:'+CELL+'px';
+  var cellCss='flex:1 1 '+CELL+'px;min-width:'+CELL+'px'; // rộng thì chia đều nở hết, hẹp thì giữ 27px + trượt ngang
   // hàng số ngày: cả hai tab đều hiện kèm ngày âm (dương xanh / âm đỏ)
-  var nums='<div style="display:flex">';
+  var nums='<div style="display:flex;width:100%">';
   for(var d=1;d<=dim;d++){
     var ld=lunarOfKey(key(d))[0];
     nums+='<div style="'+cellCss+';text-align:center;line-height:1.3;white-space:nowrap">'
@@ -991,7 +991,7 @@ function gioiStrip2HTML(interactive, y, m){
   }
   nums+='</div>';
   function dotRow(kind){
-    var h='<div style="display:flex;align-items:center">';
+    var h='<div style="display:flex;align-items:center;width:100%">';
     for(var d=1;d<=dim;d++){
       var k=key(d), on;
       if(kind==='plan') on=!!plan[d];
@@ -1017,7 +1017,7 @@ function gioiStrip2HTML(interactive, y, m){
     return h+'</div>';
   }
   var lblSticky=';position:sticky;left:0;background:#f8e9bd;z-index:2;padding-right:6px';
-  var grid='<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 6px;align-items:center;width:max-content">'
+  var grid='<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 6px;align-items:center;width:100%;min-width:max-content">'
     +'<div style="position:sticky;left:0;background:#f8e9bd;z-index:2"></div><div>'+nums+'</div>'
     +'<div class="grow-lbl" style="white-space:nowrap;font-size:9px'+lblSticky+'">KẾ HOẠCH</div><div>'+dotRow('plan')+'</div>'
     +'<div class="grow-lbl" style="white-space:nowrap;font-size:9px'+lblSticky+'">THỰC TẾ</div><div>'+dotRow('actual')+'</div>'
@@ -1073,7 +1073,7 @@ function renderGioiMonthChart(){
     var col=(m2===curM)?'#076d5e':'#0a7a4f';
     h+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px">'
       +'<div style="font-size:8.5px;font-weight:800;color:'+col+';line-height:1;height:10px">'+(v>0?v:'')+'</div>'
-      +'<div style="width:100%;max-width:16px;height:'+bh+'px;border-radius:3px 3px 0 0;background:'+col+(v>0?'':'33')+'"></div>'
+      +'<div style="width:100%;max-width:34px;height:'+bh+'px;border-radius:3px 3px 0 0;background:'+col+(v>0?'':'33')+'"></div>'
       +'<div style="font-size:8px;font-weight:'+(m2===curM?'800':'600')+';color:'+(m2===curM?'#076d5e':'var(--muted)')+'">T'+(m2+1)+'</div>'
       +'</div>';
   }
@@ -1535,12 +1535,15 @@ function renderYearHoursChart(){
       ctx.fillText(v+'h',bar.x,bar.y-2);ctx.restore();
     });
   }};
+  // màn hẹp: nới khung theo số năm (mỗi năm tối thiểu 46px) rồi trượt ngang như các biểu đồ khác
+  var _ybox=document.getElementById('chart-yearly-box');
+  if(_ybox){ _ybox.style.minWidth=Math.max(years.length*46, 0)+'px'; }
   charts.yearly=new Chart(yEl,{
     type:'bar',
     data:{labels:years,datasets:[{data:yData,backgroundColor:'rgba(184,134,11,.75)',borderRadius:3,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:16}},
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+' giờ'}}},
-      scales:{x:{grid:{display:false},ticks:{font:{size:8},maxRotation:60,minRotation:45}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:8},maxRotation:0,minRotation:0,autoSkip:false}},
               y:{beginAtZero:true,ticks:{font:{size:9}}}}},
     plugins:[yearlyPlugin]
   });
@@ -2105,11 +2108,15 @@ function renderMonthPVA(){
   let actualTotal=0,fullDays=0,missDays=0;
 
   // maxVal = max của cả KH lẫn thực tế, cộng 15% buffer
-  let dataMax=0;
+  let dataMax=0, maxAM=0, maxPM=0;
   for(let d=1;d<=daysInMonth;d++){
     const k2=y+'-'+String(mo+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
     const e2=getEntry(k2);
-    if(e2){dataMax=Math.max(dataMax,e2.mins1||0,e2.mins2||0);}
+    if(e2){
+      dataMax=Math.max(dataMax,e2.mins1||0,e2.mins2||0);
+      maxAM=Math.max(maxAM,e2.mins1||0);
+      maxPM=Math.max(maxPM,e2.mins2||0);
+    }
   }
   const maxVal=Math.max(ST.goal1,ST.goal2,dataMax)*1.15;
   const H=130; // px chiều cao vùng cột
@@ -2163,14 +2170,21 @@ function renderMonthPVA(){
     const show2=m2>0||isPast||isToday;
     const total=m1+m2;
     html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:'+H+'px;position:relative;" title="Ngay '+d+': S'+m1+'ph T'+m2+'ph">';
+    // nhãn số trên cột KỶ LỤC vượt đường kế hoạch (đồng hạng hiện hết)
+    const lblAM = (m1>0 && m1===maxAM && maxAM>ST.goal1);
+    const lblPM = (m2>0 && m2===maxPM && maxPM>ST.goal2);
     html+='<div style="width:100%;display:flex;align-items:flex-end;gap:0.5px;flex:1">';
     if(show1){
       const bc1=m1>0?c1:'rgba(192,57,43,.25)';
-      html+='<div style="flex:1;height:'+Math.max(h1,emptyH)+'px;border-radius:2px 2px 0 0;background:'+bc1+'"></div>';
+      html+='<div style="flex:1;height:'+Math.max(h1,emptyH)+'px;border-radius:2px 2px 0 0;background:'+bc1+';position:relative">'
+        +(lblAM?'<span style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:1px;font-size:7px;font-weight:900;color:#076d5e;background:var(--surface);padding:0 2px;border-radius:3px;white-space:nowrap;z-index:6">'+fmtHM(m1)+'</span>':'')
+        +'</div>';
     }else{html+='<div style="flex:1;height:0"></div>';}
     if(show2){
       const bc2=m2>0?c2:'rgba(192,57,43,.25)';
-      html+='<div style="flex:1;height:'+Math.max(h2,emptyH)+'px;border-radius:2px 2px 0 0;background:'+bc2+'"></div>';
+      html+='<div style="flex:1;height:'+Math.max(h2,emptyH)+'px;border-radius:2px 2px 0 0;background:'+bc2+';position:relative">'
+        +(lblPM?'<span style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:1px;font-size:7px;font-weight:900;color:#7a1c38;background:var(--surface);padding:0 2px;border-radius:3px;white-space:nowrap;z-index:6">'+fmtHM(m2)+'</span>':'')
+        +'</div>';
     }else{html+='<div style="flex:1;height:0"></div>';}
     html+='</div>';
     html+='</div>';
