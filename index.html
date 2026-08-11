@@ -413,10 +413,19 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="cal-hdr-cell">T7</div>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
-    <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+    <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center">
       <div class="lg-item"><div class="lg-dot" style="background:#2ECC40"></div>Đủ 2 thời</div>
       <div class="lg-item"><div class="lg-dot" style="background:#FFDC00;border:1px solid #ccc"></div>1 thời</div>
       <div class="lg-item"><div class="lg-dot" style="background:#FF4136"></div>Bỏ</div>
+      <span style="color:var(--border2)">|</span>
+      <span style="font-size:10.5px;font-weight:800;color:var(--ink);white-space:nowrap">Kế hoạch:</span>
+      <span style="display:inline-flex;align-items:center;gap:3px;white-space:nowrap;font-size:10.5px;font-weight:700;color:#7a5410">🌅 AM (phút)
+        <input type="number" id="goal1-input" min="5" max="1200" value="30" oninput="updateGoal(1,this.value)" style="width:52px;padding:3px 5px;border:1.5px solid var(--border2);border-radius:7px;font-family:inherit;font-size:11.5px;font-weight:800;background:var(--surface);color:var(--ink)">
+      </span>
+      <span style="color:var(--border2)">|</span>
+      <span style="display:inline-flex;align-items:center;gap:3px;white-space:nowrap;font-size:10.5px;font-weight:700;color:#2c3e6b">🌙 PM (phút)
+        <input type="number" id="goal2-input" min="5" max="1200" value="30" oninput="updateGoal(2,this.value)" style="width:52px;padding:3px 5px;border:1.5px solid var(--border2);border-radius:7px;font-family:inherit;font-size:11.5px;font-weight:800;background:var(--surface);color:var(--ink)">
+      </span>
     </div>
   </div>
   <div class="card">
@@ -448,27 +457,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div style="display:flex;align-items:baseline;gap:5px"><span class="mcell-val" id="mo-kem" style="color:#fff">0</span><span style="font-size:10px;color:rgba(255,255,255,.85)">lần</span></div>
     </div>
   </div>
-<div class="card">
-    <div class="card-hd">⚙ Cài đặt kế hoạch (áp dụng hằng ngày)</div>
-    <div class="frow">
-      <label>🌅 AM (phút)</label>
-      <input class="finput" type="number" id="goal1-input" min="5" max="1200" value="30" oninput="updateGoal(1,this.value)">
-    </div>
-    <div class="frow">
-      <label>🌙 PM (phút)</label>
-      <input class="finput" type="number" id="goal2-input" min="5" max="1200" value="30" oninput="updateGoal(2,this.value)">
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Loại thiền yêu thích</div>
-    <div class="tags" id="pref-tags">
-      <span class="tag on" onclick="this.classList.toggle('on')">Ānāpāna</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Mettā</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Vipassanā</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Từ bi</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Tụng kinh</span>
-      <span class="tag" onclick="this.classList.toggle('on')">Kinh hành</span>
-    </div>
 
-  </div>
     <div class="card" style="background:linear-gradient(180deg,#fdf1cf 0%,#f7e3ae 100%);border:1.5px solid #d9b45a">
     <div class="card-hd" style="color:#7a5410">☸ Giữ 8 giới — kế hoạch &amp; thực tế tháng này</div>
     <div class="mcell" style="min-height:0;display:block;margin-bottom:10px">
@@ -625,7 +614,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v177</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v178</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
