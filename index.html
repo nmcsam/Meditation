@@ -427,7 +427,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:2px">TẦN SUẤT GIỜ THIỀN TRONG NGÀY (24 KHUNG GIỜ)</div>
     <div id="hour-freq-note" style="font-size:10.5px;font-weight:800;color:var(--teal);margin-bottom:6px">—</div>
     <div style="position:relative;height:140px"><canvas id="cal-day-chart"></canvas></div>
-    <div style="font-size:9px;color:var(--muted);margin-top:4px">Đường tần suất: mỗi điểm = số lần thiền có mặt trong khung giờ đó (tháng đang xem)</div>
+    <div style="font-size:9px;color:var(--muted);margin-top:4px">Đường tần suất: 1 khung = trọn 60ph thiền trong khung giờ đó (30ph = 0.5 khung, 1ph = 1/60) — cộng dồn tháng đang xem</div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:5px">
     <div class="mcell"><div class="mcell-label">Ngày thiền</div><div class="mcell-val" id="mo-days">0</div></div>
@@ -629,7 +629,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v172</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v173</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2386,17 +2386,17 @@ function renderCalDayChart(){
         let st=hmToMin(t.s);
         if(st===null){ const en=hmToMin(t.e); st=(en!==null)? (en-mins+1440)%1440 : null; }
         if(st===null){ return; }
-        // mỗi thời +1 LẦN cho từng khung giờ nó chạm tới (qua nửa đêm vẫn đúng)
-        const seen={};
-        for(let p=0;p<mins;p+=1){ seen[Math.floor(((st+p)%1440)/60)]=1; }
-        Object.keys(seen).forEach(function(h){ bins[+h]++; });
+        // rải từng phút (qua nửa đêm vẫn đúng) — lát nữa quy ra khung: 60ph = 1 khung
+        for(let p=0;p<mins;p++){ bins[Math.floor(((st+p)%1440)/60)]++; }
       });
     } else {
-      // dữ liệu kiểu cũ không có giờ: ước 1 lần vào 5h (AM) và 19h (PM)
-      if(e.mins1) bins[5]++;
-      if(e.mins2) bins[19]++;
+      // dữ liệu kiểu cũ không có giờ: ước vào 5h (AM) và 19h (PM)
+      if(e.mins1) bins[5]+=e.mins1;
+      if(e.mins2) bins[19]+=e.mins2;
     }
   }
+  // quy ra KHUNG GIỜ: 60 phút = 1 khung, 30ph = 0.5, 1ph = 1/60
+  for(let h=0;h<24;h++) bins[h]=Math.round(bins[h]/60*100)/100;
   const labels=[]; for(let h=0;h<24;h++) labels.push(h);
   // khung cao nhất riêng AM (0-11h) và PM (12-23h)
   let bestAM=0; for(let h=1;h<12;h++) if(bins[h]>bins[bestAM]) bestAM=h;
@@ -2426,11 +2426,11 @@ function renderCalDayChart(){
       responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{
         title:function(it){const h=+it[0].label;return String(h).padStart(2,'0')+':00–'+String((h+1)%24).padStart(2,'0')+':00';},
-        label:function(it){return it.raw+' lần';}
+        label:function(it){return it.raw+' khung · '+fmtHM(Math.round(it.raw*60));}
       }}},
       scales:{
         x:{grid:{display:false},ticks:{color:tc,font:{size:7},maxRotation:0,autoSkip:false,callback:function(v,idx){return idx;}}},
-        y:{beginAtZero:true,grid:{color:gc},ticks:{color:tc,font:{size:9},precision:0,stepSize:1}}
+        y:{beginAtZero:true,grid:{color:gc},ticks:{color:tc,font:{size:9}}}
       }
     }
   });
