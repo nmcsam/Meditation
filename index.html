@@ -42,9 +42,9 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto;width:100%
 .sync-code-input{width:100%;padding:10px;font-size:16px;letter-spacing:2px;text-align:center;font-weight:700;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);color:var(--ink);text-transform:uppercase}
 .nav{display:flex;background:#ffffff;border-bottom:1px solid #e0e0e0}
 .nav-btn{flex:1;border:none;background:transparent;padding:9px 2px 7px;font-size:10px;font-weight:500;color:#999999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-bottom:2px solid transparent;border-radius:10px 10px 0 0;transition:background .12s}
-.nav-btn.on{background:linear-gradient(180deg,#0e8a77 0%,#076d5e 100%);box-shadow:0 2px 6px rgba(4,60,50,.35)}
+.nav-btn.on{background:linear-gradient(180deg,#d97706 0%,#b45309 100%);box-shadow:0 2px 6px rgba(124,58,0,.4)}
 .nav-btn svg{width:17px;height:17px;stroke-width:1.7}
-.nav-btn.on{color:#fff;font-weight:800;border-bottom-color:#b8860b}
+.nav-btn.on{color:#fff;font-weight:800;border-bottom-color:#7c3a00}
 .scroll{flex:1;overflow-y:auto;padding:12px 12px 80px;background:transparent}
 .page{display:none}.page.on{display:block}
 .card{background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 26%),linear-gradient(180deg,#ffffff 0%,#fdfaf4 60%,#f1ead9 100%);border:1px solid #ded4bd;border-radius:var(--rl);padding:12px 14px;margin-bottom:10px;box-shadow:0 6px 14px rgba(70,50,15,.16),0 2px 0 rgba(255,255,255,1) inset,0 -3px 6px rgba(150,125,75,.10) inset;position:relative}
@@ -624,7 +624,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v189</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v191</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1786,13 +1786,16 @@ function fitTimerRow(){
   const row=document.getElementById('timer-row'); if(!row) return;
   const host=row.parentElement; if(!host) return;
   const need=472; // 4 khối 112 + 3 khe 8
-  const sc=Math.min(1, host.clientWidth/need);
+  const cs=getComputedStyle(host);
+  const avail=host.clientWidth - (parseFloat(cs.paddingLeft)||0) - (parseFloat(cs.paddingRight)||0);
+  const sc=Math.min(1, avail/need);
+  if(sc<1){ row.style.width='472px'; } else { row.style.width='100%'; } // hẹp: khóa đúng khổ thiết kế rồi thu — không tràn; rộng: nở hết
   if('zoom' in row.style){
     row.style.zoom=String(sc);
     row.style.transform=''; host.style.height='';
   } else {
     row.style.transform='scale('+sc+')';
-    row.style.transformOrigin='center top';
+    row.style.transformOrigin='left top';
     host.style.height=(104*sc)+'px';
   }
 
