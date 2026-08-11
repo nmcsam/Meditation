@@ -424,7 +424,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:2px">TẦN SUẤT GIỜ THIỀN TRONG NGÀY (24 KHUNG GIỜ)</div>
     <div id="hour-freq-note" style="font-size:10.5px;font-weight:800;color:var(--teal);margin-bottom:6px">—</div>
     <div style="position:relative;height:140px"><canvas id="cal-day-chart"></canvas></div>
-    <div style="font-size:9px;color:var(--muted);margin-top:4px">Cột = tổng phút thiền rơi vào khung giờ đó trong tháng đang xem</div>
+    <div style="font-size:9px;color:var(--muted);margin-top:4px">Đường tần suất: mỗi điểm = tổng phút thiền rơi vào khung giờ đó trong tháng đang xem</div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:5px">
     <div class="mcell"><div class="mcell-label">Ngày thiền</div><div class="mcell-val" id="mo-days">0</div></div>
@@ -568,7 +568,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <div id="note-modal" style="position:fixed;inset:0;background:rgba(10,20,15,.55);z-index:1200;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box">
     <div class="card" style="width:100%;max-width:520px;padding:16px;box-sizing:border-box;box-shadow:0 10px 30px rgba(0,0,0,.35)">
       <div id="note-modal-title" style="font-size:18px;font-weight:900;margin-bottom:10px">🧘 Cảm nhận thời thiền</div>
-      <textarea id="note-modal-text" placeholder="Viết cảm nhận về thời thiền: đề mục, tầm–tứ, hỷ–lạc, trạng thái tâm, chướng ngại…" style="width:100%;box-sizing:border-box;min-height:46vh;padding:12px;border:1.5px solid var(--border2);border-radius:var(--r);font-family:inherit;font-size:32px;line-height:1.45;resize:vertical;background:var(--surface);color:var(--ink)"></textarea>
+      <textarea id="note-modal-text" placeholder="Viết cảm nhận về thời thiền: đề mục, tầm–tứ, hỷ–lạc, trạng thái tâm, chướng ngại…" style="width:100%;box-sizing:border-box;min-height:46vh;padding:12px;border:1.5px solid var(--border2);border-radius:var(--r);font-family:inherit;font-size:22px;line-height:1.5;resize:vertical;background:var(--surface);color:var(--ink)"></textarea>
       <div style="display:flex;gap:8px;margin-top:12px">
         <button onclick="noteModalSave()" style="flex:1;height:44px;border-radius:var(--r);border:none;background:var(--teal);color:#fff;font-weight:900;font-size:14px;font-family:inherit;cursor:pointer">✓ Lưu cảm nhận</button>
         <button onclick="noteModalClose()" style="flex:1;height:44px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;color:var(--muted);font-weight:800;font-size:13px;font-family:inherit;cursor:pointer">Bỏ qua</button>
@@ -626,7 +626,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v168</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v169</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2400,12 +2400,19 @@ function renderCalDayChart(){
       note.textContent='🏆 Khung nhiều nhất: '+String(best).padStart(2,'0')+':00–'+String((best+1)%24).padStart(2,'0')+':00 · '+fmtHM(bins[best]);
     } else { note.textContent='Chưa có dữ liệu trong tháng này'; }
   }
-  const cols=bins.map(function(v,h){ return h===best&&v>0 ? 'rgba(184,134,11,.95)' : (h<12?'rgba(7,109,94,.75)':'rgba(122,28,56,.75)'); });
+  const ptCol=bins.map(function(v,h){ return h===best&&v>0 ? 'rgba(184,134,11,1)' : 'rgba(7,109,94,.9)'; });
+  const ptR=bins.map(function(v,h){ return h===best&&v>0 ? 4.5 : 2; });
   const gc='rgba(0,0,0,.07)';const tc='#5a6878';
   if(charts.calDay)charts.calDay.destroy();
   charts.calDay=new Chart(document.getElementById('cal-day-chart'),{
-    type:'bar',
-    data:{labels:labels,datasets:[{label:'Phút',data:bins,backgroundColor:cols,borderRadius:2,borderSkipped:false}]},
+    type:'line',
+    data:{labels:labels,datasets:[{
+      label:'Phút', data:bins,
+      borderColor:'rgba(7,109,94,.95)', borderWidth:2,
+      backgroundColor:'rgba(7,109,94,.14)', fill:true,
+      tension:0.35,
+      pointBackgroundColor:ptCol, pointBorderColor:ptCol, pointRadius:ptR, pointHoverRadius:6
+    }]},
     options:{
       responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{
@@ -2413,7 +2420,7 @@ function renderCalDayChart(){
         label:function(it){return fmtHM(it.raw);}
       }}},
       scales:{
-        x:{grid:{display:false},ticks:{color:tc,font:{size:8},maxRotation:0,autoSkip:false,callback:function(v,idx){return idx%3===0?idx:'';}}},
+        x:{grid:{display:false},ticks:{color:tc,font:{size:7},maxRotation:0,autoSkip:false,callback:function(v,idx){return idx;}}},
         y:{beginAtZero:true,grid:{color:gc},ticks:{color:tc,font:{size:9}}}
       }
     }
