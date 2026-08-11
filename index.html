@@ -622,7 +622,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v185</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v186</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2899,9 +2899,14 @@ function renderRec(){
     return d>0 ? '#2ecc71' : '#FFFF00'; // đúng màu Tốt / Trung bình của biểu đồ tròn
   }
   function cell(icon,label,val,unit,sub,color,bg){
+    const solid = bg && bg!=='var(--surface2)'; // ô đã đổ màu xu hướng -> toàn bộ chữ đen cho rõ
+    if(solid && sub) sub = sub.replace(/color:[^;"']+/g,'color:#000');
+    const cLbl = solid ? '#000' : 'var(--muted)';
+    const cVal = solid ? '#000' : (color||'var(--ink)');
+    const cUnit = solid ? 'rgba(0,0,0,.75)' : 'var(--muted)';
     return '<div style="background:'+(bg||'var(--surface2)')+';border:1px solid var(--border2);border-radius:9px;padding:6px 5px;display:flex;flex-direction:column;justify-content:center;min-height:54px">'
-      +'<div style="font-size:7.5px;color:var(--muted);font-weight:700;line-height:1.15;margin-bottom:2px">'+icon+' '+label+'</div>'
-      +'<div style="font-size:14px;font-weight:800;color:'+(color||'var(--ink)')+';line-height:1">'+val+(unit?'<span style="font-size:8.5px;font-weight:600;color:var(--muted)"> '+unit+'</span>':'')+'</div>'
+      +'<div style="font-size:7.5px;color:'+cLbl+';font-weight:700;line-height:1.15;margin-bottom:2px">'+icon+' '+label+'</div>'
+      +'<div style="font-size:14px;font-weight:800;color:'+cVal+';line-height:1">'+val+(unit?'<span style="font-size:8.5px;font-weight:600;color:'+cUnit+'"> '+unit+'</span>':'')+'</div>'
       +'<div style="margin-top:2px;line-height:1">'+(sub||'')+'</div></div>';
   }
   const cGood='#0a7a4f', cWarn='#b8860b', cBad='#c0392b';
