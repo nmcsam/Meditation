@@ -626,7 +626,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v164</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v165</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1603,19 +1603,16 @@ function checkMonthReset(){
 // ── TIMER — DỪNG GHI VÀO THỰC TẾ (CỘNG DỒN) ──
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
 function ringBell(type){
-  if(type==='custom'&&customAudio){
-    try{customAudio.currentTime=0;customAudio.volume=1;customAudio.play();}catch(e){}
-    return;
-  }
-  const url=bellWavURL(type)||bellWavURL('chua');
   try{
-    if(kaAudio){
-      kaAudio.onended=function(){ if(timerRunning){ kaStart(); } };
-      kaAudio.loop=false; _kaMode='bell'; kaAudio.src=url; kaAudio.volume=1;
-      kaAudio.play().catch(function(){ const a=new Audio(url); a.volume=1; a.play().catch(function(){}); });
+    if(timerRunning && kaAudio && kaAudio.src===_kaCombURL && _kaCombURL){
+      // dòng âm liền mạch: tua kim sang đoạn chuông — không hở một mili giây nào cho hệ thống bóp
+      _kaMode='bell';
+      kaAudio.currentTime=KA_BELL_AT;
+      kaAudio.play().catch(function(){});
     } else {
-      const a=new Audio(url); a.volume=1; a.play().catch(function(){});
+      const a=new Audio(bellWavURL(type||'chua')); a.volume=1; a.play().catch(function(){});
     }
+    if(navigator.vibrate) navigator.vibrate([300,150,300]);
   }catch(e){}
 }
 
@@ -1673,13 +1670,66 @@ function bellWavURL(type){
   _bellURLs[type]=URL.createObjectURL(new Blob([dv.buffer],{type:'audio/wav'}));
   return _bellURLs[type];
 }
+let _kaCombURL=null;
+const KA_A=4.0, KA_LOOP_AT=2.0, KA_BELL_AT=4.0, KA_BELL_BACK=18.0, KA_TOTAL=19.7;
+function kaCombinedURL(){
+  if(_kaCombURL) return _kaCombURL;
+  const sr=22050, total=Math.ceil(KA_TOTAL*sr);
+  const data=new Float32Array(total);
+  // đoạn 45Hz (0–4s) + đuôi (18.2–19.7s)
+  const w45=2*Math.PI*45/sr;
+  for(let k=0;k<Math.floor(KA_A*sr);k++) data[k]=0.30*Math.sin(w45*k);
+  for(let k=Math.floor(18.2*sr);k<total;k++) data[k]=0.30*Math.sin(w45*k);
+  // chuông chùa 3 tiếng bắt đầu tại 4s
+  const spec={hs:[[165,.9],[330,.45],[445,.3],[660,.18],[990,.08]], dur:6.5, gap:3.2, last:7.5};
+  const b0=Math.floor(KA_BELL_AT*sr);
+  for(let s=0;s<3;s++){
+    const t0=b0+Math.floor(s*spec.gap*sr);
+    const dur=(s===2?spec.last:spec.dur), N=Math.floor(dur*sr);
+    for(const hv of spec.hs){
+      const w=2*Math.PI*hv[0]/sr, vv=hv[1];
+      for(let k=0;k<N && t0+k<total;k++){
+        const env=Math.exp(-3.2*k/N), atk=Math.min(1,k/(0.012*sr));
+        data[t0+k]+=vv*atk*env*Math.sin(w*k);
+      }
+    }
+  }
+  let mx=0; for(let k=0;k<total;k++){const a=Math.abs(data[k]); if(a>mx)mx=a;}
+  const g=mx>0?0.95/mx:1;
+  const dv=new DataView(new ArrayBuffer(44+total*2));
+  function ws(o,s2){for(let i=0;i<s2.length;i++)dv.setUint8(o+i,s2.charCodeAt(i));}
+  ws(0,'RIFF');dv.setUint32(4,36+total*2,true);ws(8,'WAVEfmt ');dv.setUint32(16,16,true);
+  dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,sr,true);
+  dv.setUint32(28,sr*2,true);dv.setUint16(32,2,true);dv.setUint16(34,16,true);
+  ws(36,'data');dv.setUint32(40,total*2,true);
+  for(let k=0;k<total;k++)dv.setInt16(44+k*2,Math.max(-32768,Math.min(32767,Math.round(data[k]*g*32767))),true);
+  _kaCombURL=URL.createObjectURL(new Blob([dv.buffer],{type:'audio/wav'}));
+  return _kaCombURL;
+}
+function kaGuard(){
+  try{
+    if(!kaAudio) return;
+    const t=kaAudio.currentTime;
+    if(_kaMode==='ka'){
+      if(t>=KA_LOOP_AT) kaAudio.currentTime=0; // quay vòng trong vùng 45Hz, biên an toàn 2 giây
+    } else if(_kaMode==='bell'){
+      if(t>=KA_BELL_BACK){
+        if(timerRunning){ _kaMode='ka'; kaAudio.currentTime=0; }
+        else { _kaMode='off'; kaAudio.pause(); }
+      }
+    }
+  }catch(e){}
+}
 let _kaMode='off'; // 'ka' = âm giữ thức, 'bell' = đang ngân chuông
 function kaStart(){
   try{
     if(!kaAudio){ kaAudio=new Audio(); }
-    kaAudio.onended=null;
-    kaAudio.src=kaWavURL(); kaAudio.loop=true; kaAudio.volume=1;
+    if(kaAudio.src!==kaCombinedURL()) kaAudio.src=kaCombinedURL();
+    kaAudio.loop=false; kaAudio.volume=1;
+    kaAudio.ontimeupdate=kaGuard;
+    kaAudio.onended=function(){ try{ if(timerRunning){ _kaMode='ka'; kaAudio.currentTime=0; kaAudio.play().catch(function(){});} }catch(e){} };
     _kaMode='ka';
+    if(kaAudio.currentTime>=KA_LOOP_AT){ try{ kaAudio.currentTime=0; }catch(e){} }
     kaAudio.play().catch(function(){});
     if('mediaSession' in navigator){
       try{
@@ -1782,8 +1832,21 @@ function copyDayReport(){
     out+=(i?'\n\n':'')+'• Thời thiền '+_roman(i+1)+': Từ '+(t.s||'--:--')+' Đến '+(t.e||'--:--')+' Tổng '+_tongH(t.m||0)+'\n'
         +((t.n&&t.n.trim())? t.n.trim() : '(chưa ghi cảm nhận)');
   });
+  // bản HTML: tiêu đề in đậm thật khi dán vào nơi hỗ trợ định dạng
+  let html='';
+  ds.forEach(function(t,i){
+    html+=(i?'<br><br>':'')+'<b>• Thời thiền '+_roman(i+1)+': Từ '+(t.s||'--:--')+' Đến '+(t.e||'--:--')+' Tổng '+_tongH(t.m||0)+'</b><br>'
+        +_esc((t.n&&t.n.trim())? t.n.trim() : '(chưa ghi cảm nhận)').replace(/\n/g,'<br>');
+  });
   function done(){ toast('✓ Đã copy báo cáo — dán vào tin nhắn gửi thiền sư'); }
-  if(navigator.clipboard && navigator.clipboard.writeText){
+  if(navigator.clipboard && navigator.clipboard.write && window.ClipboardItem){
+    try{
+      navigator.clipboard.write([new ClipboardItem({
+        'text/plain': new Blob([out],{type:'text/plain'}),
+        'text/html':  new Blob([html],{type:'text/html'})
+      })]).then(done, function(){ navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); }); });
+    }catch(e){ navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); }); }
+  } else if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); });
   } else { _copyFallback(out); done(); }
 }
@@ -1795,8 +1858,18 @@ function _copyFallback(txt){
     document.execCommand('copy'); document.body.removeChild(ta);
   }catch(e){}
 }
-let _noteKey=null,_noteIdx=-1;
+let _noteKey=null,_noteIdx=-1,_noteMode='sit',_noteDdIdx=-1;
+function ddOpenNote(i){
+  ddCapture(); // giữ các sửa đổi giờ/phút đang gõ dở
+  _noteMode='dd'; _noteDdIdx=i;
+  const t=document.getElementById('note-modal-title');
+  if(t) t.textContent='📝 Ghi chú Thời '+(i+1);
+  const ta=document.getElementById('note-modal-text'); if(ta) ta.value=(ddSess[i]&&ddSess[i].n)||'';
+  document.getElementById('note-modal').style.display='flex';
+  setTimeout(function(){ try{ta.focus();}catch(e){} }, 80);
+}
 function openNoteModal(mins){
+  _noteMode='sit';
   const t=document.getElementById('note-modal-title');
   if(t) t.textContent='🧘 Cảm nhận thời thiền ('+fmtHM(mins)+')';
   const ta=document.getElementById('note-modal-text'); if(ta) ta.value='';
@@ -1807,17 +1880,22 @@ function noteModalSave(){
   try{
     const ta=document.getElementById('note-modal-text');
     const txt=(ta.value||'').trim();
-    if(_noteKey!==null && _noteIdx>=0){
-      const e=getEntry(_noteKey);
-      if(e && e.th && e.th[_noteIdx]){ e.th[_noteIdx].n=txt; save(); renderAll(); }
+    if(_noteMode==='dd'){
+      if(_noteDdIdx>=0 && ddSess[_noteDdIdx]){ ddSess[_noteDdIdx].n=txt; ddRenderSessions(); }
+      if(txt) toast('✓ Đã ghi chú — nhớ bấm Lưu của ngày để chốt');
+    } else {
+      if(_noteKey!==null && _noteIdx>=0){
+        const e=getEntry(_noteKey);
+        if(e && e.th && e.th[_noteIdx]){ e.th[_noteIdx].n=txt; save(); renderAll(); }
+      }
+      if(txt) toast('✓ Đã lưu cảm nhận');
     }
-    if(txt) toast('✓ Đã lưu cảm nhận');
   }catch(e){}
   noteModalClose();
 }
 function noteModalClose(){
   document.getElementById('note-modal').style.display='none';
-  _noteKey=null; _noteIdx=-1;
+  _noteKey=null; _noteIdx=-1; _noteDdIdx=-1; _noteMode='sit';
 }
 function timerBegin(startAt, setMins, daRung){
   timerRunning=true; timerStartAt=startAt;
@@ -2439,10 +2517,13 @@ function ddRenderSessions(){
       +'<span class="vsep"></span>'
       +rb('tot','Tốt','')+rb('can','Tr. bình',' rcan')+rb('kem','Kém','')
       +'<span class="vsep"></span>'
-      +'<button type="button" onclick="noteCopy(\'dd-n-'+i+'\')" class="nbtn" title="Copy ghi chú">Copy</button>'
-      +'<button type="button" onclick="notePaste(\'dd-n-'+i+'\')" class="nbtn" title="Dán vào ghi chú">Dán</button>'
       +'</div>'
-      +'<textarea id="dd-n-'+i+'" rows="3" placeholder="Ghi chú thời '+(i+1)+'..." class="tnote">'+_esc(t.n)+'</textarea>'
+      +((t.n&&t.n.trim())
+        ? '<div style="background:var(--surface);border:1px solid '+bd+';border-radius:8px;padding:7px 9px;margin-top:2px">'
+          +'<div style="font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word">'+_esc(t.n)+'</div>'
+          +'<button type="button" onclick="ddOpenNote('+i+')" style="margin-top:6px;height:30px;padding:0 14px;border-radius:7px;border:1.5px solid '+bd+';background:transparent;color:'+fg+';font-weight:800;font-size:11.5px;font-family:inherit;cursor:pointer">✎ Sửa</button>'
+          +'</div>'
+        : '<button type="button" onclick="ddOpenNote('+i+')" style="width:100%;margin-top:2px;height:36px;border-radius:8px;border:1.5px dashed '+bd+';background:transparent;color:var(--muted);font-weight:700;font-size:12px;font-family:inherit;cursor:pointer">📝 Ghi chú thời thiền</button>')
       +'</div>';
   }).join('');
   const add=document.getElementById('dd-add-sess');
