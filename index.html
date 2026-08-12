@@ -584,6 +584,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div style="font-size:12.5px;font-weight:900;letter-spacing:.5px;margin-bottom:12px">⏱ THỜI GIAN THIỀN (PHÚT)</div>
       <input id="timer-modal-min" class="tin" inputmode="numeric" maxlength="4" onclick="event.stopPropagation()" style="width:116px;height:58px;font-size:28px;font-weight:900;text-align:center;border-width:2px;box-sizing:border-box">
       <button onclick="timerModalGo()" style="display:block;width:100%;margin-top:14px;height:50px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:900;font-size:16px;font-family:inherit;cursor:pointer">▶ Bắt đầu</button>
+      <button onclick="sysTimerGo()" style="display:block;width:100%;margin-top:8px;height:42px;border-radius:10px;border:1.5px solid var(--border2);background:transparent;color:var(--ink);font-weight:800;font-size:13px;font-family:inherit;cursor:pointer">⏰ Hẹn giờ hệ thống (Đồng hồ)</button>
+      <div style="margin-top:6px;font-size:9px;color:var(--muted);line-height:1.4">Nút ⏰ cần APK bản mới có cầu nối Đồng hồ — xem gói twa-clock.zip</div>
     </div>
   </div>
 
@@ -627,7 +629,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v199</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v201</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1683,8 +1685,8 @@ function kaCombinedURL(){
   const data=new Float32Array(total);
   // đoạn 45Hz (0–4s) + đuôi (18.2–19.7s)
   const w45=2*Math.PI*45/sr;
-  for(let k=0;k<Math.floor(KA_A*sr);k++) data[k]=0.30*Math.sin(w45*k);
-  for(let k=Math.floor(18.2*sr);k<total;k++) data[k]=0.30*Math.sin(w45*k);
+  for(let k=0;k<Math.floor(KA_A*sr);k++) data[k]=0.010*Math.sin(w45*k);
+  for(let k=Math.floor(18.2*sr);k<total;k++) data[k]=0.010*Math.sin(w45*k);
   // chuông chùa 3 tiếng bắt đầu tại 4s
   const spec={hs:[[165,.9],[330,.45],[445,.3],[660,.18],[990,.08]], dur:6.5, gap:3.2, last:7.5};
   const b0=Math.floor(KA_BELL_AT*sr);
@@ -1873,6 +1875,15 @@ function timerTap(){
   inp.value=last;
   document.getElementById('timer-modal').style.display='flex';
   setTimeout(function(){ try{inp.focus(); inp.select();}catch(e){} }, 60);
+}
+function sysTimerGo(){
+  // gọi cầu nối native trong APK: thienclock://set?min=N -> mở thẳng Hẹn giờ của app Đồng hồ
+  const inp=document.getElementById('timer-modal-min');
+  let v=parseInt(inp && inp.value,10);
+  if(!isFinite(v)||v<1) v=parseInt(localStorage.getItem('thien_last_set')||'180',10)||180;
+  v=Math.max(1,Math.min(1440,v));
+  try{ localStorage.setItem('thien_last_set', String(v)); }catch(e){}
+  location.href='thienclock://set?min='+v;
 }
 function timerModalGo(){
   const inp=document.getElementById('timer-modal-min');
