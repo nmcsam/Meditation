@@ -561,6 +561,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div class="card" style="width:100%;max-width:520px;padding:16px;box-sizing:border-box;box-shadow:0 10px 30px rgba(0,0,0,.35)">
       <div id="note-modal-title" style="font-size:18px;font-weight:900;margin-bottom:10px">🧘 Cảm nhận thời thiền</div>
       <textarea id="note-modal-text" placeholder="Viết cảm nhận về thời thiền: đề mục, tầm–tứ, hỷ–lạc, trạng thái tâm, chướng ngại…" style="width:100%;box-sizing:border-box;min-height:46vh;padding:12px;border:1.5px solid var(--border2);border-radius:var(--r);font-family:inherit;font-size:22px;line-height:1.5;resize:vertical;background:var(--surface);color:var(--ink)"></textarea>
+      <div id="note-rate-row" style="display:flex;gap:8px;margin-top:10px">
+        <button type="button" id="note-rate-tot" onclick="noteRate('tot')" style="flex:1;height:40px;border-radius:10px;border:1.5px solid #cfc3a6;background:transparent;color:#555;font-weight:800;font-size:14px;font-family:inherit;cursor:pointer">Tốt</button>
+        <button type="button" id="note-rate-can" onclick="noteRate('can')" style="flex:1;height:40px;border-radius:10px;border:1.5px solid #cfc3a6;background:transparent;color:#555;font-weight:800;font-size:14px;font-family:inherit;cursor:pointer">Tr. bình</button>
+        <button type="button" id="note-rate-kem" onclick="noteRate('kem')" style="flex:1;height:40px;border-radius:10px;border:1.5px solid #cfc3a6;background:transparent;color:#555;font-weight:800;font-size:14px;font-family:inherit;cursor:pointer">Kém</button>
+      </div>
       <div style="display:flex;gap:8px;margin-top:12px">
         <button onclick="noteModalSave()" style="flex:1;height:44px;border-radius:var(--r);border:none;background:var(--teal);color:#fff;font-weight:900;font-size:14px;font-family:inherit;cursor:pointer">✓ Lưu cảm nhận</button>
         <button onclick="noteModalClose()" style="flex:1;height:44px;border-radius:var(--r);border:1.5px solid var(--border2);background:transparent;color:var(--muted);font-weight:800;font-size:13px;font-family:inherit;cursor:pointer">Bỏ qua</button>
@@ -1943,6 +1948,7 @@ function ddOpenNote(i){
   if(t) t.textContent='📝 Ghi chú Thời '+(i+1);
   const ta=document.getElementById('note-modal-text'); if(ta) ta.value=(ddSess[i]&&ddSess[i].n)||'';
   document.getElementById('note-modal').style.display='flex';
+  var _rr=document.getElementById('note-rate-row'); if(_rr) _rr.style.display='none';
   setTimeout(function(){ try{ta.focus();}catch(e){} }, 80);
 }
 function openNoteModal(mins){
@@ -1951,6 +1957,7 @@ function openNoteModal(mins){
   if(t) t.textContent='🧘 Cảm nhận thời thiền ('+fmtHM(mins)+')';
   const ta=document.getElementById('note-modal-text'); if(ta) ta.value='';
   document.getElementById('note-modal').style.display='flex';
+  var _rr=document.getElementById('note-rate-row'); if(_rr) _rr.style.display='flex'; noteRateHi();
   setTimeout(function(){ try{ta.focus();}catch(e){} }, 80);
 }
 function noteModalSave(){
@@ -1973,6 +1980,26 @@ function noteModalSave(){
 function noteModalClose(){
   document.getElementById('note-modal').style.display='none';
   _noteKey=null; _noteIdx=-1; _noteDdIdx=-1; _noteMode='sit';
+}
+var NOTE_RATE_COLORS={tot:'#2ecc71',can:'#FFFF00',kem:'#e74c3c'};
+function noteRateHi(){
+  try{
+    var cur=null;
+    if(_noteMode==='sit'){ var e=getEntry(_noteKey); if(e&&e.th&&e.th[_noteIdx]) cur=e.th[_noteIdx].r; }
+    ['tot','can','kem'].forEach(function(r){
+      var b=document.getElementById('note-rate-'+r); if(!b)return;
+      if(r===cur){ b.style.background=NOTE_RATE_COLORS[r]; b.style.borderColor=NOTE_RATE_COLORS[r]; b.style.color='#000'; }
+      else { b.style.background='transparent'; b.style.borderColor='#cfc3a6'; b.style.color='#555'; }
+    });
+  }catch(e){}
+}
+function noteRate(r){
+  try{
+    if(_noteMode!=='sit') return;
+    var e=getEntry(_noteKey);
+    if(e&&e.th&&e.th[_noteIdx]){ e.th[_noteIdx].r=(e.th[_noteIdx].r===r?null:r); save(); }
+    noteRateHi();
+  }catch(e){}
 }
 function timerBegin(startAt, setMins, daRung){
   timerRunning=true; timerStartAt=startAt;
