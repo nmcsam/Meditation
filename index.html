@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Meditation">
 <meta name="theme-color" content="#076d5e">
+<meta name="color-scheme" content="light">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-med2-192.png">
 <link rel="icon" type="image/png" href="icon-med2-192.png">
@@ -26,9 +27,11 @@
   --rose:#C04020;--rose-light:#F5D0C0;
   --r:12px;--rl:18px
 }
-@media(prefers-color-scheme:dark){:root{--ink:#e8f0f8;--ink2:#c0cedd;--surface:#0d1520;--surface2:#162030;--surface3:#1e2d40;--muted:#7a90a8;--border:rgba(232,240,248,.10);--border2:rgba(232,240,248,.22);--gold-light:#2a1e00;--teal-light:#03201a;--rose-light:#220a14}}
+@media(prefers-color-scheme:dark) and (min-width:100000px){:root{--ink:#e8f0f8;--ink2:#c0cedd;--surface:#0d1520;--surface2:#162030;--surface3:#1e2d40;--muted:#7a90a8;--border:rgba(232,240,248,.10);--border2:rgba(232,240,248,.22);--gold-light:#2a1e00;--teal-light:#03201a;--rose-light:#220a14}}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:#f5f5f5;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased}
+body{overflow-x:clip}
+@media(max-width:420px){#sess1-card,#sess2-card,#tong-card{min-width:0!important}}
 body{display:flex;flex-direction:column;max-width:540px;margin:0 auto;width:100%}
 @media(min-width:600px){ body{max-width:none;margin:0;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))} }
 @media(min-width:900px){ body{padding-left:max(28px,env(safe-area-inset-left));padding-right:max(28px,env(safe-area-inset-right))} }
@@ -2911,7 +2914,7 @@ function showDayDetailOld(k){}
 // CHARTS
 function renderCharts(){
   if(typeof Chart==='undefined')return;
-  const isDark=matchMedia('(prefers-color-scheme:dark)').matches;
+  const isDark=false;
   const gc=isDark?'rgba(255,255,255,.07)':'rgba(0,0,0,.07)';const tc=isDark?'#7a90a8':'#5a6878';
   const base={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gc},ticks:{color:tc,font:{size:10}}},x:{grid:{display:false},ticks:{color:tc,font:{size:10}}}}};
 
