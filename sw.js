@@ -1,7 +1,7 @@
 // MẠNG TRƯỚC — CACHE DỰ PHÒNG:
 // Có mạng: luôn tải bản MỚI NHẤT (không dùng cache), đồng thời lưu một bản dự phòng.
 // Mất mạng / chế độ máy bay: mở app bằng bản dự phòng đã lưu lần gần nhất.
-const CACHE = 'med-offline-v5';
+const CACHE = 'med-offline-v7';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
 
