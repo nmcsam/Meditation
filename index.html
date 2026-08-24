@@ -344,7 +344,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   <!-- CARD 5: Biểu đồ so sánh các tháng -->
   <div class="card" style="padding:10px 12px">
     <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px">
-      <span style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px">SỐ GIỜ THIỀN THEO THÁNG</span>
+      <span style="display:inline-flex;align-items:baseline;gap:6px;min-width:0;flex-wrap:wrap">
+        <span style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px">SỐ GIỜ THIỀN THEO THÁNG</span>
+        <span style="display:inline-flex;align-items:center;gap:3px;font-size:8px;color:#1a56db;font-weight:700"><span style="display:inline-block;width:16px;height:1.5px;background:repeating-linear-gradient(90deg,#1a56db 0 3px,transparent 3px 6px)"></span>Kế hoạch</span>
+      </span>
       <span id="monthly-cum" style="font-size:11px;font-weight:900;color:var(--teal);white-space:nowrap">Tổng tích lũy: —</span>
     </div>
     <div style="position:relative;height:140px"><canvas id="chart-monthly"></canvas></div>
@@ -637,7 +640,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v201</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v202</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2928,6 +2931,10 @@ function renderCharts(){
     moLabels.push('T'+(m+1));
     moData.push(Math.round(total/60*10)/10);
   }
+  // Đường kế hoạch: (kế hoạch AM+PM mỗi ngày) × số ngày trong tháng
+  const dailyPlanH=((ST.goal1||0)+(ST.goal2||0))/60;
+  const planData=[];
+  for(let m=0;m<=11;m++){ planData.push(Math.round(dailyPlanH*new Date(2026,m+1,0).getDate()*10)/10); }
   // Tổng tích lũy toàn bộ (mọi ngày đã ghi)
   (function(){
     const el=document.getElementById('monthly-cum'); if(!el) return;
@@ -2946,8 +2953,11 @@ function renderCharts(){
   }};
   charts.monthly=new Chart(document.getElementById('chart-monthly'),{
     type:'bar',
-    data:{labels:moLabels,datasets:[{data:moData,backgroundColor:'rgba(7,109,94,.7)',borderRadius:4,borderSkipped:false}]},
-    options:Object.assign({},base,{layout:{padding:{top:16}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'h'}}}}),
+    data:{labels:moLabels,datasets:[
+      {type:'bar',label:'Thực tế',data:moData,backgroundColor:'rgba(7,109,94,.7)',borderRadius:4,borderSkipped:false},
+      {type:'line',label:'Kế hoạch',data:planData,borderColor:'#1a56db',borderWidth:1.5,borderDash:[5,4],pointRadius:0,pointHoverRadius:0,fill:false,tension:0,order:0}
+    ]},
+    options:Object.assign({},base,{layout:{padding:{top:16}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.dataset.label==='Kế hoạch'?'Kế hoạch: ':'')+c.parsed.y+'h'}}}}),
     plugins:[monthlyPlugin]
   });
 
