@@ -640,7 +640,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v202</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v203</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2955,7 +2955,7 @@ function renderCharts(){
     type:'bar',
     data:{labels:moLabels,datasets:[
       {type:'bar',label:'Thực tế',data:moData,backgroundColor:'rgba(7,109,94,.7)',borderRadius:4,borderSkipped:false},
-      {type:'line',label:'Kế hoạch',data:planData,borderColor:'#1a56db',borderWidth:1.5,borderDash:[5,4],pointRadius:0,pointHoverRadius:0,fill:false,tension:0,order:0}
+      {type:'line',label:'Kế hoạch',data:planData,borderColor:'#1a56db',borderWidth:1.5,borderDash:[5,4],pointStyle:'circle',pointRadius:3.2,pointHoverRadius:4.5,pointBackgroundColor:'#1a56db',pointBorderColor:'#1a56db',pointBorderWidth:1.5,fill:false,tension:0,order:0}
     ]},
     options:Object.assign({},base,{layout:{padding:{top:16}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.dataset.label==='Kế hoạch'?'Kế hoạch: ':'')+c.parsed.y+'h'}}}}),
     plugins:[monthlyPlugin]
