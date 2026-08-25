@@ -513,7 +513,10 @@ input[type=range]{width:100%;accent-color:var(--teal)}
   </div>
   <!-- So sánh số giờ giữa các năm (2026–2040) -->
   <div class="card" style="padding:10px 12px">
-    <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px">SỐ GIỜ THIỀN THEO NĂM (2026–2040)</div>
+    <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+      <span style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px">SỐ GIỜ THIỀN THEO NĂM (2026–2040)</span>
+      <span style="display:inline-flex;align-items:center;gap:3px;font-size:8px;color:#1a56db;font-weight:700"><span style="display:inline-block;width:16px;height:1.5px;background:repeating-linear-gradient(90deg,#1a56db 0 3px,transparent 3px 6px)"></span>Kế hoạch</span>
+    </div>
     <div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><div id="chart-yearly-box" style="position:relative;height:150px;width:100%"><canvas id="chart-yearly"></canvas></div></div>
   </div>
 </div><!-- end pg-year -->
@@ -639,7 +642,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v210</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v211</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1540,24 +1543,48 @@ function renderYearHoursChart(){
   });
   const years=[]; for(let y=2026;y<=2040;y++) years.push(String(y));
   const yData=years.map(function(y){return Math.round((perYear[y]||0)/60*10)/10;});
+  // Đường kế hoạch năm = (kế hoạch AM+PM mỗi ngày) × số ngày trong năm
+  const dailyPlanH=((ST.goal1||0)+(ST.goal2||0))/60;
+  function daysInYear(y){ y=+y; return ((y%4===0&&y%100!==0)||y%400===0)?366:365; }
+  const yPlan=years.map(function(y){ return Math.round(dailyPlanH*daysInYear(y)*10)/10; });
   if(charts.yearly){charts.yearly.destroy();charts.yearly=null;}
-  const yearlyPlugin={id:'yearlyLabels',afterDatasetDraw(chart){
-    const {ctx,data}=chart;
+  const yearlyPlugin={id:'yearlyLabels',afterDatasetsDraw(chart){
+    const ctx=chart.ctx, area=chart.chartArea, data=chart.data;
+    ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
     chart.getDatasetMeta(0).data.forEach((bar,i)=>{
       const v=data.datasets[0].data[i];if(!v)return;
-      ctx.save();ctx.fillStyle='#1a1a1a';ctx.font='bold 9px -apple-system,sans-serif';
-      ctx.textAlign='center';ctx.textBaseline='bottom';
-      ctx.fillText(v+'h',bar.x,bar.y-2);ctx.restore();
+      const plan=(data.datasets[1]&&data.datasets[1].data[i])||0;
+      const pct=plan>0?Math.round(v/plan*100):null;
+      const dat=(pct!=null&&pct>=100);
+      const midY=Math.min(area.bottom-16,(bar.y+area.bottom)/2);
+      ctx.font='bold 9px -apple-system,sans-serif';
+      ctx.lineWidth=2.6;ctx.strokeStyle='rgba(0,0,0,.5)';ctx.strokeText(v+'h',bar.x,midY-7);
+      ctx.fillStyle='#ffffff';ctx.fillText(v+'h',bar.x,midY-7);
+      if(pct!=null){
+        ctx.font='bold 10px -apple-system,sans-serif';
+        ctx.lineWidth=3;ctx.strokeStyle='#ffffff';ctx.strokeText('('+pct+'%)',bar.x,midY+8);
+        ctx.fillStyle=dat?'#1a9e46':'#e11d1d';ctx.fillText('('+pct+'%)',bar.x,midY+8);
+      }
     });
+    const lm=chart.getDatasetMeta(1);
+    if(lm&&lm.data){
+      ctx.font='bold 8px -apple-system,sans-serif';ctx.textBaseline='bottom';
+      ctx.lineWidth=2.8;ctx.strokeStyle='#ffffff';ctx.fillStyle='#1a56db';
+      lm.data.forEach((pt,i)=>{ const vv=data.datasets[1].data[i];if(vv==null)return; ctx.strokeText(String(vv),pt.x,pt.y-6); ctx.fillText(String(vv),pt.x,pt.y-6); });
+    }
+    ctx.restore();
   }};
   // màn hẹp: nới khung theo số năm (mỗi năm tối thiểu 46px) rồi trượt ngang như các biểu đồ khác
   var _ybox=document.getElementById('chart-yearly-box');
   if(_ybox){ _ybox.style.minWidth=Math.max(years.length*46, 0)+'px'; }
   charts.yearly=new Chart(yEl,{
     type:'bar',
-    data:{labels:years,datasets:[{data:yData,backgroundColor:'rgba(184,134,11,.75)',borderRadius:3,borderSkipped:false}]},
+    data:{labels:years,datasets:[
+      {type:'bar',label:'Thực tế',data:yData,backgroundColor:'rgba(184,134,11,.75)',borderRadius:3,borderSkipped:false},
+      {type:'line',label:'Kế hoạch',data:yPlan,borderColor:'#1a56db',borderWidth:1.5,borderDash:[5,4],pointStyle:'circle',pointRadius:4.5,pointHoverRadius:5.5,pointBackgroundColor:'#ffffff',pointBorderColor:'#1a56db',pointBorderWidth:2,fill:false,tension:0,order:0}
+    ]},
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:16}},
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+' giờ'}}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.dataset.label==='Kế hoạch'?'Kế hoạch: ':'')+c.parsed.y+' giờ'}}},
       scales:{x:{grid:{display:false},ticks:{font:{size:8},maxRotation:0,minRotation:0,autoSkip:false}},
               y:{beginAtZero:true,ticks:{font:{size:9}}}}},
     plugins:[yearlyPlugin]
