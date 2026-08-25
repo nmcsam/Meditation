@@ -594,8 +594,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div class="card" style="width:272px;padding:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)">
       <div style="font-size:12.5px;font-weight:900;letter-spacing:.5px;margin-bottom:12px">⏱ THỜI GIAN THIỀN (PHÚT)</div>
       <input id="timer-modal-min" class="tin" inputmode="numeric" maxlength="4" onclick="event.stopPropagation()" style="width:116px;height:58px;font-size:28px;font-weight:900;text-align:center;border-width:2px;box-sizing:border-box">
-      <button onclick="timerModalGo()" style="display:block;width:100%;margin-top:14px;height:50px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:900;font-size:16px;font-family:inherit;cursor:pointer">▶ Bắt đầu</button>
-      <div style="margin-top:8px;font-size:9px;color:var(--muted);line-height:1.4">Đồng hồ chạy trong app; hết giờ chuông tự reo (trong APK có cầu nối).</div>
+      <button onclick="timerModalGo()" style="display:block;width:100%;margin-top:14px;height:50px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-weight:900;font-size:16px;font-family:inherit;cursor:pointer">✓ Đóng</button>
+      <div style="margin-top:8px;font-size:9px;color:var(--muted);line-height:1.4">Đặt phút xong bấm <b>Đóng</b>, rồi <b>chạm đồng hồ</b> để bắt đầu. Hết giờ chuông tự reo.</div>
     </div>
   </div>
 
@@ -639,7 +639,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v207</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v208</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1880,6 +1880,13 @@ function timerTap(){
     updateRing(1,1);
     return;
   }
+  // Đã đặt phút (bấm Đóng) -> CHẠM đồng hồ để BẮT ĐẦU chạy
+  if(window._tcArm>0){
+    const mm=window._tcArm; window._tcArm=0;
+    timerBegin(Date.now(), mm, 0);
+    try{ if(window.TCAndroid){ location.href='thienclock://set?min='+Math.min(1440,mm); } }catch(e){}
+    return;
+  }
   // NGHỈ: mở cửa sổ động cài thời gian
   const inp=document.getElementById('timer-modal-min');
   let last=30; try{ last=parseInt(localStorage.getItem('thien_last_set')||'30',10)||30; }catch(e){}
@@ -1897,15 +1904,17 @@ function sysTimerGo(){
   location.href='thienclock://set?min='+v;
 }
 function timerModalGo(){
+  // Chỉ ĐẶT phút rồi đóng cửa sổ — CHƯA chạy. Chạm vào đồng hồ để bắt đầu.
   const inp=document.getElementById('timer-modal-min');
   const m=parseInt(String(inp.value).replace(/\D/g,''),10);
   if(!m || m<1){ toast('Gõ số phút thiền trước đã'); return; }
   const mm=Math.min(1200,m);
+  window._tcArm=mm;
   try{ localStorage.setItem('thien_last_set', String(mm)); }catch(e){}
   document.getElementById('timer-modal').style.display='none';
-  timerBegin(Date.now(), mm, 0);
-  // Trong APK: đặt luôn chuông native reo khi hết giờ
-  try{ if(window.TCAndroid){ location.href='thienclock://set?min='+Math.min(1440,mm); } }catch(e){}
+  try{ var sd=document.getElementById('timer-set-display'); if(sd) sd.textContent=timerFmtHMS(mm*60); }catch(e){}
+  try{ var d=document.getElementById('timer-display'); if(d) d.textContent='0:00:00'; }catch(e){}
+  toast('Đã đặt '+mm+' phút — chạm đồng hồ để bắt đầu');
 }
 function _roman(n){ const R=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII']; return R[n-1]||String(n); }
 function _tongH(m){ m=+m||0; const h=Math.floor(m/60), mm=m%60; if(h&&mm) return h+'h'+String(mm).padStart(2,'0'); if(h) return h+'h'; return mm+'ph'; }
@@ -2017,7 +2026,7 @@ function timerBegin(startAt, setMins, daRung){
   document.getElementById('timer-set-display').textContent = timerSetSecs>0 ? timerFmtHMS(timerSetSecs) : '--:--:--';
   document.getElementById('timer-ring').style.stroke = timerRung ? 'var(--rose)' : 'var(--teal)';
   requestWakeLock();
-  kaStart(); // chạy ngầm khi tắt màn hình (âm 45Hz tai không nghe — tốn ít pin, đã chấp nhận)
+  if(!window.TCAndroid){ kaStart(); } // web: chạy ngầm khi tắt màn hình. Trong APK: dùng chuông native, không cần âm giữ-thức
   clearInterval(timerInterval);
   timerInterval=setInterval(timerTick,1000); timerTick();
 }
@@ -2031,7 +2040,7 @@ function timerTick(){
     if(!timerRung && s>=timerSetSecs){
       timerRung=true;
       try{ const r=JSON.parse(localStorage.getItem('thien_run')||'{}'); r.r=1; localStorage.setItem('thien_run', JSON.stringify(r)); }catch(e){}
-      ringBell(bellType); // 3 tiếng chuông chùa qua kênh âm đang sống — ngân cả khi màn hình tắt
+      if(!window.TCAndroid){ ringBell(bellType); } // web: 3 tiếng chuông. Trong APK: chuông native tự reo
       document.getElementById('timer-ring').style.stroke='var(--rose)';
       sendNotif('🔔 Đủ giờ thiền!','Đồng hồ vẫn đếm tiếp — chạm đồng hồ khi xả thiền để ghi.');
     }
