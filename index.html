@@ -639,7 +639,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v208</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v210</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1966,7 +1966,7 @@ function ddOpenNote(i){
   if(t) t.textContent='📝 Ghi chú Thời '+(i+1);
   const ta=document.getElementById('note-modal-text'); if(ta) ta.value=(ddSess[i]&&ddSess[i].n)||'';
   document.getElementById('note-modal').style.display='flex';
-  var _rr=document.getElementById('note-rate-row'); if(_rr) _rr.style.display='none';
+  var _rr=document.getElementById('note-rate-row'); if(_rr) _rr.style.display='flex'; noteRateHi();
   setTimeout(function(){ try{ta.focus();}catch(e){} }, 80);
 }
 function openNoteModal(mins){
@@ -2004,6 +2004,7 @@ function noteRateHi(){
   try{
     var cur=null;
     if(_noteMode==='sit'){ var e=getEntry(_noteKey); if(e&&e.th&&e.th[_noteIdx]) cur=e.th[_noteIdx].r; }
+    else if(_noteMode==='dd'){ if(_noteDdIdx>=0 && ddSess[_noteDdIdx]) cur=ddSess[_noteDdIdx].r; }
     ['tot','can','kem'].forEach(function(r){
       var b=document.getElementById('note-rate-'+r); if(!b)return;
       if(r===cur){ b.style.background=NOTE_RATE_COLORS[r]; b.style.borderColor=NOTE_RATE_COLORS[r]; b.style.color='#000'; }
@@ -2013,7 +2014,10 @@ function noteRateHi(){
 }
 function noteRate(r){
   try{
-    if(_noteMode!=='sit') return;
+    if(_noteMode==='dd'){
+      if(_noteDdIdx>=0 && ddSess[_noteDdIdx]){ ddSess[_noteDdIdx].r=(ddSess[_noteDdIdx].r===r?null:r); try{ ddRenderSessions(); }catch(e){} }
+      noteRateHi(); return;
+    }
     var e=getEntry(_noteKey);
     if(e&&e.th&&e.th[_noteIdx]){ e.th[_noteIdx].r=(e.th[_noteIdx].r===r?null:r); save(); }
     noteRateHi();
@@ -2957,13 +2961,24 @@ function renderCharts(){
   const monthlyPlugin={id:'monthlyLabels',afterDatasetsDraw(chart){
     const ctx=chart.ctx, area=chart.chartArea, data=chart.data;
     ctx.save();
-    // Nhãn cột THỰC TẾ — nằm giữa cột, chữ trắng đậm (viền tối cho nổi bật)
-    ctx.font='bold 10px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    // Nhãn cột THỰC TẾ — số giờ (trắng) + (% đạt): xanh nếu đạt ≥100%, đỏ nếu chưa đạt
+    ctx.textAlign='center';ctx.textBaseline='middle';
     chart.getDatasetMeta(0).data.forEach((bar,i)=>{
       const v=data.datasets[0].data[i];if(!v)return;
-      const midY=Math.min(area.bottom-8,(bar.y+area.bottom)/2);
-      ctx.lineWidth=2.6;ctx.strokeStyle='rgba(0,0,0,.5)';ctx.strokeText(v+'h',bar.x,midY);
-      ctx.fillStyle='#ffffff';ctx.fillText(v+'h',bar.x,midY);
+      const plan=(data.datasets[1]&&data.datasets[1].data[i])||0;
+      const pct=plan>0?Math.round(v/plan*100):null;
+      const dat=(pct!=null&&pct>=100);
+      const midY=Math.min(area.bottom-16,(bar.y+area.bottom)/2);
+      // dòng 1: số giờ (trắng, viền tối)
+      ctx.font='bold 10px -apple-system,sans-serif';
+      ctx.lineWidth=2.6;ctx.strokeStyle='rgba(0,0,0,.5)';ctx.strokeText(v+'h',bar.x,midY-7);
+      ctx.fillStyle='#ffffff';ctx.fillText(v+'h',bar.x,midY-7);
+      // dòng 2: (% đạt) — xanh/đỏ, viền trắng cho nổi rõ trên cột
+      if(pct!=null){
+        ctx.font='bold 11px -apple-system,sans-serif';
+        ctx.lineWidth=3;ctx.strokeStyle='#ffffff';ctx.strokeText('('+pct+'%)',bar.x,midY+8);
+        ctx.fillStyle=dat?'#1a9e46':'#e11d1d';ctx.fillText('('+pct+'%)',bar.x,midY+8);
+      }
     });
     // Nhãn KẾ HOẠCH — tại mỗi chấm, chữ xanh
     const lm=chart.getDatasetMeta(1);
