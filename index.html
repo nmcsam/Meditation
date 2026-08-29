@@ -455,8 +455,9 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="lg-item"><div class="lg-dot" style="background:#2ECC40"></div>Đủ 2 thời</div>
       <div class="lg-item"><div class="lg-dot" style="background:#FFDC00;border:1px solid #ccc"></div>1 thời</div>
       <div class="lg-item"><div class="lg-dot" style="background:#FF4136"></div>Bỏ</div>
-      <div class="lg-item"><div class="lg-dot" style="background:#8e44ad"></div>Có nhật ký</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#8e44ad"></div>Nhật ký</div>
     </div>
+    <button onclick="copyMonthDiary()" style="width:100%;margin-top:10px;height:38px;border-radius:var(--r);border:1.5px solid #7d3cad;background:transparent;color:#7d3cad;font-weight:900;font-size:12.5px;font-family:inherit;cursor:pointer">📔 Copy nhật ký tháng</button>
   </div>
   <div class="card">
     <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:2px">TẦN SUẤT GIỜ THIỀN TRONG NGÀY (24 KHUNG GIỜ)</div>
@@ -583,6 +584,17 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     </div>
   </div>
 
+  <!-- Cửa sổ ghi Nhật ký trong ngày -->
+  <div id="diary-modal" style="position:fixed;inset:0;background:rgba(20,10,30,.55);z-index:1250;display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box">
+    <div class="card" style="width:100%;max-width:520px;padding:16px;box-sizing:border-box;box-shadow:0 10px 30px rgba(0,0,0,.35)">
+      <div id="diary-modal-title" style="font-size:18px;font-weight:900;margin-bottom:10px;color:#6a2f97">📔 Nhật ký trong ngày</div>
+      <textarea id="diary-modal-text" placeholder="Ghi nhật ký cho ngày: sự việc, cảm xúc, pháp học, nhân duyên…" style="width:100%;box-sizing:border-box;min-height:46vh;padding:12px;border:1.5px solid #b48fd6;border-radius:var(--r);font-family:inherit;font-size:20px;line-height:1.5;resize:vertical;background:#faf5ff;color:#3a1560"></textarea>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button onclick="diaryModalClose()" style="flex:1;height:44px;border-radius:var(--r);border:none;background:#7d3cad;color:#fff;font-weight:900;font-size:14px;font-family:inherit;cursor:pointer">✓ Đóng &amp; lưu</button>
+      </div>
+    </div>
+  </div>
+
   
 <!-- Bảng động nhập kế hoạch -->
   <div id="goal-modal" onclick="if(event.target===this){this.style.display='none';}" style="position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:1100;display:none;align-items:center;justify-content:center">
@@ -624,7 +636,8 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <!-- Nhật ký trong ngày -->
     <div style="margin-bottom:12px;background:linear-gradient(135deg,#7d3cad 0%,#6a2f97 50%,#552580 100%);border:2px solid #4a1f70;border-radius:var(--r);padding:10px 12px;box-shadow:0 3px 10px rgba(85,37,128,.4), inset 0 1px 0 rgba(255,255,255,.22)">
       <div style="font-size:12px;font-weight:900;color:#fff;letter-spacing:.6px;text-shadow:0 1px 2px rgba(0,0,0,.4);margin-bottom:6px">📔 NHẬT KÝ TRONG NGÀY</div>
-      <textarea id="dd-diary" placeholder="Ghi nhật ký cho ngày: sự việc, cảm xúc, pháp học, nhân duyên…" style="width:100%;box-sizing:border-box;min-height:90px;padding:8px 10px;border:1.5px solid #4a1f70;border-radius:9px;background:#faf5ff;color:#3a1560;font-size:13px;font-weight:500;font-family:inherit;line-height:1.5;resize:vertical"></textarea>
+      <div id="dd-diary-box" onclick="openDiaryModal()" style="width:100%;box-sizing:border-box;min-height:70px;max-height:120px;overflow:hidden;padding:8px 10px;border:1.5px solid #4a1f70;border-radius:9px;background:#faf5ff;color:#3a1560;font-size:13px;line-height:1.5;cursor:pointer;white-space:pre-wrap"><span id="dd-diary-preview" style="color:#8a6aa8">Chạm để ghi nhật ký…</span></div>
+      <input type="hidden" id="dd-diary">
     </div>
     <div id="dd-body" style="font-size:13px;color:var(--ink);line-height:2;margin-bottom:12px"></div>
     <button onclick="copyDayReport()" style="width:100%;margin:-4px 0 12px;height:38px;border-radius:var(--r);border:1.5px solid var(--teal);background:transparent;color:var(--teal);font-weight:900;font-size:12.5px;font-family:inherit;cursor:pointer">📋 Copy báo cáo thiền sư (toàn bộ cảm nhận trong ngày)</button>
@@ -648,7 +661,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v215</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v216</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1985,6 +1998,34 @@ function copyDayReport(){
     navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); });
   } else { _copyFallback(out); done(); }
 }
+function copyMonthDiary(){
+  const y=calYear, mo=calMonth, dim=new Date(y,mo+1,0).getDate();
+  const items=[];
+  for(let d=1;d<=dim;d++){
+    const k=y+'-'+String(mo+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const e=getEntry(k);
+    if(e && e.diary && e.diary.trim()) items.push({d:d, txt:e.diary.trim()});
+  }
+  if(!items.length){ toast('Tháng này chưa có nhật ký nào'); return; }
+  items.sort(function(a,b){ return b.d-a.d; }); // mới nhất trước
+  let out='', html='';
+  items.forEach(function(it,i){
+    const hdr='Ngày '+String(it.d).padStart(2,'0')+' tháng '+(mo+1)+' năm '+y;
+    out+=(i?'\n\n':'')+hdr+'\n\n* '+it.txt;
+    html+=(i?'<div><br></div>':'')+'<div style="font-weight:700"><b><strong>'+hdr+'</strong></b></div><div><br></div><div>* '+_esc(it.txt).replace(/\n/g,'<br>')+'</div>';
+  });
+  function done(){ toast('✓ Đã copy nhật ký tháng '+(mo+1)); }
+  if(navigator.clipboard && navigator.clipboard.write && window.ClipboardItem){
+    try{
+      navigator.clipboard.write([new ClipboardItem({
+        'text/plain': new Blob([out],{type:'text/plain'}),
+        'text/html':  new Blob([html],{type:'text/html'})
+      })]).then(done, function(){ navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); }); });
+    }catch(e){ navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); }); }
+  } else if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); });
+  } else { _copyFallback(out); done(); }
+}
 function _copyFallback(txt){
   try{
     const ta=document.createElement('textarea'); ta.value=txt;
@@ -2033,6 +2074,31 @@ function noteModalSave(){
 function noteModalClose(){
   document.getElementById('note-modal').style.display='none';
   _noteKey=null; _noteIdx=-1; _noteDdIdx=-1; _noteMode='sit';
+}
+function openDiaryModal(){
+  var ta=document.getElementById('diary-modal-text');
+  var h=document.getElementById('dd-diary');
+  if(ta) ta.value=(h&&h.value)||'';
+  var t=document.getElementById('diary-modal-title');
+  if(t && currentDayKey){ var d=new Date(currentDayKey); t.textContent='📔 Nhật ký '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear(); }
+  document.getElementById('diary-modal').style.display='flex';
+  setTimeout(function(){ try{ta.focus();}catch(e){} }, 80);
+}
+function diaryModalClose(){
+  var ta=document.getElementById('diary-modal-text');
+  var txt=((ta&&ta.value)||'').trim();
+  var h=document.getElementById('dd-diary'); if(h) h.value=txt;
+  var pv=document.getElementById('dd-diary-preview');
+  if(pv){ if(txt){ pv.textContent=txt; pv.style.color='#3a1560'; } else { pv.textContent='Chạm để ghi nhật ký…'; pv.style.color='#8a6aa8'; } }
+  try{
+    if(currentDayKey){
+      var e=getEntry(currentDayKey);
+      if(!e){ e={date:currentDayKey,mins1:0,mins2:0,q1:3,q2:3,types1:[],types2:[]}; ST.data.push(e); }
+      e.diary=txt; save(); renderAll();
+    }
+  }catch(err){}
+  document.getElementById('diary-modal').style.display='none';
+  toast('✓ Đã lưu nhật ký');
 }
 var NOTE_RATE_COLORS={tot:'#2ecc71',can:'#FFFF00',kem:'#e74c3c'};
 function noteRateHi(){
@@ -2482,11 +2548,10 @@ function renderCalendar(){
     var _hasDiary=!!(e && e.diary && String(e.diary).trim());
     var _med=/\bfull\b/.test(cls)?'#2ECC40':(/\bpartial\b/.test(cls)?'#FFDC00':(/\bmissed\b/.test(cls)?'#FF4136':null));
     var _bg='';
-    if(_hasDiary){
-      _bg=(_med?('background:linear-gradient(90deg,'+_med+' 0 50%,#8e44ad 50% 100%)!important;'):('background:#8e44ad!important;'))+'text-shadow:0 1px 2px rgba(0,0,0,.6);';
-    }
-    const _sol=_hasDiary?'color:#fff;':(_neutral?'color:#0a7a4f;':'');
-    const _lun=_hasDiary?'color:#fff;opacity:.92;':(_neutral?'color:#c0392b;':'opacity:.8;');
+    if(_hasDiary){ _bg = _med ? ('background:linear-gradient(90deg,'+_med+' 0 66%,#8e44ad 66% 100%)!important;') : ('background:#8e44ad!important;'); }
+    const _solidPurple=_hasDiary && !_med;
+    const _sol=_solidPurple?'color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5);':(_neutral?'color:#0a7a4f;':'');
+    const _lun=_solidPurple?'color:#fff;opacity:.92;text-shadow:0 1px 2px rgba(0,0,0,.5);':(_neutral?'color:#c0392b;':'opacity:.8;');
     html+='<div class="'+cls+'" style="position:relative;'+_bg+'" onclick="showDayDetail(\''+k+'\')">'
       +'<div style="line-height:1.1;white-space:nowrap"><span style="font-size:9px;font-weight:800;'+_sol+'">'+d+'</span><span style="font-size:6.5px;opacity:.7">/</span><span style="font-size:7.5px;font-weight:700;'+_lun+'">'+_ld+'</span></div>'
       +'<div style="font-size:6px;line-height:1;opacity:.8;font-weight:600">'+wdc+'</div>'+gioiMark+'</div>';
@@ -2645,7 +2710,8 @@ function showDayDetail(k){
   if(e) thMigrate(e);
   document.getElementById('dd-title').textContent=DAYS7[d.getDay()]+', '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' · '+lunarLabelKey(k);
   const _ev=document.getElementById('dd-event'); if(_ev) _ev.value=(e&&e.event)?e.event:'';
-  const _dr=document.getElementById('dd-diary'); if(_dr) _dr.value=(e&&e.diary)?e.diary:'';
+  const _dr=document.getElementById('dd-diary'); const _dv=(e&&e.diary)?e.diary:''; if(_dr) _dr.value=_dv;
+  const _dp=document.getElementById('dd-diary-preview'); if(_dp){ if(_dv){ _dp.textContent=_dv; _dp.style.color='#3a1560'; } else { _dp.textContent='Chạm để ghi nhật ký…'; _dp.style.color='#8a6aa8'; } }
   ddEventShow=(e&&e.eventShow===false)?false:true; ddPaintEventShow();
   const _gc=document.getElementById('dd-gioi');
   if(_gc){ _gc.checked=!!(e&&e.gioi);
