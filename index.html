@@ -457,7 +457,6 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="lg-item"><div class="lg-dot" style="background:#FF4136"></div>Bỏ</div>
       <div class="lg-item"><div class="lg-dot" style="background:#8e44ad"></div>Nhật ký</div>
     </div>
-    <button onclick="copyMonthDiary()" style="width:100%;margin-top:10px;height:38px;border-radius:var(--r);border:1.5px solid #7d3cad;background:transparent;color:#7d3cad;font-weight:900;font-size:12.5px;font-family:inherit;cursor:pointer">📔 Copy nhật ký tháng</button>
   </div>
   <div class="card">
     <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:2px">TẦN SUẤT GIỜ THIỀN TRONG NGÀY (24 KHUNG GIỜ)</div>
@@ -489,7 +488,17 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     </div>
   </div>
 
-    
+  <!-- NHẬT KÝ THÁNG -->
+  <div class="card">
+    <div style="font-size:11px;font-weight:800;color:#7d3cad;letter-spacing:.4px;margin-bottom:8px">📔 NHẬT KÝ THÁNG NÀY</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+      <button onclick="copyMonthDiary()" style="flex:1;min-width:130px;height:38px;border-radius:var(--r);border:1.5px solid #7d3cad;background:transparent;color:#7d3cad;font-weight:900;font-size:12px;font-family:inherit;cursor:pointer">📔 Copy nhật ký tháng</button>
+      <button onclick="copyYtdDiary()" style="flex:1;min-width:130px;height:38px;border-radius:var(--r);border:none;background:#7d3cad;color:#fff;font-weight:900;font-size:12px;font-family:inherit;cursor:pointer">📚 Copy T1 → tháng này</button>
+    </div>
+    <div id="month-diary-list" style="font-size:13.5px;line-height:1.55;color:var(--ink)"></div>
+  </div>
+
+
 </div>
 
 <!-- NĂM -->
@@ -661,7 +670,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v216</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v217</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1998,23 +2007,32 @@ function copyDayReport(){
     navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); });
   } else { _copyFallback(out); done(); }
 }
-function copyMonthDiary(){
-  const y=calYear, mo=calMonth, dim=new Date(y,mo+1,0).getDate();
+function _diaryCollect(y, mo0, mo1){
   const items=[];
-  for(let d=1;d<=dim;d++){
-    const k=y+'-'+String(mo+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    const e=getEntry(k);
-    if(e && e.diary && e.diary.trim()) items.push({d:d, txt:e.diary.trim()});
+  for(let m=mo0;m<=mo1;m++){
+    const dim=new Date(y,m+1,0).getDate();
+    for(let d=1;d<=dim;d++){
+      const k=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      const e=getEntry(k);
+      if(e && e.diary && e.diary.trim()) items.push({y:y,m:m,d:d,txt:e.diary.trim()});
+    }
   }
-  if(!items.length){ toast('Tháng này chưa có nhật ký nào'); return; }
-  items.sort(function(a,b){ return b.d-a.d; }); // mới nhất trước
+  return items;
+}
+function _diaryFmt(items){
+  items=items.slice().sort(function(a,b){ if(a.y!==b.y)return b.y-a.y; if(a.m!==b.m)return b.m-a.m; return b.d-a.d; });
   let out='', html='';
   items.forEach(function(it,i){
-    const hdr='Ngày '+String(it.d).padStart(2,'0')+' tháng '+(mo+1)+' năm '+y;
-    out+=(i?'\n\n':'')+hdr+'\n\n* '+it.txt;
-    html+=(i?'<div><br></div>':'')+'<div style="font-weight:700"><b><strong>'+hdr+'</strong></b></div><div><br></div><div>* '+_esc(it.txt).replace(/\n/g,'<br>')+'</div>';
+    const hdr='Ngày '+String(it.d).padStart(2,'0')+' tháng '+(it.m+1)+' năm '+it.y;
+    const body=it.txt.split('\n').map(function(ln){ ln=ln.trim(); return ln?('• '+ln):''; }).join('\n');
+    out+=(i?'\n\n':'')+hdr+'\n'+body;
+    const bodyH=it.txt.split('\n').map(function(ln){ ln=ln.trim(); return ln?('<div>• '+_esc(ln)+'</div>'):'<div><br></div>'; }).join('');
+    html+=(i?'<div><br></div>':'')+'<div style="font-weight:700"><b><strong>'+hdr+'</strong></b></div>'+bodyH;
   });
-  function done(){ toast('✓ Đã copy nhật ký tháng '+(mo+1)); }
+  return {out:out, html:html};
+}
+function _copyRich(out, html, doneMsg){
+  function done(){ toast(doneMsg); }
   if(navigator.clipboard && navigator.clipboard.write && window.ClipboardItem){
     try{
       navigator.clipboard.write([new ClipboardItem({
@@ -2025,6 +2043,21 @@ function copyMonthDiary(){
   } else if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(out).then(done, function(){ _copyFallback(out); done(); });
   } else { _copyFallback(out); done(); }
+}
+function copyMonthDiary(){
+  const items=_diaryCollect(calYear,calMonth,calMonth);
+  if(!items.length){ toast('Tháng này chưa có nhật ký nào'); return; }
+  const r=_diaryFmt(items); _copyRich(r.out, r.html, '✓ Đã copy nhật ký tháng '+(calMonth+1));
+}
+function copyYtdDiary(){
+  const items=_diaryCollect(calYear,0,calMonth);
+  if(!items.length){ toast('Chưa có nhật ký nào từ tháng 1'); return; }
+  const r=_diaryFmt(items); _copyRich(r.out, r.html, '✓ Đã copy nhật ký T1 → T'+(calMonth+1));
+}
+function renderMonthDiary(){
+  const box=document.getElementById('month-diary-list'); if(!box) return;
+  const items=_diaryCollect(calYear,calMonth,calMonth);
+  box.innerHTML = items.length ? _diaryFmt(items).html : '<div style="color:var(--muted);font-size:12px;padding:4px 2px">Tháng này chưa có nhật ký.</div>';
 }
 function _copyFallback(txt){
   try{
@@ -2557,6 +2590,7 @@ function renderCalendar(){
       +'<div style="font-size:6px;line-height:1;opacity:.8;font-weight:600">'+wdc+'</div>'+gioiMark+'</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
+  try{ renderMonthDiary(); }catch(e){}
   document.getElementById('mo-days').textContent=nf(totalD);
   document.getElementById('mo-mins').textContent=fmtHM(totalM);
   document.getElementById('mo-streak').textContent=nf(streak);
