@@ -455,6 +455,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       <div class="lg-item"><div class="lg-dot" style="background:#2ECC40"></div>Đủ 2 thời</div>
       <div class="lg-item"><div class="lg-dot" style="background:#FFDC00;border:1px solid #ccc"></div>1 thời</div>
       <div class="lg-item"><div class="lg-dot" style="background:#FF4136"></div>Bỏ</div>
+      <div class="lg-item"><div class="lg-dot" style="background:#8e44ad"></div>Có nhật ký</div>
     </div>
   </div>
   <div class="card">
@@ -620,6 +621,11 @@ input[type=range]{width:100%;accent-color:var(--teal)}
       </div>
       <input type="text" id="dd-event" placeholder="Ví dụ: vào Sơ thiền, Nhị thiền, Minh sát..." style="width:100%;padding:8px 10px;border:1.5px solid #0a1f4b;border-radius:9px;background:#f4f8ff;color:#0d2a63;font-size:13px;font-weight:600;font-family:inherit">
     </div>
+    <!-- Nhật ký trong ngày -->
+    <div style="margin-bottom:12px;background:linear-gradient(135deg,#7d3cad 0%,#6a2f97 50%,#552580 100%);border:2px solid #4a1f70;border-radius:var(--r);padding:10px 12px;box-shadow:0 3px 10px rgba(85,37,128,.4), inset 0 1px 0 rgba(255,255,255,.22)">
+      <div style="font-size:12px;font-weight:900;color:#fff;letter-spacing:.6px;text-shadow:0 1px 2px rgba(0,0,0,.4);margin-bottom:6px">📔 NHẬT KÝ TRONG NGÀY</div>
+      <textarea id="dd-diary" placeholder="Ghi nhật ký cho ngày: sự việc, cảm xúc, pháp học, nhân duyên…" style="width:100%;box-sizing:border-box;min-height:90px;padding:8px 10px;border:1.5px solid #4a1f70;border-radius:9px;background:#faf5ff;color:#3a1560;font-size:13px;font-weight:500;font-family:inherit;line-height:1.5;resize:vertical"></textarea>
+    </div>
     <div id="dd-body" style="font-size:13px;color:var(--ink);line-height:2;margin-bottom:12px"></div>
     <button onclick="copyDayReport()" style="width:100%;margin:-4px 0 12px;height:38px;border-radius:var(--r);border:1.5px solid var(--teal);background:transparent;color:var(--teal);font-weight:900;font-size:12.5px;font-family:inherit;cursor:pointer">📋 Copy báo cáo thiền sư (toàn bộ cảm nhận trong ngày)</button>
 
@@ -642,7 +648,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v214</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v215</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2473,9 +2479,15 @@ function renderCalendar(){
     const wdc=WDC[new Date(calYear,calMonth,d).getDay()];
     const _ld=lunarOfKey(k)[0];
     const _neutral=!/full|partial|missed/.test(cls);
-    const _sol=_neutral?'color:#0a7a4f;':'';
-    const _lun=_neutral?'color:#c0392b;':'opacity:.8;';
-    html+='<div class="'+cls+'" style="position:relative" onclick="showDayDetail(\''+k+'\')">'
+    var _hasDiary=!!(e && e.diary && String(e.diary).trim());
+    var _med=/\bfull\b/.test(cls)?'#2ECC40':(/\bpartial\b/.test(cls)?'#FFDC00':(/\bmissed\b/.test(cls)?'#FF4136':null));
+    var _bg='';
+    if(_hasDiary){
+      _bg=(_med?('background:linear-gradient(90deg,'+_med+' 0 50%,#8e44ad 50% 100%)!important;'):('background:#8e44ad!important;'))+'text-shadow:0 1px 2px rgba(0,0,0,.6);';
+    }
+    const _sol=_hasDiary?'color:#fff;':(_neutral?'color:#0a7a4f;':'');
+    const _lun=_hasDiary?'color:#fff;opacity:.92;':(_neutral?'color:#c0392b;':'opacity:.8;');
+    html+='<div class="'+cls+'" style="position:relative;'+_bg+'" onclick="showDayDetail(\''+k+'\')">'
       +'<div style="line-height:1.1;white-space:nowrap"><span style="font-size:9px;font-weight:800;'+_sol+'">'+d+'</span><span style="font-size:6.5px;opacity:.7">/</span><span style="font-size:7.5px;font-weight:700;'+_lun+'">'+_ld+'</span></div>'
       +'<div style="font-size:6px;line-height:1;opacity:.8;font-weight:600">'+wdc+'</div>'+gioiMark+'</div>';
   }
@@ -2633,6 +2645,7 @@ function showDayDetail(k){
   if(e) thMigrate(e);
   document.getElementById('dd-title').textContent=DAYS7[d.getDay()]+', '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' · '+lunarLabelKey(k);
   const _ev=document.getElementById('dd-event'); if(_ev) _ev.value=(e&&e.event)?e.event:'';
+  const _dr=document.getElementById('dd-diary'); if(_dr) _dr.value=(e&&e.diary)?e.diary:'';
   ddEventShow=(e&&e.eventShow===false)?false:true; ddPaintEventShow();
   const _gc=document.getElementById('dd-gioi');
   if(_gc){ _gc.checked=!!(e&&e.gioi);
@@ -2890,6 +2903,7 @@ function saveDayDetail(){
   e.rating1b=null; e.note1b=''; e.rating2b=null; e.note2b='';
   const _g=document.getElementById('dd-gioi'); if(_g) e.gioi=_g.checked;
   const _ev=document.getElementById('dd-event'); if(_ev) e.event=_ev.value.trim();
+  const _dr=document.getElementById('dd-diary'); if(_dr) e.diary=_dr.value.trim();
   e.eventShow=ddEventShow;
   save();renderAll();
   document.getElementById('day-detail').classList.remove('on');
