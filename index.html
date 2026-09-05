@@ -671,7 +671,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v219</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v220</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -745,7 +745,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 <script>
 const DAYS7=['CN','T2','T3','T4','T5','T6','T7'];
 const KEY='thien_v4';
-let ST={goal1:30,goal2:30,data:[]};
+let ST={goal1:30,goal2:30,mgoals:{},data:[]};
 let logSessNum=1;
 let timerMins=30,timerInterval=null,timerRemaining=0,timerTotal=0,timerRunning=false,timerEndAt=0,timerStartAt=0,timerOvertime=false,timerWaiting=false,timerHiddenAt=0,timerTapAt=0,timerSetSecs=0,timerRung=false;
 let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
@@ -1386,8 +1386,8 @@ function applyRemote(remoteST, updatedAt){
   try{ localStorage.setItem(KEY,JSON.stringify(ST)); }catch(e){}
   renderAll();
   applyUserName();
-  const _g1=document.getElementById('goal1-input'); if(_g1) _g1.value=ST.goal1;
-  const _g2=document.getElementById('goal2-input'); if(_g2) _g2.value=ST.goal2;
+  const _g1=document.getElementById('goal1-input'); if(_g1) _g1.value=getG1(calYear,calMonth);
+  const _g2=document.getElementById('goal2-input'); if(_g2) _g2.value=getG2(calYear,calMonth);
 }
 function resolveKeepLocal(){
   if(!pendingConflict)return;
@@ -1452,22 +1452,32 @@ function nav(id){
   if(id==='year'){renderYear();renderYearHoursChart();}
 }
 
+// ── Kế hoạch theo TỪNG THÁNG (mỗi tháng riêng biệt) — mặc định AM 180, PM 120 ──
+const DEF_G1=180, DEF_G2=120;
+function _mgk(y,m){ return y+'-'+String(m+1).padStart(2,'0'); }
+function getG1(y,m){ const o=ST.mgoals&&ST.mgoals[_mgk(y,m)]; return (o&&o.g1!=null)?o.g1:DEF_G1; }
+function getG2(y,m){ const o=ST.mgoals&&ST.mgoals[_mgk(y,m)]; return (o&&o.g2!=null)?o.g2:DEF_G2; }
+function setMGoal(y,m,which,v){ if(!ST.mgoals)ST.mgoals={}; const k=_mgk(y,m); if(!ST.mgoals[k])ST.mgoals[k]={}; if(which===1)ST.mgoals[k].g1=v; else ST.mgoals[k].g2=v; }
+// theo khóa ngày 'YYYY-MM-DD' → kế hoạch của đúng tháng ngày đó
+function gk1(dk){ return getG1(+dk.slice(0,4), +dk.slice(5,7)-1); }
+function gk2(dk){ return getG2(+dk.slice(0,4), +dk.slice(5,7)-1); }
+
 function updateGoal(n,v){
   if(!+v||+v<5)return;
-  if(n===1)ST.goal1=+v;else ST.goal2=+v;
+  setMGoal(calYear,calMonth,n,+v); // ghi cho THÁNG đang xem trên lịch
   save();renderAll();
 }
 
 function getTodayPlan(){
   const k=getDK();const e=getEntry(k);
-  return{p1:(e&&e.todayPlan1)||ST.goal1,p2:(e&&e.todayPlan2)||ST.goal2};
+  return{p1:(e&&e.todayPlan1)||gk1(k),p2:(e&&e.todayPlan2)||gk2(k)};
 }
 
 function adjTodayPlan(sess,delta){
   const k=getDK();let e=getEntry(k);
   if(!e){e={date:k,mins1:0,mins2:0,q1:3,q2:3,types1:[],types2:[]};ST.data.push(e);}
-  if(sess===1)e.todayPlan1=Math.max(5,Math.min(1200,(e.todayPlan1||ST.goal1)+delta));
-  else e.todayPlan2=Math.max(5,Math.min(1200,(e.todayPlan2||ST.goal2)+delta));
+  if(sess===1)e.todayPlan1=Math.max(5,Math.min(1200,(e.todayPlan1||gk1(k))+delta));
+  else e.todayPlan2=Math.max(5,Math.min(1200,(e.todayPlan2||gk2(k))+delta));
   save();renderTodayPlanUI();renderTimerInfo();renderAll();
 }
 
@@ -1483,7 +1493,7 @@ function renderTodayPlanUI(){
   document.getElementById('today-plan1-val').textContent=p.p1;
   document.getElementById('today-plan2-val').textContent=p.p2;
   const k=getDK();const e=getEntry(k);
-  const custom=(e&&e.todayPlan1&&e.todayPlan1!==ST.goal1)||(e&&e.todayPlan2&&e.todayPlan2!==ST.goal2);
+  const custom=(e&&e.todayPlan1&&e.todayPlan1!==gk1(k))||(e&&e.todayPlan2&&e.todayPlan2!==gk2(k));
   const hint=document.getElementById('today-special-hint');
   if(custom){hint.textContent='⚡ Đang dùng KH đặc biệt';hint.style.color='var(--gold)';}
   else{hint.textContent='⏱ KH đặc biệt hôm nay';hint.style.color='var(--muted)';}
@@ -1572,10 +1582,9 @@ function renderYearHoursChart(){
   });
   const years=[]; for(let y=2026;y<=2040;y++) years.push(String(y));
   const yData=years.map(function(y){return Math.round((perYear[y]||0)/60*10)/10;});
-  // Đường kế hoạch năm = (kế hoạch AM+PM mỗi ngày) × số ngày trong năm
-  const dailyPlanH=((ST.goal1||0)+(ST.goal2||0))/60;
-  function daysInYear(y){ y=+y; return ((y%4===0&&y%100!==0)||y%400===0)?366:365; }
-  const yPlan=years.map(function(y){ return Math.round(dailyPlanH*daysInYear(y)*10)/10; });
+  // Đường kế hoạch năm = TỔNG kế hoạch từng tháng (mỗi tháng có KH riêng) × số ngày mỗi tháng
+  function _yearPlanH(y){ let h=0; for(let m=0;m<12;m++){ h+=(getG1(y,m)+getG2(y,m))/60*new Date(y,m+1,0).getDate(); } return Math.round(h*10)/10; }
+  const yPlan=years.map(function(y){ return _yearPlanH(+y); });
   if(charts.yearly){charts.yearly.destroy();charts.yearly=null;}
   const yearlyPlugin={id:'yearlyLabels',afterDatasetsDraw(chart){
     const ctx=chart.ctx, area=chart.chartArea, data=chart.data;
@@ -1636,7 +1645,7 @@ function renderYear(){
       const e=getEntry(k);
       if(e&&(e.mins1||e.mins2)){
         mDays++;mMins+=(e.mins1||0)+(e.mins2||0);
-        if(e.mins1>=ST.goal1&&e.mins2>=ST.goal2){mFull++;curStreak++;}
+        if(e.mins1>=getG1(viewYear,mo)&&e.mins2>=getG2(viewYear,mo)){mFull++;curStreak++;}
         else curStreak++;
         maxStreak=Math.max(maxStreak,curStreak);
       }else{curStreak=0;}
@@ -1901,7 +1910,7 @@ function openGoalModal(n){
   const t=document.getElementById('goal-modal-title');
   if(t) t.textContent='Kế hoạch '+(n===1?'AM':'PM')+' (phút)';
   const inp=document.getElementById('goal-modal-min');
-  if(inp) inp.value = n===1 ? ST.goal1 : ST.goal2;
+  if(inp) inp.value = n===1 ? getG1(calYear,calMonth) : getG2(calYear,calMonth);
   document.getElementById('goal-modal').style.display='flex';
   setTimeout(function(){ try{inp.focus(); inp.select();}catch(e){} }, 80);
 }
@@ -2339,13 +2348,13 @@ function renderMonthPVA(){
       maxPM=Math.max(maxPM,e2.mins2||0);
     }
   }
-  const maxVal=Math.max(ST.goal1,ST.goal2,dataMax)*1.15;
+  const maxVal=Math.max(getG1(y,mo),getG2(y,mo),dataMax)*1.15;
   const H=130; // px chiều cao vùng cột
   const LH=14; // px chiều cao label ngày
 
   // Vị trí đường KH tính từ bottom của vùng cột (px)
-  const g1b=Math.round(ST.goal1/maxVal*H);
-  const g2b=Math.round(ST.goal2/maxVal*H);
+  const g1b=Math.round(getG1(y,mo)/maxVal*H);
+  const g2b=Math.round(getG2(y,mo)/maxVal*H);
 
   const container=document.getElementById('month-chart');
   if(!container)return;
@@ -2372,7 +2381,7 @@ function renderMonthPVA(){
     const m1=e?e.mins1||0:0;const m2=e?e.mins2||0:0;
     actualTotal+=m1+m2;
     const isPast=d<todayD;const isToday=d===todayD;
-    if(m1>0||m2>0){if(m1>=ST.goal1&&m2>=ST.goal2)fullDays++;}
+    if(m1>0||m2>0){if(m1>=getG1(y,mo)&&m2>=getG2(y,mo))fullDays++;}
     else if(isPast)missDays++;
 
     // Chiều cao cột px — cùng công thức với g1b, g2b
@@ -2388,8 +2397,8 @@ function renderMonthPVA(){
     const total=m1+m2;
     html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:'+H+'px;position:relative;" title="Ngay '+d+': S'+m1+'ph T'+m2+'ph">';
     // nhãn số trên cột KỶ LỤC vượt đường kế hoạch (đồng hạng hiện hết)
-    const lblAM = (m1>0 && m1===maxAM && maxAM>ST.goal1);
-    const lblPM = (m2>0 && m2===maxPM && maxPM>ST.goal2);
+    const lblAM = (m1>0 && m1===maxAM && maxAM>getG1(y,mo));
+    const lblPM = (m2>0 && m2===maxPM && maxPM>getG2(y,mo));
     html+='<div style="width:100%;display:flex;align-items:flex-end;gap:0.5px;flex:1">';
     if(show1){
       const bc1=m1>0?c1:'rgba(192,57,43,.25)';
@@ -2424,16 +2433,16 @@ function renderMonthPVA(){
   html+='</div>'; // end outer
 
   container.innerHTML=html;
-  var _ka=document.getElementById('lg-kh-am'); if(_ka) _ka.textContent=ST.goal1;
-  var _kp=document.getElementById('lg-kh-pm'); if(_kp) _kp.textContent=ST.goal2;
+  var _ka=document.getElementById('lg-kh-am'); if(_ka) _ka.textContent=getG1(y,mo);
+  var _kp=document.getElementById('lg-kh-pm'); if(_kp) _kp.textContent=getG2(y,mo);
 
   // Stats
-  const planTotal=(ST.goal1+ST.goal2)*daysInMonth;
+  const planTotal=(getG1(y,mo)+getG2(y,mo))*daysInMonth;
   // Kế hoạch LŨY KẾ tới hôm nay: tháng đang diễn ra = KH ngày × số ngày đã qua (tính cả hôm nay);
   // tháng đã qua = trọn tháng; tháng tương lai = 0.
   const _cmpM=(y*12+mo)-(now.getFullYear()*12+now.getMonth());
   const elapsedD=_cmpM<0?daysInMonth:(_cmpM>0?0:now.getDate());
-  const planToDate=(ST.goal1+ST.goal2)*elapsedD;
+  const planToDate=(getG1(y,mo)+getG2(y,mo))*elapsedD;
   const pct=planToDate>0?Math.round(actualTotal/planToDate*100):0;
   const color=pct>=100?'#076d5e':pct>=70?'#f0b429':'#7a1c38';
   document.getElementById('month-pva-pct').textContent=pct+'%';
@@ -2464,14 +2473,14 @@ function renderMonthPVA(){
 function renderPlanPage(){
   if(!document.getElementById('pva-bars')) return; // tab Kế hoạch đã bỏ
   const days=getLast(7);
-  const maxV=Math.max(ST.goal1,ST.goal2,...days.flatMap(function(k){const e=getEntry(k);return e?[e.mins1||0,e.mins2||0]:[0,0];}),10);
+  const maxV=Math.max(gk1(getDK()),gk2(getDK()),...days.flatMap(function(k){const e=getEntry(k);return e?[e.mins1||0,e.mins2||0]:[0,0];}),10);
   let html='';
   days.forEach(function(k){
     const e=getEntry(k);const d=new Date(k);
     const m1=e?e.mins1||0:0;const m2=e?e.mins2||0:0;
     const isToday=k===getDK();
     const lbl=DAYS7[d.getDay()]+(isToday?' ●':'');
-    const pw1=Math.round(ST.goal1/maxV*100);const pw2=Math.round(ST.goal2/maxV*100);
+    const pw1=Math.round(gk1(k)/maxV*100);const pw2=Math.round(gk2(k)/maxV*100);
     const aw1=Math.round(m1/maxV*100);const aw2=Math.round(m2/maxV*100);
     html+='<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid var(--border)">';
     html+='<span style="font-size:11px;color:'+(isToday?'var(--teal)':'var(--muted)')+';font-weight:'+(isToday?700:400)+';width:24px">'+lbl+'</span>';
@@ -2483,11 +2492,11 @@ function renderPlanPage(){
   document.getElementById('pva-bars').innerHTML=html;
   const actuals=days.map(function(k){const e=getEntry(k);return e?(e.mins1||0)+(e.mins2||0):0;});
   const total=actuals.reduce(function(a,b){return a+b;},0);
-  const planned=(ST.goal1+ST.goal2)*7;
+  const planned=days.reduce(function(a,k){return a+gk1(k)+gk2(k);},0);
   const pct=planned>0?Math.round(total/planned*100):0;
   const nonZ=actuals.filter(function(x){return x>0;});
   const avg=nonZ.length?Math.round(total/nonZ.length):0;
-  const fd=days.filter(function(k){const e=getEntry(k);return e&&e.mins1>=ST.goal1&&e.mins2>=ST.goal2;}).length;
+  const fd=days.filter(function(k){const e=getEntry(k);return e&&e.mins1>=gk1(k)&&e.mins2>=gk2(k);}).length;
   document.getElementById('week-total').innerHTML=nf(total)+'<span class="mcell-unit"> ph</span>';
   document.getElementById('week-pct').innerHTML=pct+'<span class="mcell-unit">%</span>';
   document.getElementById('week-avg').innerHTML=nf(avg)+'<span class="mcell-unit"> ph</span>';
@@ -2570,6 +2579,8 @@ function renderCalendar(){
   const WDC=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const labels=['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
   document.getElementById('cal-month-label').textContent=labels[calMonth]+' '+calYear;
+  var _gi1=document.getElementById('goal1-input'); if(_gi1) _gi1.value=getG1(calYear,calMonth);
+  var _gi2=document.getElementById('goal2-input'); if(_gi2) _gi2.value=getG2(calYear,calMonth);
   var _gt=document.getElementById('gioi-month-title');
   if(_gt) _gt.textContent='Tháng '+(calMonth+1)+' năm '+calYear+' - Kế hoạch bát quan trai giới';
   try{fitTimerRow();}catch(e){}
@@ -3107,10 +3118,9 @@ function renderCharts(){
     moLabels.push('T'+(m+1));
     moData.push(Math.round(total/60*10)/10);
   }
-  // Đường kế hoạch: (kế hoạch AM+PM mỗi ngày) × số ngày trong tháng
-  const dailyPlanH=((ST.goal1||0)+(ST.goal2||0))/60;
+  // Đường kế hoạch: mỗi tháng dùng KẾ HOẠCH RIÊNG của tháng đó × số ngày trong tháng
   const planData=[];
-  for(let m=0;m<=11;m++){ planData.push(Math.round(dailyPlanH*new Date(2026,m+1,0).getDate()*10)/10); }
+  for(let m=0;m<=11;m++){ planData.push(Math.round((getG1(2026,m)+getG2(2026,m))/60*new Date(2026,m+1,0).getDate()*10)/10); }
   // Tổng tích lũy toàn bộ (mọi ngày đã ghi)
   (function(){
     const el=document.getElementById('monthly-cum'); if(!el) return;
@@ -3175,8 +3185,8 @@ function renderRec(){
       const e=getEntry(getDK(kk));
       if(e&&((e.mins1||0)+(e.mins2||0))>0) entD++;
       if(e&&e.mins1>0&&e.mins2>0) full++;
-      if(e&&(e.mins1||0)>=ST.goal1) sOk++;
-      if(e&&(e.mins2||0)>=ST.goal2) tOk++;
+      if(e&&(e.mins1||0)>=gk1(getDK(kk))) sOk++;
+      if(e&&(e.mins2||0)>=gk2(getDK(kk))) tOk++;
       if(e) mins+=(e.mins1||0)+(e.mins2||0)+((e.extra||[]).reduce((a,x)=>a+(x.mins||0),0));
       if(gioiPlannedKey(getDK(kk))){ gp++; if(e&&e.gioi) gk++; } else if(e&&e.gioi){ gk++; gp++; }
       for(const r of thRatings(e||{})){
@@ -3220,7 +3230,7 @@ function renderRec(){
   html+=cell('🧘','ĐỦ 2 THỜI', pc(A.full)+'%','', delta(pc(A.full),pc(B.full)), tone(pc(A.full)), bgOf(pc(A.full),pc(B.full)));
   html+=cell('🌅','ĐẠT KH AM', pc(A.sOk)+'%','', delta(pc(A.sOk),pc(B.sOk)), tone(pc(A.sOk)), bgOf(pc(A.sOk),pc(B.sOk)));
   html+=cell('🌙','ĐẠT KH PM', pc(A.tOk)+'%','', delta(pc(A.tOk),pc(B.tOk)), tone(pc(A.tOk)), bgOf(pc(A.tOk),pc(B.tOk)));
-  html+=cell('⏱','TB MỖI NGÀY', nf(A.avg),'ph', delta(A.avg,B.avg), A.avg>=(ST.goal1+ST.goal2)?cGood:cWarn, bgOf(A.avg,B.avg));
+  html+=cell('⏱','TB MỖI NGÀY', nf(A.avg),'ph', delta(A.avg,B.avg), A.avg>=(gk1(getDK())+gk2(getDK()))?cGood:cWarn, bgOf(A.avg,B.avg));
   html+=cell('📅','NGÀY CÓ THIỀN', pc(A.entD)+'%','', delta(pc(A.entD),pc(B.entD)), tone(pc(A.entD)), bgOf(pc(A.entD),pc(B.entD)));
   html+=cell('🔥','CHUỖI 2 THỜI', cur,'ngày','', cur>0?cGood:cBad);
   html+=cell('☸','GIỮ 8 GIỚI', A.gp>0?(A.gk+'/'+A.gp):'—','', A.gp>0?delta(Math.round(A.gk/A.gp*100), B.gp?Math.round(B.gk/B.gp*100):0):'', (A.gp>0&&A.gk>=A.gp)?cGood:cWarn, A.gp>0?bgOf(Math.round(A.gk/A.gp*100), B.gp?Math.round(B.gk/B.gp*100):0):'var(--surface2)');
@@ -3229,7 +3239,7 @@ function renderRec(){
   html+='<div style="font-size:8.5px;color:var(--muted);margin-top:5px">30 ngày qua · mũi tên so với 30 ngày trước đó</div>';
 
   // ── Lời khuyên ──
-  const goalDay=(ST.goal1+ST.goal2)||1;
+  const goalDay=(gk1(getDK())+gk2(getDK()))||1;
   // 1) Nhận định chung
   let score=0;
   score += (pc(A.full)-pc(B.full));
@@ -3260,7 +3270,7 @@ function renderRec(){
   if(pc(A.entD)<70) weak.push({p:1,t:'Bỏ ngày nhiều: chỉ hành thiền <b>'+pc(A.entD)+'%</b> ('+A.entD+'/30 ngày).',
     a:'Đặt mức tối thiểu <b>10 phút/ngày</b> không được bỏ — ngày bận vẫn ngồi 10 phút để không đứt chuỗi.'});
   if(pc(A.full)<50) weak.push({p:2,t:'Đủ 2 thời mới <b>'+pc(A.full)+'%</b> — phần lớn ngày chỉ ngồi một thời.',
-    a:'Tuần này ưu tiên <b>có mặt đủ 2 thời</b>, chấp nhận rút mỗi thời còn '+Math.max(10,Math.round(ST.goal1/2))+'–'+ST.goal1+' phút; khi đã đều rồi mới tăng lại.'});
+    a:'Tuần này ưu tiên <b>có mặt đủ 2 thời</b>, chấp nhận rút mỗi thời còn '+Math.max(10,Math.round(gk1(getDK())/2))+'–'+gk1(getDK())+' phút; khi đã đều rồi mới tăng lại.'});
   if(pc(A.tOk)<pc(A.sOk)-15) weak.push({p:3,t:'<b>PM</b> yếu hơn AM rõ rệt ('+pc(A.tOk)+'% so với '+pc(A.sOk)+'%).',
     a:'Chốt một giờ ngồi tối cố định, đặt chuông nhắc trước 15 phút, và ngồi <b>trước</b> khi xem điện thoại/tin tức.'});
   if(pc(A.sOk)<pc(A.tOk)-15) weak.push({p:3,t:'<b>AM</b> yếu hơn PM rõ rệt ('+pc(A.sOk)+'% so với '+pc(A.tOk)+'%).',
@@ -3481,8 +3491,9 @@ function bkRestore(day){
 // INIT
 load();
 checkMonthReset();
-document.getElementById('goal1-input').value=ST.goal1;
-document.getElementById('goal2-input').value=ST.goal2;
+if(!ST.mgoals)ST.mgoals={};
+document.getElementById('goal1-input').value=getG1(calYear,calMonth);
+document.getElementById('goal2-input').value=getG2(calYear,calMonth);
 timerReset();
 renderAll();
 applyUserName();
