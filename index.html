@@ -673,7 +673,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v224</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v225</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2019,39 +2019,51 @@ function copyDayReport(){
   const _deMuc=(ST.deMuc&&String(ST.deMuc).trim())||'Niệm hơi thở vào-ra';
   const _n=ds.length;
   const _pali=['Idaṃ me puññaṃ āsavakkhayāvahaṃ hotu.','Idaṃ me puññaṃ nibbānassa paccayo hotu.','Mama puññabhāgaṃ sabbasattānaṃ bhājemi.','Te sabbe me samaṃ puññabhāgaṃ labhantu.'];
+  const _circ=['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩','⑪','⑫','⑬','⑭','⑮','⑯','⑰','⑱','⑲','⑳'];
+  function _cnum(i){ return _circ[i]||String(i+1); }
 
   // ── Bản chữ thường (dán vào nơi không giữ định dạng) ──
+  const _blocks=ds.map(function(t,i){
+    let s='▣ Thời thiền '+_cnum(i)+' từ '+_hm2h(t.s)+' đến '+_hm2h(t.e)+' ('+_durP(t.m||0)+')';
+    const nn=(t.n&&t.n.trim())? t.n.trim() : '';
+    if(nn) s+='\n'+nn;
+    return s;
+  });
   let out='Kính bạch Bhante,\n\n';
   out+='Con tên: '+_name+'\n';
   out+='Con xin trình pháp ngày: '+_dstr+'\n';
   out+='Đề mục: '+_deMuc+'\n\n';
-  out+='Hôm nay con hành thiền '+_n+' thời:\n';
-  ds.forEach(function(t,i){
-    out+='✅ Thời thiền '+_roman(i+1)+' từ '+_hm2h(t.s)+' đến '+_hm2h(t.e)+' ('+_durP(t.m||0)+')\n';
-    out+=((t.n&&t.n.trim())? t.n.trim() : '(chưa ghi cảm nhận)')+'\n\n';
-  });
-  out+='Con sẽ cố gắng thêm\n';
+  out+='Hôm nay con hành thiền '+_n+' thời\n';
+  out+=_blocks.join('\n\n\n');
+  out+='\n\n\nCon sẽ cố gắng thêm\n';
   out+='Kính mong Bhante từ bi chỉ dạy để con điều chỉnh việc thực hành cho đúng pháp.\n\n';
   out+=_pali.join('\n')+'\n\n';
   out+='Con xin kính tri ân Bhante.';
 
-  // ── Bản HTML (in đậm thật khi dán vào Zalo/Word/Docs) ──
+  // ── Bản HTML: cỡ chữ 13 (riêng lời chào cỡ 14 đậm) — in đậm thật khi dán vào Zalo/Word/Docs ──
+  const S='font-size:13pt';
+  function _D(s){ return '<div style="'+S+'">'+s+'</div>'; }
+  function _BL(){ return '<div style="'+S+'"><br></div>'; }
   let html='';
-  html+='<div>Kính bạch Bhante,</div><div><br></div>';
-  html+='<div>Con tên: '+_esc(_name)+'</div>';
-  html+='<div>Con xin trình pháp ngày: <b><strong>'+_esc(_dstr)+'</strong></b></div>';
-  html+='<div>Đề mục: <b><strong>'+_esc(_deMuc)+'</strong></b></div><div><br></div>';
-  html+='<div>Hôm nay con hành thiền '+_n+' thời:</div>';
+  html+='<div style="font-size:14pt;font-weight:700"><b><strong>Kính bạch Bhante,</strong></b></div>';
+  html+=_BL();
+  html+=_D('Con tên: '+_esc(_name));
+  html+='<div style="'+S+'">Con xin trình pháp ngày: <b><strong>'+_esc(_dstr)+'</strong></b></div>';
+  html+='<div style="'+S+'">Đề mục: <b><strong>'+_esc(_deMuc)+'</strong></b></div>';
+  html+=_BL();
+  html+=_D('Hôm nay con hành thiền '+_n+' thời');
   ds.forEach(function(t,i){
-    html+='<div style="font-weight:700"><b><strong>✅ Thời thiền '+_roman(i+1)+' từ '+_hm2h(t.s)+' đến '+_hm2h(t.e)+' ('+_durP(t.m||0)+')</strong></b></div>';
-    html+='<div style="font-weight:400">'+_esc((t.n&&t.n.trim())? t.n.trim() : '(chưa ghi cảm nhận)').replace(/\n/g,'<br>')+'</div>';
-    html+='<div><br></div>';
+    html+='<div style="'+S+';font-weight:700"><b><strong>▣ Thời thiền '+_cnum(i)+' từ '+_hm2h(t.s)+' đến '+_hm2h(t.e)+' ('+_durP(t.m||0)+')</strong></b></div>';
+    const nn=(t.n&&t.n.trim())? t.n.trim() : '';
+    if(nn) html+='<div style="'+S+';font-weight:400">'+_esc(nn).replace(/\n/g,'<br>')+'</div>';
+    html+=_BL()+_BL();
   });
-  html+='<div>Con sẽ cố gắng thêm</div>';
-  html+='<div>Kính mong Bhante từ bi chỉ dạy để con điều chỉnh việc thực hành cho đúng pháp.</div><div><br></div>';
-  _pali.forEach(function(p){ html+='<div>'+_esc(p)+'</div>'; });
-  html+='<div><br></div>';
-  html+='<div style="font-weight:700"><b><strong>Con xin kính tri ân Bhante.</strong></b></div>';
+  html+=_D('Con sẽ cố gắng thêm');
+  html+=_D('Kính mong Bhante từ bi chỉ dạy để con điều chỉnh việc thực hành cho đúng pháp.');
+  html+=_BL();
+  _pali.forEach(function(p){ html+=_D(_esc(p)); });
+  html+=_BL();
+  html+='<div style="'+S+';font-weight:700"><b><strong>Con xin kính tri ân Bhante.</strong></b></div>';
   function done(){ toast('✓ Đã copy báo cáo — dán vào tin nhắn gửi thiền sư'); }
   if(navigator.clipboard && navigator.clipboard.write && window.ClipboardItem){
     try{
