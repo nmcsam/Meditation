@@ -582,6 +582,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div class="card" style="width:100%;max-width:520px;padding:16px;box-sizing:border-box;box-shadow:0 10px 30px rgba(0,0,0,.35)">
       <div id="note-modal-title" style="font-size:18px;font-weight:900;margin-bottom:10px">🧘 Cảm nhận thời thiền</div>
       <textarea id="note-modal-text" placeholder="Viết cảm nhận về thời thiền: đề mục, tầm–tứ, hỷ–lạc, trạng thái tâm, chướng ngại…" style="width:100%;box-sizing:border-box;min-height:46vh;padding:12px;border:1.5px solid var(--border2);border-radius:var(--r);font-family:inherit;font-size:22px;line-height:1.5;resize:vertical;background:var(--surface);color:var(--ink)"></textarea>
+      <div id="note-char-bar" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
       <div id="note-rate-row" style="display:flex;gap:8px;margin-top:10px">
         <button type="button" id="note-rate-tot" onclick="noteRate('tot')" style="flex:1;height:40px;border-radius:10px;border:1.5px solid #cfc3a6;background:transparent;color:#555;font-weight:800;font-size:14px;font-family:inherit;cursor:pointer">Tốt</button>
         <button type="button" id="note-rate-can" onclick="noteRate('can')" style="flex:1;height:40px;border-radius:10px;border:1.5px solid #cfc3a6;background:transparent;color:#555;font-weight:800;font-size:14px;font-family:inherit;cursor:pointer">Tr. bình</button>
@@ -599,6 +600,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
     <div class="card" style="width:100%;max-width:520px;padding:16px;box-sizing:border-box;box-shadow:0 10px 30px rgba(0,0,0,.35)">
       <div id="diary-modal-title" style="font-size:18px;font-weight:900;margin-bottom:10px;color:#6a2f97">📔 Nhật ký trong ngày</div>
       <textarea id="diary-modal-text" placeholder="Ghi nhật ký cho ngày: sự việc, cảm xúc, pháp học, nhân duyên…" style="width:100%;box-sizing:border-box;min-height:46vh;padding:12px;border:1.5px solid #b48fd6;border-radius:var(--r);font-family:inherit;font-size:20px;line-height:1.5;resize:vertical;background:#faf5ff;color:#3a1560"></textarea>
+      <div id="diary-char-bar" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
       <div style="display:flex;gap:8px;margin-top:12px">
         <button onclick="diaryModalClose()" style="flex:1;height:44px;border-radius:var(--r);border:none;background:#7d3cad;color:#fff;font-weight:900;font-size:14px;font-family:inherit;cursor:pointer">✓ Đóng &amp; lưu</button>
       </div>
@@ -671,7 +673,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v221</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v222</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1986,6 +1988,24 @@ function _tongH(m){ m=+m||0; const h=Math.floor(m/60), mm=m%60; if(h&&mm) return
 function _hm2h(s){ if(!s) return '--h--'; const m=String(s).match(/(\d{1,2}):(\d{2})/); return m ? ((+m[1])+'h'+m[2]) : String(s); }
 function _durP(m){ m=+m||0; const h=Math.floor(m/60), mm=m%60; if(h&&mm) return h+'h'+String(mm).padStart(2,'0')+'p'; if(h) return h+'h'; return mm+'p'; }
 function _ddmmyyyy(k){ const m=String(k||'').match(/(\d{4})-(\d{2})-(\d{2})/); return m ? (m[3]+'/'+m[2]+'/'+m[1]) : String(k||''); }
+// ── Ký tự đặc biệt chèn nhanh cho ô Ghi chú Thời & Nhật ký ──
+const SPECIAL_CHARS=['●','○','☺','→','←','⇐','⇛','①','②','③','④','⑤','▣','◈','◉','✓'];
+function insertChar(taId, ch){
+  const ta=document.getElementById(taId); if(!ta) return;
+  let s=ta.selectionStart, e=ta.selectionEnd;
+  if(s==null||e==null){ ta.value+=ch; ta.focus(); return; }
+  ta.value=ta.value.slice(0,s)+ch+ta.value.slice(e);
+  const pos=s+ch.length;
+  ta.focus();
+  try{ ta.setSelectionRange(pos,pos); }catch(_){}
+}
+function buildCharBar(barId, taId){
+  const bar=document.getElementById(barId); if(!bar) return;
+  bar.innerHTML=SPECIAL_CHARS.map(function(c){
+    return '<button type="button" onmousedown="event.preventDefault()" onclick="insertChar(\''+taId+'\',\''+c+'\')" '
+      +'style="min-width:36px;height:36px;padding:0 6px;border:1.5px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--ink);font-size:18px;line-height:1;font-family:inherit;cursor:pointer">'+c+'</button>';
+  }).join('');
+}
 function copyDayReport(){
   const e=getEntry(currentDayKey);
   if(!e || !e.th || !e.th.length){ toast('Ngày này chưa có thời thiền'); return; }
@@ -3521,6 +3541,7 @@ checkMonthReset();
 if(!ST.mgoals)ST.mgoals={};
 document.getElementById('goal1-input').value=getG1(calYear,calMonth);
 document.getElementById('goal2-input').value=getG2(calYear,calMonth);
+try{ buildCharBar('note-char-bar','note-modal-text'); buildCharBar('diary-char-bar','diary-modal-text'); }catch(e){}
 timerReset();
 renderAll();
 applyUserName();
