@@ -673,7 +673,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v222</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v223</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1989,7 +1989,7 @@ function _hm2h(s){ if(!s) return '--h--'; const m=String(s).match(/(\d{1,2}):(\d
 function _durP(m){ m=+m||0; const h=Math.floor(m/60), mm=m%60; if(h&&mm) return h+'h'+String(mm).padStart(2,'0')+'p'; if(h) return h+'h'; return mm+'p'; }
 function _ddmmyyyy(k){ const m=String(k||'').match(/(\d{4})-(\d{2})-(\d{2})/); return m ? (m[3]+'/'+m[2]+'/'+m[1]) : String(k||''); }
 // ── Ký tự đặc biệt chèn nhanh cho ô Ghi chú Thời & Nhật ký ──
-const SPECIAL_CHARS=['●','○','☺','→','←','⇐','⇛','①','②','③','④','⑤','▣','◈','◉','✓'];
+const SPECIAL_CHARS=['●','○','☺','→','←','⇐','⇛','①','②','③','④','⑤','▣','◈','◉','✓','➠','▶','▷','⋙','⋘','≈'];
 function insertChar(taId, ch){
   const ta=document.getElementById(taId); if(!ta) return;
   let s=ta.selectionStart, e=ta.selectionEnd;
