@@ -673,7 +673,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v228</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v229</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2056,11 +2056,13 @@ function copyDayReport(){
     html+='<div style="'+S+';font-weight:700"><b><strong>▣ Thời thiền '+_cnum(i)+' từ '+_hm2h(t.s)+' đến '+_hm2h(t.e)+' ('+_durP(t.m||0)+')</strong></b></div>';
     const nn=(t.n&&t.n.trim())? t.n.trim() : '';
     if(nn){
-      // Mỗi dòng cảm nhận: thụt treo (hanging indent) — dòng bị xuống hàng sẽ canh thẳng với chữ sau dấu đầu dòng
+      // Dùng BẢNG ẨN (không viền): Word luôn giữ chữ trong ô, nên dòng dài xuống hàng vẫn thụt thẳng với ◈
+      html+='<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;margin:0 0 0 1.8em">';
       nn.split('\n').forEach(function(ln){
-        if(ln.trim()==='') { html+=_BL(); }
-        else html+='<div style="'+S+';font-weight:400;margin:0 0 0 1.8em">'+_esc(ln)+'</div>';
+        if(ln.trim()===''){ html+='<tr><td style="border:none;padding:1px 0;'+S+'">&nbsp;</td></tr>'; }
+        else html+='<tr><td style="border:none;padding:1px 0;'+S+';font-weight:400">'+_esc(ln)+'</td></tr>';
       });
+      html+='</table>';
     }
     html+=_BL()+_BL();
   });
