@@ -673,7 +673,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v229</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v230</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -1258,12 +1258,12 @@ function toggleGioiDay(d){
 // ==== CLOUD SYNC (Firebase Firestore) ====
 // Dán config lấy từ Firebase Console (Project settings > General > SDK setup) vào đây:
 const firebaseConfig = {
-  apiKey: "AIzaSyBDvIFgBq0PmZ4fjWu0RUSZAgh_V5N58G0",
-  authDomain: "daily-meditation-d6bdf.firebaseapp.com",
-  projectId: "daily-meditation-d6bdf",
-  storageBucket: "daily-meditation-d6bdf.firebasestorage.app",
-  messagingSenderId: "619038884675",
-  appId: "1:619038884675:web:4db3c469bb5f70c899a5f6"
+  apiKey: "AIzaSyDSBoaMi_w4a6s2j2wicsf-0MosWROnVa8",
+  authDomain: "thien-cua-sam.firebaseapp.com",
+  projectId: "thien-cua-sam",
+  storageBucket: "thien-cua-sam.firebasestorage.app",
+  messagingSenderId: "997583545380",
+  appId: "1:997583545380:web:a7b69a0833c1300b72e4b1"
 };
 let fbDb=null,syncUnsub=null,syncCode=localStorage.getItem('thien_sync_code')||'',syncEcho=false,syncTimer=null,pendingConflict=null;
 
