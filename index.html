@@ -673,7 +673,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v232</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v233</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -721,12 +721,19 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 <div class="detail-overlay" id="sync-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto">
     <h3 style="margin-bottom:6px">☁️ Đồng bộ nhiều thiết bị</h3>
-    <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.5">Nhập <strong>cùng một mã</strong> trên điện thoại và máy tính để dữ liệu tự động đồng bộ hai chiều.</div>
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.5">Nhập <strong>cùng một mã</strong> trên điện thoại và máy tính. Chọn <strong>vai trò</strong> cho mỗi máy: 📱 điện thoại tự đẩy lên web, 💻 máy tính chỉ tải về.</div>
     <input type="text" id="sync-code-input" class="sync-code-input" placeholder="VD: A1B2C3D4E5" maxlength="12">
     <div style="display:flex;gap:8px;margin-top:10px">
       <button class="btn" style="flex:1" onclick="genSyncCode()">🎲 Tạo mã mới</button>
       <button class="btn btn-p" style="flex:1" onclick="connectSync(document.getElementById('sync-code-input').value,false)">✓ Kết nối</button>
     </div>
+    <div style="font-size:12px;font-weight:800;color:var(--ink);margin-top:14px">Vai trò máy này:</div>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button id="role-push-btn" class="btn" style="flex:1;font-size:12px" onclick="setSyncRole('push')">📱 Điện thoại · tự đẩy lên</button>
+      <button id="role-pull-btn" class="btn" style="flex:1;font-size:12px" onclick="setSyncRole('pull')">💻 Máy tính · chỉ tải về</button>
+    </div>
+    <button id="pull-now-btn" class="btn btn-p" style="width:100%;margin-top:8px;display:none" onclick="pullFromCloud()">⬇ Tải dữ liệu từ web về</button>
+    <div id="role-hint" style="font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45"></div>
     <div id="sync-status" style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center">Chưa kết nối</div>
     <div id="sync-conflict-box" style="display:none;margin-top:12px;padding:12px;border:1px solid var(--rose);border-radius:var(--r);background:var(--rose-light)">
       <div id="sync-conflict-text" style="font-size:12.5px;line-height:1.5;color:var(--ink)"></div>
@@ -1266,6 +1273,44 @@ const firebaseConfig = {
   appId: "1:997583545380:web:a7b69a0833c1300b72e4b1"
 };
 let fbDb=null,syncUnsub=null,syncCode=localStorage.getItem('thien_sync_code')||'',syncEcho=false,syncTimer=null,pendingConflict=null;
+// Vai trò thiết bị: 'push' = điện thoại (tự đẩy lên), 'pull' = máy tính (chỉ tải về), '' = hai chiều (cũ)
+let syncRole=''; try{ syncRole=localStorage.getItem('thien_sync_role')||''; }catch(e){}
+function setSyncRole(r){
+  syncRole=r; try{ localStorage.setItem('thien_sync_role', r); }catch(e){}
+  updateSyncRoleUI();
+  if(r==='push'){
+    if(syncCode&&fbDb){ pushToCloud(); toast('📱 Máy này = ĐIỆN THOẠI — đã bật tự đẩy lên web'); }
+    else toast('📱 Đã đặt vai trò ĐIỆN THOẠI (tự đẩy lên)');
+  }else{
+    toast('💻 Máy này = MÁY TÍNH — chỉ tải về, KHÔNG đẩy lên');
+  }
+}
+function updateSyncRoleUI(){
+  var pb=document.getElementById('role-push-btn'), lb=document.getElementById('role-pull-btn'),
+      pn=document.getElementById('pull-now-btn'), h=document.getElementById('role-hint');
+  function sel(b,on){ if(!b)return; b.style.background=on?'var(--teal)':''; b.style.color=on?'#fff':''; b.style.fontWeight=on?'900':'700'; }
+  sel(pb, syncRole==='push'); sel(lb, syncRole==='pull');
+  if(pn) pn.style.display=(syncRole==='pull')?'block':'none';
+  if(h){
+    if(syncRole==='push') h.textContent='📱 Điện thoại: mỗi lần ghi dữ liệu sẽ TỰ ĐỘNG đẩy lên web (và tự đẩy khi mở app).';
+    else if(syncRole==='pull') h.textContent='💻 Máy tính: KHÔNG bao giờ đẩy lên web. Bấm nút "Tải dữ liệu từ web về" để lấy bản mới nhất từ điện thoại.';
+    else h.textContent='Hãy chọn vai trò cho máy này: Điện thoại (tự đẩy lên) hoặc Máy tính (chỉ tải về).';
+  }
+}
+function pullFromCloud(){
+  if(!syncCode){ toast('Nhập/tạo mã rồi bấm Kết nối trước'); return; }
+  if(!initFirebase()){ syncErr('⚠️ Chưa cấu hình Firebase trong file index.html'); return; }
+  var ref=fbDb.collection('syncs').doc(syncCode);
+  toast('Đang tải dữ liệu từ web…');
+  ref.get().then(function(doc){
+    if(!doc.exists){ toast('Đám mây chưa có dữ liệu (mã: '+syncCode+')'); return; }
+    var r=null; try{ r=JSON.parse(doc.data().payload); }catch(e){ r=null; }
+    if(!r){ toast('Dữ liệu đám mây bị lỗi'); return; }
+    applyRemote(r, doc.data().updatedAt||Date.now());
+    updateSyncBtn();
+    toast('☁️ Đã tải dữ liệu mới nhất từ web về máy này');
+  }).catch(function(e){ syncErr('Lỗi tải từ web: '+(e&&e.message||e)); });
+}
 
 function fbConfigured(){return firebaseConfig.apiKey && firebaseConfig.apiKey!=='YOUR_API_KEY';}
 function initFirebase(){
@@ -1273,7 +1318,9 @@ function initFirebase(){
   try{ if(!fbDb){ if(!firebase.apps.length)firebase.initializeApp(firebaseConfig); fbDb=firebase.firestore(); } return true; }
   catch(e){ console.error(e); return false; }
 }
-function initSync(){ updateSyncBtn(); } // Không tự động kết nối khi mở app — bấm ☁️ để đồng bộ
+function initSync(){ updateSyncBtn(); try{ updateSyncRoleUI(); }catch(e){}
+  if(syncCode && syncRole==='push' && typeof firebase!=='undefined' && (typeof fbConfigured!=='function' || fbConfigured())){ try{ connectSync(syncCode, true); }catch(e){} } // Điện thoại: tự kết nối & đẩy ngầm khi mở app
+}
 function updateSyncBtn(){
   const b=document.getElementById('sync-btn'); if(!b)return;
   const on=!!syncCode && !!fbDb && !pendingConflict;
@@ -1301,6 +1348,7 @@ function openSyncModal(){
     box.style.display='none';
     document.getElementById('sync-status').textContent = !fbConfigured() ? '⚠️ Chưa cấu hình Firebase trong file index.html' : (syncCode ? ('✓ Đang đồng bộ — mã: '+syncCode) : 'Chưa kết nối');
   }
+  try{ updateSyncRoleUI(); }catch(e){}
   document.getElementById('sync-modal').classList.add('on');
 }
 function closeSyncModal(){ document.getElementById('sync-modal').classList.remove('on'); }
@@ -1318,6 +1366,33 @@ function connectSync(code,silent){
   if(syncUnsub){ syncUnsub(); syncUnsub=null; }
   pendingConflict=null;
   const ref=fbDb.collection('syncs').doc(syncCode);
+  // ── MÁY TÍNH (chỉ tải về): kéo dữ liệu từ web xuống, KHÔNG đẩy lên, không nghe realtime ──
+  if(syncRole==='pull'){
+    ref.get().then(function(doc){
+      if(doc.exists){
+        var r=null; try{ r=JSON.parse(doc.data().payload); }catch(e){ r=null; }
+        if(r){ applyRemote(r, doc.data().updatedAt||Date.now()); if(!silent) toast('☁️ Đã tải dữ liệu từ web về (máy tính chỉ tải về)'); }
+        else if(!silent) toast('Dữ liệu đám mây bị lỗi');
+      } else if(!silent) toast('Đám mây chưa có dữ liệu (mã: '+syncCode+')');
+      updateSyncBtn(); if(!silent) closeSyncModal();
+    }).catch(function(err){ syncErr('Lỗi tải từ web: '+((err&&err.message)||err)); });
+    return;
+  }
+  // ── ĐIỆN THOẠI (tự đẩy lên): đẩy dữ liệu máy này lên web (nếu máy trống mà web có thì tải về để không xoá nhầm) ──
+  if(syncRole==='push'){
+    ref.get().then(function(doc){
+      var lc=dataSummary(ST).count;
+      if(lc===0 && doc.exists){
+        var r=null; try{ r=JSON.parse(doc.data().payload); }catch(e){ r=null; }
+        if(r) applyRemote(r, doc.data().updatedAt||Date.now());
+      } else {
+        pushToCloud();
+      }
+      attachSyncListener(ref); updateSyncBtn();
+      if(!silent){ toast('📱 Điện thoại đã kết nối — tự đẩy dữ liệu lên web'); closeSyncModal(); }
+    }).catch(function(err){ syncErr('Lỗi kết nối: '+((err&&err.message)||err)); });
+    return;
+  }
   ref.get().then(function(doc){
     if(!doc.exists){
       pushToCloud(); attachSyncListener(ref); updateSyncBtn();
@@ -1417,12 +1492,14 @@ function disconnectSync(){
   updateSyncBtn(); toast('Đã ngắt đồng bộ'); closeSyncModal();
 }
 function pushToCloud(){
+  if(syncRole==='pull')return; // máy tính: KHÔNG bao giờ đẩy lên web
   if(!syncCode||!fbDb)return;
   ST.updatedAt=Date.now();
   syncEcho=true;
   fbDb.collection('syncs').doc(syncCode).set({payload:JSON.stringify(ST),updatedAt:ST.updatedAt},{merge:true}).catch(function(e){console.error(e);syncErr('Lỗi ghi đám mây: '+(e&&e.message||e));});
 }
 function queueCloudSave(){
+  if(syncRole==='pull')return; // máy tính: không tự đẩy
   if(!syncCode||pendingConflict)return;
   clearTimeout(syncTimer);
   syncTimer=setTimeout(pushToCloud,800);
@@ -3520,6 +3597,7 @@ function bkRefreshUI(){
 }
 function bkDocRef(){ return fbDb.collection('syncs').doc(syncCode+'-BK'); }
 function bkNow(manual){
+  if(syncRole==='pull'){ if(manual)toast('Máy tính chỉ tải về — không sao lưu lên web'); return; }
   if(!syncCode||!fbDb){ if(manual)toast('Cần bật Đồng bộ đám mây trước (mục ☁️)'); return; }
   const day=new Date().toISOString().slice(0,10);
   bkDocRef().get().then(function(doc){
