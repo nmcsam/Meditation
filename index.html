@@ -326,7 +326,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
           <span style="flex:none;color:var(--border2)">|</span>
           <div style="flex:none;display:flex;align-items:center;gap:3px;font-size:8px;color:#8b3a52;font-weight:700"><div style="width:18px;height:0;border-top:1.5px dashed #8b3a52"></div>PM-<span id="lg-kh-pm">90</span></div>
         </div>
-        <div id="month-chart" style="position:relative;width:100%;height:156px"></div>
+        <div id="month-chart" style="position:relative;width:100%;height:170px"></div>
       </div>
       <!-- Pie chart -->
       <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px;max-width:112px">
@@ -673,7 +673,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 <div class="detail-overlay" id="settings-modal">
   <div style="background:var(--surface);border-radius:var(--rl) var(--rl) 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:86vh;overflow-y:auto">
-    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v234</span></h3>
+    <h3 style="margin-bottom:12px">⚙ Cài đặt <span style="font-size:11px;font-weight:600;color:var(--muted)">· Phiên bản v235</span></h3>
     <div class="card" style="margin-bottom:10px">
       <div class="card-hd">☁️ Đồng bộ nhiều thiết bị</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:10px" id="set-sync-status"></p>
@@ -2507,8 +2507,8 @@ function renderMonthPVA(){
     }
   }
   const maxVal=Math.max(getG1(y,mo),getG2(y,mo),dataMax)*1.15;
-  const H=130; // px chiều cao vùng cột
-  const LH=26; // px chiều cao label ngày + tổng thời gian trong ngày
+  const H=124; // px chiều cao vùng cột
+  const LH=46; // px chiều cao label ngày + tổng thời gian (dựng đứng)
 
   // Vị trí đường KH tính từ bottom của vùng cột (px)
   const g1b=Math.round(getG1(y,mo)/maxVal*H);
@@ -2586,9 +2586,9 @@ function renderMonthPVA(){
     let lColor=lIsToday?'var(--teal)':lHasData?'#076d5e':lIsPast?'#c0392b':'var(--muted)';
     const lWeight=lIsToday||lHasData?700:500;
     const ltot=lm1+lm2;
-    html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:0;overflow:hidden">'
-      +'<div style="font-size:7px;color:'+lColor+';font-weight:'+lWeight+';line-height:11px">'+d+'</div>'
-      +(lHasData?'<div style="font-size:6px;color:#7a5410;font-weight:700;line-height:10px;white-space:nowrap" title="Tổng '+ltot+' phút">'+fmtTotC(ltot)+'</div>':'')
+    html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1px;overflow:visible">'
+      +'<div style="font-size:8px;color:'+lColor+';font-weight:'+lWeight+';line-height:10px">'+d+'</div>'
+      +(lHasData?'<div style="height:'+(LH-12)+'px;display:flex;align-items:center;justify-content:center;width:100%"><span style="transform:rotate(-90deg);font-size:9.5px;color:#7a5410;font-weight:800;white-space:nowrap;line-height:1" title="Tổng '+ltot+' phút">'+fmtTotC(ltot)+'</span></div>':'')
       +'</div>';
   }
   html+='</div>';
@@ -3109,13 +3109,12 @@ function fmtHM(m){
   var h=Math.floor(m/60), mm=m%60;
   return nf(h)+'h'+(mm>0?String(mm).padStart(2,'0')+'ph':'');
 }
-// Tổng thời gian rất gọn để hiện dưới số ngày trong biểu đồ (cột hẹp ~12px)
+// Tổng thời gian dạng giờ:phút (vd 2:05) để hiện dựng đứng dưới số ngày (cột hẹp ~12px)
 function fmtTotC(m){
   m=+m||0;
   if(m<=0) return '';
-  if(m<60) return m+'′';
   var h=Math.floor(m/60), mm=m%60;
-  return h+'h'+(mm>0?String(mm).padStart(2,'0'):'');
+  return h+':'+String(mm).padStart(2,'0');
 }
 function tfmt(el){
   var v=el.value.replace(/[^0-9]/g,'').slice(0,4);
