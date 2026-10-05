@@ -13,6 +13,7 @@
 <link rel="apple-touch-icon" href="icon-med2-192.png">
 <link rel="icon" type="image/png" href="icon-med2-192.png">
 <title>Nguyễn Hồng Sâm</title>
+<script>/* Mở bên trong app chung (Bố thí · Giữ giới · Hành thiền) → ẩn trang bìa */try{if(window.self!==window.top)document.documentElement.classList.add('embed');}catch(e){document.documentElement.classList.add('embed');}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" onload="if(typeof renderCharts==='function')try{renderCharts();}catch(e){}if(typeof renderPieChart==='function')try{renderPieChart();}catch(e){}"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -50,6 +51,16 @@ body{display:flex;flex-direction:column;max-width:540px;margin:0 auto;width:100%
 .nav-btn.on{color:#fff;font-weight:800;border-bottom-color:#7c3a00}
 .scroll{flex:1;overflow-y:auto;padding:12px 12px 80px;background:transparent}
 .page{display:none}.page.on{display:block}
+html.embed #home-screen{display:none!important}
+#chart-pie{max-width:100%;max-height:100%}
+/* ── Màn hình ngang & rộng (máy tính, Z Fold xoay ngang): Hôm nay · Tháng · Năm cạnh nhau, mỗi cột 1/3 ── */
+body.wide{max-width:none!important;margin:0!important;padding-left:0!important;padding-right:0!important;height:100vh;height:100dvh;overflow:hidden}
+body.wide .nav{display:none}
+body.wide .scroll{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:0;overflow:hidden;min-height:0}
+body.wide .scroll>.page{display:block!important;height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:0 10px 80px;border-right:1px solid #e0d6bf;container-type:inline-size}
+body.wide .scroll>.page:last-child{border-right:none}
+body.wide .scroll>.page>*{zoom:var(--colz,1)}
+body.wide .scroll>.page::before{content:attr(data-title);display:block;position:sticky;top:0;z-index:15;margin:0 -10px 10px;padding:7px 12px;background:linear-gradient(180deg,#d97706 0%,#b45309 100%);color:#fff;font-size:13px;font-weight:800;text-align:center;letter-spacing:.03em}
 .card{background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,0) 26%),linear-gradient(180deg,#ffffff 0%,#fdfaf4 60%,#f1ead9 100%);border:1px solid #ded4bd;border-radius:var(--rl);padding:12px 14px;margin-bottom:10px;box-shadow:0 6px 14px rgba(70,50,15,.16),0 2px 0 rgba(255,255,255,1) inset,0 -3px 6px rgba(150,125,75,.10) inset;position:relative}
 .card-hd{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
 .gwrap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;justify-items:center}
@@ -172,7 +183,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 <div id="lock-screen" style="display:none;position:fixed;inset:0;z-index:700;background:linear-gradient(170deg,#0b3d35,#076d5e 55%,#0a4a40);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px">
   <div style="font-size:44px">🔒</div>
   <div style="font-size:17px;font-weight:700;color:#fff8ec">Nhập mật khẩu để mở app</div>
-  <input type="password" id="lock-input" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')tryUnlock()" style="width:min(240px,80vw);padding:12px 14px;font-size:18px;text-align:center;border:none;border-radius:12px;background:#fff;color:#111;letter-spacing:4px">
+  <input type="text" id="lock-input" name="th-k" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-form-type="other" onkeydown="if(event.key==='Enter')tryUnlock()" style="width:min(240px,80vw);padding:12px 14px;font-size:18px;text-align:center;border:none;border-radius:12px;background:#fff;color:#111;letter-spacing:4px;-webkit-text-security:disc;text-security:disc">
   <button onclick="tryUnlock()" style="width:min(240px,80vw);padding:12px;border:none;border-radius:12px;background:#c9a54a;color:#2c1f00;font-size:15px;font-weight:800;cursor:pointer">Mở khóa</button>
   <div id="lock-err" style="font-size:12px;color:#ffd1c8;min-height:16px"></div>
 </div>
@@ -207,7 +218,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 <div class="scroll">
 
 <!-- HÔM NAY -->
-<div class="page on" id="pg-today">
+<div class="page on" id="pg-today" data-title="🕐 Hôm nay">
 
   <div style="text-align:left;font-size:18px;font-weight:900;letter-spacing:2px;color:#8a6d1a;margin:2px 0 6px 2px"><span style="font-size:1.5em;vertical-align:middle;line-height:1">⓵</span> ☸ UPOSATHA</div>
   <!-- CARD ☸: KH & thực tế 8 giới cả tháng (chỉ xem; cài đặt & ghi ở tab Tháng) -->
@@ -409,7 +420,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 
 
 <!-- THÁNG -->
-<div class="page" id="pg-month">
+<div class="page" id="pg-month" data-title="📅 Tháng">
   <div class="card" style="background:linear-gradient(180deg,#fdf1cf 0%,#f7e3ae 100%);border:1.5px solid #d9b45a">
     <div class="card-hd" style="color:#7a5410;font-size:13px;font-weight:900" id="gioi-month-title">Kế hoạch bát quan trai giới</div>
     <div class="mcell" style="min-height:0;display:block;margin-bottom:10px">
@@ -503,7 +514,7 @@ input[type=range]{width:100%;accent-color:var(--teal)}
 </div>
 
 <!-- NĂM -->
-<div class="page" id="pg-year">
+<div class="page" id="pg-year" data-title="📊 Năm">
   <div class="card">
     <div class="cal-nav">
       <button onclick="prevYear()">&#8249;</button>
@@ -1520,6 +1531,21 @@ function nf(n){if(n===null||n===undefined||n==='')return n;const x=Number(n);if(
 function toast(msg){const t=document.getElementById('toast-el');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
 function syncErr(msg){const st=document.getElementById('sync-status');if(st){st.textContent=msg;st.style.color='#b3261e';}toast(msg);}
 
+// Ngang + đủ rộng + đủ cao: máy tính, màn hình trong Z Fold xoay ngang. Màn hình ngoài xoay ngang vẫn 1 trang.
+let _wide=false;
+function isWideScreen(){ const w=window.innerWidth, h=window.innerHeight; return w>h && w>=680 && h>=440; }
+function applyWide(){
+  const w=isWideScreen(), changed=w!==_wide; _wide=w;
+  document.body.classList.toggle('wide',w);
+  // Cột hẹp hơn bề rộng thiết kế (~340px) → thu nhỏ nội dung trong cột cho vừa, không bị cắt
+  if(w){ const pg=document.getElementById('pg-today'); const cw=(pg?pg.clientWidth:340)-20; document.documentElement.style.setProperty('--colz',String(Math.min(1,Math.max(.6,cw/340)))); }
+  if(changed&&w){ try{ renderAll(); renderYear(); renderYearHoursChart(); }catch(e){} }
+  if(changed){ setTimeout(function(){ try{ renderCharts(); }catch(e){} try{ fitTimerRow(); }catch(e){} },120); }
+}
+let _wideT=null;
+window.addEventListener('resize',function(){ clearTimeout(_wideT); _wideT=setTimeout(applyWide,150); });
+window.addEventListener('orientationchange',function(){ setTimeout(applyWide,200); });
+try{ new ResizeObserver(function(){ clearTimeout(_wideT); _wideT=setTimeout(applyWide,150); }).observe(document.documentElement); }catch(e){}
 function nav(id){
   try{ localStorage.setItem('thien_last_tab', id); }catch(e){}
   const ids=['today','month','year'];
@@ -3670,6 +3696,7 @@ try{ buildCharBar('note-char-bar','note-modal-text'); buildCharBar('diary-char-b
 try{ initRealBell(); }catch(e){}
 timerReset();
 renderAll();
+applyWide();
 applyUserName();
 initLock();
 try{
